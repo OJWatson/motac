@@ -19,5 +19,5 @@ def version() -> None:
 
 
 def main() -> None:
-    """Entry point for `saker-hawkes`."""
+    """Entry point for `motac`."""
     app()
