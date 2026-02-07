@@ -3,7 +3,7 @@ from __future__ import annotations
 from click.testing import CliRunner
 from typer.main import get_command
 
-from budgie.cli import app
+from saker_hawkes.cli import app
 
 
 def test_version_command() -> None:
