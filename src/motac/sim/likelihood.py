@@ -90,3 +90,71 @@ def hawkes_loglik_poisson(
     # gammaln(y+1) = log(y!)
     ll = (y * np.log(lam_safe) - lam_safe - gammaln(y + 1.0)).sum()
     return float(ll)
+
+
+def hawkes_loglik_poisson_observed(
+    *,
+    world: World,
+    kernel: np.ndarray,
+    mu: np.ndarray,
+    alpha: float,
+    y_true_for_history: np.ndarray,
+    y_obs: np.ndarray,
+    p_detect: float,
+    false_rate: float,
+    eps: float = 1e-12,
+) -> float:
+    """Approximate log-likelihood for observed counts with detection+clutter.
+
+    Simulator observation model
+    ---------------------------
+    In :func:`motac.sim.simulate_hawkes_counts`, the observed counts are
+
+        y_obs = Binomial(y_true, p_detect) + Poisson(false_rate)
+
+    Conditional on the latent intensity lambda(t), if we ignore the discreteness
+    of thinning and treat the thinned process as Poisson, we obtain the
+    approximation
+
+        y_obs(t) ~ Poisson(p_detect * lambda(t) + false_rate).
+
+    This is a cheap likelihood used for parameter recovery/QA.
+
+    Parameters
+    ----------
+    y_true_for_history:
+        Counts used to construct the Hawkes history term. For fully observed
+        experiments you can pass y_obs here, but in the simulator setting this
+        is typically y_true.
+    y_obs:
+        Observed counts.
+    p_detect:
+        Detection probability in (0,1].
+    false_rate:
+        Additive Poisson clutter rate (>=0).
+
+    Notes
+    -----
+    - This is not the exact likelihood under Binomial thinning.
+    - For numerical safety we lower-bound the observed intensity by `eps`.
+    """
+
+    if not (0.0 < p_detect <= 1.0):
+        raise ValueError("p_detect must be in (0,1]")
+    if false_rate < 0.0:
+        raise ValueError("false_rate must be non-negative")
+    if y_obs.shape != y_true_for_history.shape:
+        raise ValueError("y_obs and y_true_for_history must have the same shape")
+
+    lam_true = hawkes_intensity(
+        world=world,
+        kernel=kernel,
+        mu=mu,
+        alpha=alpha,
+        y=y_true_for_history,
+    )
+    lam_obs = p_detect * lam_true + false_rate
+    lam_obs = np.clip(lam_obs, eps, None)
+
+    ll = (y_obs * np.log(lam_obs) - lam_obs - gammaln(y_obs + 1.0)).sum()
+    return float(ll)

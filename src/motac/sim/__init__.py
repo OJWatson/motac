@@ -22,7 +22,11 @@ from .hawkes import (
     simulate_hawkes_counts,
 )
 from .io import load_simulation_parquet, save_simulation_parquet
-from .likelihood import hawkes_intensity, hawkes_loglik_poisson
+from .likelihood import (
+    hawkes_intensity,
+    hawkes_loglik_poisson,
+    hawkes_loglik_poisson_observed,
+)
 from .world import World, generate_random_world
 
 __all__ = [
@@ -35,6 +39,7 @@ __all__ = [
     "predict_hawkes_intensity_multi_step",
     "hawkes_intensity",
     "hawkes_loglik_poisson",
+    "hawkes_loglik_poisson_observed",
     "fit_hawkes_alpha_mu",
     "fit_hawkes_mle_alpha_mu",
     "fit_hawkes_mle_alpha_mu_beta",
