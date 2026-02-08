@@ -9,7 +9,11 @@ M4: Parametric prediction API for one-step and multi-step intensity forecasts
 
 from __future__ import annotations
 
-from .fit import fit_hawkes_alpha_mu, fit_hawkes_mle_alpha_mu
+from .fit import (
+    fit_hawkes_alpha_mu,
+    fit_hawkes_mle_alpha_mu,
+    fit_hawkes_mle_alpha_mu_beta,
+)
 from .hawkes import (
     HawkesDiscreteParams,
     discrete_exponential_kernel,
@@ -33,6 +37,7 @@ __all__ = [
     "hawkes_loglik_poisson",
     "fit_hawkes_alpha_mu",
     "fit_hawkes_mle_alpha_mu",
+    "fit_hawkes_mle_alpha_mu_beta",
     "save_simulation_parquet",
     "load_simulation_parquet",
 ]

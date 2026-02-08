@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 from scipy.optimize import minimize
 
-from .hawkes import _convolved_history
+from .hawkes import _convolved_history, discrete_exponential_kernel
 from .likelihood import hawkes_loglik_poisson
 from .world import World
 
@@ -156,5 +156,123 @@ def fit_hawkes_mle_alpha_mu(
         "mu": mu_hat,
         "alpha": alpha_hat,
         "loglik": float(ll),
+        "result": res,
+    }
+
+
+def fit_hawkes_mle_alpha_mu_beta(
+    *,
+    world: World,
+    n_lags: int,
+    y: np.ndarray,
+    init_mu: np.ndarray | None = None,
+    init_alpha: float = 0.1,
+    init_beta: float = 1.0,
+    maxiter: int = 800,
+) -> dict[str, np.ndarray | float | object]:
+    r"""Fit (mu, alpha, beta) by MLE with a 1-parameter exponential kernel.
+
+    Kernel parameterisation
+    -----------------------
+    We fix the lag length L = n_lags and use a normalized exponential kernel
+    over lags 1..L:
+
+        g_l \propto exp(-beta * (l-1))
+
+    with beta > 0 enforced via a softplus transform.
+
+    Returns
+    -------
+    dict with keys:
+      - mu: np.ndarray (n_locations,)
+      - alpha: float
+      - beta: float
+      - kernel: np.ndarray (n_lags,)
+      - loglik: float
+      - loglik_init: float
+      - result: scipy optimisation result
+    """
+
+    if n_lags <= 0:
+        raise ValueError("n_lags must be positive")
+    if y.ndim != 2:
+        raise ValueError("y must be 2D")
+    n_locations, _ = y.shape
+    if n_locations != world.n_locations:
+        raise ValueError("y first dimension must match world.n_locations")
+
+    y_mean = y.mean(axis=1)
+    mu0 = (y_mean if init_mu is None else np.asarray(init_mu, dtype=float)).copy()
+    if mu0.shape != (n_locations,):
+        raise ValueError("init_mu must have shape (n_locations,)")
+    mu0 = np.clip(mu0, 1e-6, None)
+
+    alpha0 = float(max(init_alpha, 0.0))
+    beta0 = float(max(init_beta, 0.0))
+
+    # Unconstrained parameterisation:
+    #   mu = softplus(theta_mu) + eps
+    #   alpha = softplus(theta_alpha)
+    #   beta = softplus(theta_beta) + eps
+    theta0 = np.concatenate(
+        [
+            np.log(np.expm1(mu0) + 1e-6),
+            np.array(
+                [
+                    np.log(np.expm1(alpha0) + 1e-6),
+                    np.log(np.expm1(beta0) + 1e-6),
+                ]
+            ),
+        ]
+    )
+
+    def unpack(theta: np.ndarray) -> tuple[np.ndarray, float, float, np.ndarray]:
+        theta_mu = theta[:n_locations]
+        theta_alpha = theta[n_locations]
+        theta_beta = theta[n_locations + 1]
+
+        mu = _softplus(theta_mu) + 1e-12
+        alpha = float(_softplus(np.array([theta_alpha]))[0])
+        beta = float(_softplus(np.array([theta_beta]))[0] + 1e-12)
+        kernel = discrete_exponential_kernel(n_lags=n_lags, beta=beta, normalize=True)
+        return mu, alpha, beta, kernel
+
+    mu_init, alpha_init, beta_init, kernel_init = unpack(theta0)
+    ll_init = hawkes_loglik_poisson(
+        world=world,
+        kernel=kernel_init,
+        mu=mu_init,
+        alpha=alpha_init,
+        y=y,
+    )
+
+    def objective(theta: np.ndarray) -> float:
+        mu, alpha, _beta, kernel = unpack(theta)
+        return -hawkes_loglik_poisson(world=world, kernel=kernel, mu=mu, alpha=alpha, y=y)
+
+    res = minimize(
+        objective,
+        theta0,
+        method="L-BFGS-B",
+        options={"maxiter": int(maxiter)},
+    )
+
+    theta_hat = np.asarray(res.x, dtype=float)
+    mu_hat, alpha_hat, beta_hat, kernel_hat = unpack(theta_hat)
+    ll = hawkes_loglik_poisson(
+        world=world,
+        kernel=kernel_hat,
+        mu=mu_hat,
+        alpha=alpha_hat,
+        y=y,
+    )
+
+    return {
+        "mu": mu_hat,
+        "alpha": float(alpha_hat),
+        "beta": float(beta_hat),
+        "kernel": kernel_hat,
+        "loglik": float(ll),
+        "loglik_init": float(ll_init),
         "result": res,
     }

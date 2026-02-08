@@ -6,7 +6,9 @@ from ._version import __version__
 
 app = typer.Typer(add_completion=False, no_args_is_help=True)
 substrate_app = typer.Typer(add_completion=False, no_args_is_help=True)
+sim_app = typer.Typer(add_completion=False, no_args_is_help=True)
 app.add_typer(substrate_app, name="substrate")
+app.add_typer(sim_app, name="sim")
 
 
 @app.callback()
@@ -39,6 +41,49 @@ def substrate_build(
         typer.echo("poi=disabled")
     else:
         typer.echo(f"poi_features={substrate.poi.x.shape[1]}")
+
+
+@sim_app.command("fit-kernel")
+def sim_fit_kernel(
+    parquet: str = typer.Option(..., "--parquet", help="Path to simulation parquet."),
+    n_lags: int = typer.Option(6, "--n-lags", min=1, help="Kernel lag length."),
+    init_alpha: float = typer.Option(0.1, "--init-alpha", min=0.0),
+    init_beta: float = typer.Option(1.0, "--init-beta", min=0.0),
+    maxiter: int = typer.Option(800, "--maxiter", min=1),
+) -> None:
+    """Fit (mu, alpha, beta) with an exponential kernel to a saved simulation."""
+
+    import json
+
+    import numpy as np
+
+    from .sim import load_simulation_parquet
+    from .sim.fit import fit_hawkes_mle_alpha_mu_beta
+
+    loaded = load_simulation_parquet(path=parquet)
+    world = loaded["world"]
+    y = loaded["y_true"]
+
+    fit = fit_hawkes_mle_alpha_mu_beta(
+        world=world,
+        n_lags=n_lags,
+        y=y,
+        init_alpha=init_alpha,
+        init_beta=init_beta,
+        maxiter=maxiter,
+    )
+
+    payload = {
+        "mu": np.asarray(fit["mu"], dtype=float).tolist(),
+        "alpha": float(fit["alpha"]),
+        "beta": float(fit["beta"]),
+        "loglik": float(fit["loglik"]),
+        "loglik_init": float(fit["loglik_init"]),
+        "success": bool(getattr(fit["result"], "success", False)),
+        "message": str(getattr(fit["result"], "message", "")),
+    }
+
+    typer.echo(json.dumps(payload))
 
 
 def main() -> None:
