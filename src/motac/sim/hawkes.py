@@ -105,6 +105,93 @@ def _convolved_history(y: np.ndarray, kernel: np.ndarray, t: int) -> np.ndarray:
     return window[:, ::-1] @ k
 
 
+def predict_hawkes_intensity_one_step(
+    *,
+    world: World,
+    params: HawkesDiscreteParams,
+    y_history: np.ndarray,
+) -> np.ndarray:
+    """One-step-ahead intensity forecast given history.
+
+    Parameters
+    ----------
+    world:
+        Provides the mobility matrix.
+    params:
+        Hawkes parameters.
+    y_history:
+        Array of past counts with shape (n_locations, n_steps_history).
+        The forecast is for the next step t = n_steps_history.
+
+    Returns
+    -------
+    lam_next:
+        Non-negative intensity (Poisson mean) for the next step with shape
+        (n_locations,).
+    """
+
+    if y_history.ndim != 2:
+        raise ValueError("y_history must be a 2D array (n_locations, n_steps)")
+    if y_history.shape[0] != world.n_locations:
+        raise ValueError("y_history first dimension must match world.n_locations")
+    if params.mu.shape[0] != world.n_locations:
+        raise ValueError("params.mu length must match world.n_locations")
+
+    t = int(y_history.shape[1])
+    h = _convolved_history(np.asarray(y_history, dtype=float), params.kernel, t)
+    excitation = world.mobility @ h
+    lam = params.mu + params.alpha * excitation
+    return np.clip(lam, 0.0, None)
+
+
+def predict_hawkes_intensity_multi_step(
+    *,
+    world: World,
+    params: HawkesDiscreteParams,
+    y_history: np.ndarray,
+    horizon: int,
+) -> np.ndarray:
+    """Multi-step intensity forecast using expected-count roll-forward.
+
+    This produces a deterministic forecast by iterating the Hawkes recursion
+    and substituting the (conditional) expected counts for future, unobserved
+    counts. Concretely, at each forecast step we set y(t) := lambda(t).
+
+    Parameters
+    ----------
+    y_history:
+        Past counts with shape (n_locations, n_steps_history).
+    horizon:
+        Number of steps to forecast ahead.
+
+    Returns
+    -------
+    intensity:
+        Forecast intensities of shape (n_locations, horizon) corresponding to
+        times t = n_steps_history .. n_steps_history + horizon - 1.
+    """
+
+    if horizon <= 0:
+        raise ValueError("horizon must be positive")
+    if y_history.ndim != 2:
+        raise ValueError("y_history must be a 2D array (n_locations, n_steps)")
+    if y_history.shape[0] != world.n_locations:
+        raise ValueError("y_history first dimension must match world.n_locations")
+
+    # Work in float since we will append expected counts.
+    y_ext = np.asarray(y_history, dtype=float)
+    n_locations = y_ext.shape[0]
+
+    out = np.zeros((n_locations, horizon), dtype=float)
+    for k in range(horizon):
+        lam = predict_hawkes_intensity_one_step(world=world, params=params, y_history=y_ext)
+        out[:, k] = lam
+        # Append expected count as proxy for the unknown future draw.
+        y_ext = np.concatenate([y_ext, lam.reshape(n_locations, 1)], axis=1)
+
+    return out
+
+
 def simulate_hawkes_counts(
     *,
     world: World,

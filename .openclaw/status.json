@@ -1,0 +1,7 @@
+{
+  "project": "motac",
+  "milestone": "M4",
+  "state": "running",
+  "updatedAtUtc": "2026-02-08T12:58:05Z",
+  "note": "CI is green for M3. M4 target: implement predict API for parametric Hawkes (one-step + multi-step intensity forecasts given history), with tests + docs, then push. Orchestrator attempted to nudge project agent via openclaw agent; initial sends timed out/hung (see pm-orchestrator-state.json). Third attempt running in background (session young-reef) to deliver nudge." 
+}
