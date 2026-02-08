@@ -13,6 +13,13 @@ def test_version_command() -> None:
     assert res.stdout.strip() != ""
 
 
+def test_sim_fit_observed_help() -> None:
+    runner = CliRunner()
+    res = runner.invoke(get_command(app), ["sim", "fit-observed", "--help"])
+    assert res.exit_code == 0
+    assert "Fit (mu, alpha)" in res.stdout
+
+
 def test_substrate_build_command(tmp_path) -> None:
     import json
 
