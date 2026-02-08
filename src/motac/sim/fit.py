@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import numpy as np
+from scipy.optimize import minimize
 
 from .hawkes import _convolved_history
+from .likelihood import hawkes_loglik_poisson
 from .world import World
 
 
@@ -63,3 +65,96 @@ def fit_hawkes_alpha_mu(
     mu_hat = np.clip(mu_hat, 0.0, None)
 
     return {"mu": mu_hat, "alpha": alpha_hat}
+
+
+def _softplus(x: np.ndarray) -> np.ndarray:
+    # Stable softplus.
+    return np.log1p(np.exp(-np.abs(x))) + np.maximum(x, 0.0)
+
+
+def fit_hawkes_mle_alpha_mu(
+    *,
+    world: World,
+    kernel: np.ndarray,
+    y: np.ndarray,
+    init_mu: np.ndarray | None = None,
+    init_alpha: float = 0.1,
+    maxiter: int = 500,
+) -> dict[str, np.ndarray | float | object]:
+    """Fit (mu, alpha) by maximum likelihood under the Poisson Hawkes model.
+
+    This is intended as the first "parametric Hawkes" vertical slice (M3):
+    likelihood + fit + prediction hooks for simulator recovery.
+
+    Parameters
+    ----------
+    world, kernel, y:
+        See :func:`motac.sim.hawkes_loglik_poisson`.
+    init_mu:
+        Optional initial mu guess, shape (n_locations,). If None, uses
+        per-location sample mean.
+    init_alpha:
+        Initial alpha guess.
+    maxiter:
+        Maximum iterations for the optimiser.
+
+    Returns
+    -------
+    dict with keys:
+      - mu: np.ndarray (n_locations,)
+      - alpha: float
+      - loglik: float
+      - result: scipy optimisation result
+    """
+
+    if y.ndim != 2:
+        raise ValueError("y must be 2D")
+    n_locations, _ = y.shape
+    if n_locations != world.n_locations:
+        raise ValueError("y first dimension must match world.n_locations")
+    if kernel.ndim != 1 or kernel.size == 0:
+        raise ValueError("kernel must be a non-empty 1D array")
+
+    y_mean = y.mean(axis=1)
+    mu0 = (y_mean if init_mu is None else np.asarray(init_mu, dtype=float)).copy()
+    if mu0.shape != (n_locations,):
+        raise ValueError("init_mu must have shape (n_locations,)")
+    mu0 = np.clip(mu0, 1e-6, None)
+    alpha0 = float(max(init_alpha, 0.0))
+
+    # Unconstrained parameterisation:
+    #   mu = softplus(theta_mu) + eps, alpha = softplus(theta_alpha)
+    theta0 = np.concatenate([
+        np.log(np.expm1(mu0) + 1e-6),
+        np.array([np.log(np.expm1(alpha0) + 1e-6)]),
+    ])
+
+    def objective(theta: np.ndarray) -> float:
+        theta_mu = theta[:n_locations]
+        theta_alpha = theta[n_locations]
+        mu = _softplus(theta_mu) + 1e-12
+        alpha = float(_softplus(np.array([theta_alpha]))[0])
+        return -hawkes_loglik_poisson(
+            world=world, kernel=kernel, mu=mu, alpha=alpha, y=y
+        )
+
+    res = minimize(
+        objective,
+        theta0,
+        method="L-BFGS-B",
+        options={"maxiter": int(maxiter)},
+    )
+
+    theta_hat = np.asarray(res.x, dtype=float)
+    mu_hat = _softplus(theta_hat[:n_locations]) + 1e-12
+    alpha_hat = float(_softplus(np.array([theta_hat[n_locations]]))[0])
+    ll = hawkes_loglik_poisson(
+        world=world, kernel=kernel, mu=mu_hat, alpha=alpha_hat, y=y
+    )
+
+    return {
+        "mu": mu_hat,
+        "alpha": alpha_hat,
+        "loglik": float(ll),
+        "result": res,
+    }
