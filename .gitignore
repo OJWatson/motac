@@ -5,3 +5,6 @@ __pycache__/
 .ruff_cache/
 .mypy_cache/
 .DS_Store
+
+# OpenClaw local status (do not commit)
+.openclaw/
