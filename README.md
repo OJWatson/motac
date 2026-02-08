@@ -1,5 +1,30 @@
 # motac
 
+## Quickstart (simulation + fit + predict)
+
+This repo currently contains a lightweight discrete-time simulator and parametric
+Poisson Hawkes utilities.
+
+### Predict API
+
+Given a fitted (or known) set of Hawkes parameters and a history of counts, you
+can forecast intensities (conditional Poisson means):
+
+- `predict_hawkes_intensity_one_step(...)` returns \(\lambda(t)\) for the next time step.
+- `predict_hawkes_intensity_multi_step(...)` rolls forward deterministically using
+  expected counts: it sets future \(y(t) := \lambda(t)\).
+
+### CLI: kernel fitting (quick QA)
+
+If you have a simulation saved via `save_simulation_parquet`, you can fit
+`(mu, alpha, beta)` with an exponential kernel:
+
+```bash
+motac sim fit-kernel --parquet sim.parquet --n-lags 6
+```
+
+This prints JSON with fitted parameters and log-likelihood diagnostics.
+
 Milestones
 ----------
 

@@ -111,7 +111,26 @@ def predict_hawkes_intensity_one_step(
     params: HawkesDiscreteParams,
     y_history: np.ndarray,
 ) -> np.ndarray:
-    """One-step-ahead intensity forecast given history.
+    """One-step-ahead intensity forecast given count history.
+
+    This matches the simulator recursion exactly: the returned intensities are
+    the conditional Poisson means for the *next* time step.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from motac.sim import generate_random_world
+    >>> from motac.sim.hawkes import HawkesDiscreteParams, discrete_exponential_kernel
+    >>> world = generate_random_world(n_locations=3, seed=0, lengthscale=0.5)
+    >>> params = HawkesDiscreteParams(
+    ...     mu=np.full((3,), 0.1),
+    ...     alpha=0.5,
+    ...     kernel=discrete_exponential_kernel(n_lags=4, beta=1.0),
+    ... )
+    >>> y_hist = np.zeros((3, 10), dtype=int)
+    >>> lam_next = predict_hawkes_intensity_one_step(world=world, params=params, y_history=y_hist)
+    >>> lam_next.shape
+    (3,)
 
     Parameters
     ----------
@@ -120,14 +139,14 @@ def predict_hawkes_intensity_one_step(
     params:
         Hawkes parameters.
     y_history:
-        Array of past counts with shape (n_locations, n_steps_history).
-        The forecast is for the next step t = n_steps_history.
+        Past counts with shape ``(n_locations, n_steps_history)``.
+        The forecast is for time ``t = n_steps_history``.
 
     Returns
     -------
     lam_next:
         Non-negative intensity (Poisson mean) for the next step with shape
-        (n_locations,).
+        ``(n_locations,)``.
     """
 
     if y_history.ndim != 2:
@@ -153,22 +172,43 @@ def predict_hawkes_intensity_multi_step(
 ) -> np.ndarray:
     """Multi-step intensity forecast using expected-count roll-forward.
 
-    This produces a deterministic forecast by iterating the Hawkes recursion
-    and substituting the (conditional) expected counts for future, unobserved
-    counts. Concretely, at each forecast step we set y(t) := lambda(t).
+    The future counts are unknown. This function produces a deterministic
+    forecast by iterating the Hawkes recursion and substituting the conditional
+    expectations for future counts, i.e. it rolls forward with ``y(t) := lambda(t)``.
+
+    This is cheap and stable enough for quick QA, but it is *not* a sample from
+    the full predictive distribution.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from motac.sim import generate_random_world
+    >>> from motac.sim.hawkes import HawkesDiscreteParams, discrete_exponential_kernel
+    >>> world = generate_random_world(n_locations=2, seed=0, lengthscale=0.5)
+    >>> params = HawkesDiscreteParams(
+    ...     mu=np.full((2,), 0.2),
+    ...     alpha=0.3,
+    ...     kernel=discrete_exponential_kernel(n_lags=3, beta=1.0),
+    ... )
+    >>> y_hist = np.zeros((2, 5), dtype=int)
+    >>> lam = predict_hawkes_intensity_multi_step(
+    ...     world=world, params=params, y_history=y_hist, horizon=4
+    ... )
+    >>> lam.shape
+    (2, 4)
 
     Parameters
     ----------
     y_history:
-        Past counts with shape (n_locations, n_steps_history).
+        Past counts with shape ``(n_locations, n_steps_history)``.
     horizon:
         Number of steps to forecast ahead.
 
     Returns
     -------
     intensity:
-        Forecast intensities of shape (n_locations, horizon) corresponding to
-        times t = n_steps_history .. n_steps_history + horizon - 1.
+        Forecast intensities with shape ``(n_locations, horizon)`` for times
+        ``t = n_steps_history .. n_steps_history + horizon - 1``.
     """
 
     if horizon <= 0:
