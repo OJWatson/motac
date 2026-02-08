@@ -297,3 +297,96 @@ def simulate_hawkes_counts(
         "y_obs": y_obs,
         "intensity": intensity,
     }
+
+
+def sample_hawkes_predictive_paths(
+    *,
+    world: World,
+    params: HawkesDiscreteParams,
+    y_history: np.ndarray,
+    horizon: int,
+    n_paths: int,
+    seed: int,
+) -> dict[str, np.ndarray]:
+    """Sample predictive paths forward from a history.
+
+    This provides an uncertainty hook beyond the deterministic
+    :func:`predict_hawkes_intensity_multi_step` expected-count roll-forward.
+
+    It simulates the latent counts y_true forward using the Hawkes recursion,
+    and then applies the same observation model used in
+    :func:`simulate_hawkes_counts` to produce y_obs.
+
+    Parameters
+    ----------
+    y_history:
+        Past *latent* counts of shape (n_locations, n_steps_history) used to
+        seed the Hawkes history. (For real data you may substitute y_obs, but
+        that is misspecified.)
+    horizon:
+        Forecast horizon (number of steps ahead).
+    n_paths:
+        Number of Monte Carlo paths.
+
+    Returns
+    -------
+    dict with arrays:
+      - y_true: (n_paths, n_locations, horizon)
+      - y_obs:  (n_paths, n_locations, horizon)
+      - intensity: (n_paths, n_locations, horizon)
+    """
+
+    if horizon <= 0:
+        raise ValueError("horizon must be positive")
+    if n_paths <= 0:
+        raise ValueError("n_paths must be positive")
+    if y_history.ndim != 2:
+        raise ValueError("y_history must be 2D (n_locations, n_steps)")
+    if y_history.shape[0] != world.n_locations:
+        raise ValueError("y_history first dimension must match world.n_locations")
+
+    rng = np.random.default_rng(seed)
+
+    n_locations = world.n_locations
+    y_hist = np.asarray(y_history, dtype=int)
+
+    y_true_paths = np.zeros((n_paths, n_locations, horizon), dtype=int)
+    y_obs_paths = np.zeros((n_paths, n_locations, horizon), dtype=int)
+    intensity_paths = np.zeros((n_paths, n_locations, horizon), dtype=float)
+
+    for p in range(n_paths):
+        # Extend history step by step for this path.
+        y_ext = y_hist.copy()
+        for k in range(horizon):
+            t = int(y_ext.shape[1])
+            h = _convolved_history(y_ext, params.kernel, t)
+            excitation = world.mobility @ h
+            lam = params.mu + params.alpha * excitation
+            lam = np.clip(lam, 0.0, None)
+
+            intensity_paths[p, :, k] = lam
+            y_next = rng.poisson(lam=lam)
+            y_true_paths[p, :, k] = y_next
+
+            # Observation model.
+            y_det = (
+                rng.binomial(n=y_next, p=params.p_detect)
+                if params.p_detect < 1.0
+                else y_next
+            )
+
+            if params.false_rate > 0.0:
+                y_fp = rng.poisson(lam=params.false_rate, size=y_next.shape)
+            else:
+                y_fp = np.zeros_like(y_next)
+
+            y_obs_paths[p, :, k] = y_det + y_fp
+
+            # Append latent to history.
+            y_ext = np.concatenate([y_ext, y_next.reshape(n_locations, 1)], axis=1)
+
+    return {
+        "y_true": y_true_paths,
+        "y_obs": y_obs_paths,
+        "intensity": intensity_paths,
+    }
