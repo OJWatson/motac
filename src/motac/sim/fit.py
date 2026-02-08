@@ -4,7 +4,7 @@ import numpy as np
 from scipy.optimize import minimize
 
 from .hawkes import _convolved_history, discrete_exponential_kernel
-from .likelihood import hawkes_loglik_poisson
+from .likelihood import hawkes_loglik_poisson, hawkes_loglik_poisson_observed
 from .world import World
 
 
@@ -272,6 +272,116 @@ def fit_hawkes_mle_alpha_mu_beta(
         "alpha": float(alpha_hat),
         "beta": float(beta_hat),
         "kernel": kernel_hat,
+        "loglik": float(ll),
+        "loglik_init": float(ll_init),
+        "result": res,
+    }
+
+
+def fit_hawkes_mle_alpha_mu_observed_poisson_approx(
+    *,
+    world: World,
+    kernel: np.ndarray,
+    y_true_for_history: np.ndarray,
+    y_obs: np.ndarray,
+    p_detect: float,
+    false_rate: float,
+    init_mu: np.ndarray | None = None,
+    init_alpha: float = 0.1,
+    maxiter: int = 600,
+) -> dict[str, np.ndarray | float | object]:
+    """Fit (mu, alpha) from observed counts using Poisson-approx likelihood.
+
+    Uses :func:`motac.sim.hawkes_loglik_poisson_observed` which approximates the
+    simulator observation model by
+
+        y_obs(t) ~ Poisson(p_detect * lambda(t) + false_rate).
+
+    Notes
+    -----
+    The history term for lambda(t) is computed from `y_true_for_history`.
+    In real-data settings you may substitute y_obs, but then this is a
+    misspecified likelihood.
+    """
+
+    if y_obs.shape != y_true_for_history.shape:
+        raise ValueError("y_obs and y_true_for_history must have same shape")
+
+    if y_true_for_history.ndim != 2:
+        raise ValueError("y_true_for_history must be 2D")
+    n_locations, _ = y_true_for_history.shape
+    if n_locations != world.n_locations:
+        raise ValueError("y_true_for_history first dimension must match world.n_locations")
+
+    y_mean = y_obs.mean(axis=1)
+    mu0 = (y_mean if init_mu is None else np.asarray(init_mu, dtype=float)).copy()
+    if mu0.shape != (n_locations,):
+        raise ValueError("init_mu must have shape (n_locations,)")
+    mu0 = np.clip(mu0, 1e-6, None)
+    alpha0 = float(max(init_alpha, 0.0))
+
+    theta0 = np.concatenate(
+        [
+            np.log(np.expm1(mu0) + 1e-6),
+            np.array([np.log(np.expm1(alpha0) + 1e-6)]),
+        ]
+    )
+
+    def unpack(theta: np.ndarray) -> tuple[np.ndarray, float]:
+        theta_mu = theta[:n_locations]
+        theta_alpha = theta[n_locations]
+        mu = _softplus(theta_mu) + 1e-12
+        alpha = float(_softplus(np.array([theta_alpha]))[0])
+        return mu, alpha
+
+    mu_init, alpha_init = unpack(theta0)
+    ll_init = hawkes_loglik_poisson_observed(
+        world=world,
+        kernel=kernel,
+        mu=mu_init,
+        alpha=alpha_init,
+        y_true_for_history=y_true_for_history,
+        y_obs=y_obs,
+        p_detect=p_detect,
+        false_rate=false_rate,
+    )
+
+    def objective(theta: np.ndarray) -> float:
+        mu, alpha = unpack(theta)
+        return -hawkes_loglik_poisson_observed(
+            world=world,
+            kernel=kernel,
+            mu=mu,
+            alpha=alpha,
+            y_true_for_history=y_true_for_history,
+            y_obs=y_obs,
+            p_detect=p_detect,
+            false_rate=false_rate,
+        )
+
+    res = minimize(
+        objective,
+        theta0,
+        method="L-BFGS-B",
+        options={"maxiter": int(maxiter)},
+    )
+
+    theta_hat = np.asarray(res.x, dtype=float)
+    mu_hat, alpha_hat = unpack(theta_hat)
+    ll = hawkes_loglik_poisson_observed(
+        world=world,
+        kernel=kernel,
+        mu=mu_hat,
+        alpha=alpha_hat,
+        y_true_for_history=y_true_for_history,
+        y_obs=y_obs,
+        p_detect=p_detect,
+        false_rate=false_rate,
+    )
+
+    return {
+        "mu": mu_hat,
+        "alpha": float(alpha_hat),
         "loglik": float(ll),
         "loglik_init": float(ll_init),
         "result": res,

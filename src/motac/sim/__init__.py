@@ -13,6 +13,7 @@ from .fit import (
     fit_hawkes_alpha_mu,
     fit_hawkes_mle_alpha_mu,
     fit_hawkes_mle_alpha_mu_beta,
+    fit_hawkes_mle_alpha_mu_observed_poisson_approx,
 )
 from .hawkes import (
     HawkesDiscreteParams,
@@ -43,6 +44,7 @@ __all__ = [
     "fit_hawkes_alpha_mu",
     "fit_hawkes_mle_alpha_mu",
     "fit_hawkes_mle_alpha_mu_beta",
+    "fit_hawkes_mle_alpha_mu_observed_poisson_approx",
     "save_simulation_parquet",
     "load_simulation_parquet",
 ]
