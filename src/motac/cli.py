@@ -200,6 +200,16 @@ def sim_forecast_observed(
     summary = workflow["summary"]
 
     payload = {
+        "meta": {
+            "n_locations": int(y_obs.shape[0]),
+            "n_steps_history": int(y_obs.shape[1]),
+            "horizon": int(horizon),
+            "n_paths": int(n_paths),
+            "n_lags": int(n_lags),
+            "beta": float(beta),
+            "p_detect": float(p_detect),
+            "false_rate": float(false_rate),
+        },
         "fit": {
             "mu": np.asarray(fit["mu"], dtype=float).tolist(),
             "alpha": float(fit["alpha"]),

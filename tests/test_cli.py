@@ -72,7 +72,14 @@ def test_sim_forecast_observed_roundtrip_csv(tmp_path) -> None:
 
     assert res.exit_code == 0, res.stdout
     payload = json.loads(res.stdout)
-    assert set(payload.keys()) == {"fit", "predict"}
+    assert set(payload.keys()) == {"meta", "fit", "predict"}
+
+    meta = payload["meta"]
+    assert meta["n_locations"] == 3
+    assert meta["horizon"] == 2
+    assert meta["n_paths"] == 5
+    assert meta["n_lags"] == 3
+    assert float(meta["beta"]) == 1.0
 
     # Also written to disk.
     assert out_path.exists()
