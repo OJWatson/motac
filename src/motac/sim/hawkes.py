@@ -390,3 +390,82 @@ def sample_hawkes_predictive_paths(
         "y_obs": y_obs_paths,
         "intensity": intensity_paths,
     }
+
+
+def sample_hawkes_observed_predictive_paths_poisson_approx(
+    *,
+    world: World,
+    mu: np.ndarray,
+    alpha: float,
+    kernel: np.ndarray,
+    y_history_for_intensity: np.ndarray,
+    horizon: int,
+    n_paths: int,
+    seed: int,
+    p_detect: float,
+    false_rate: float,
+) -> dict[str, np.ndarray]:
+    """Sample predictive *observed* count paths with Poisson approximation.
+
+    This is aligned with the Poisson-approx likelihood used in
+    :func:`motac.sim.hawkes_loglik_poisson_observed`:
+
+        y_obs(t) ~ Poisson(p_detect * lambda(t) + false_rate)
+
+    where lambda(t) is the latent Hawkes intensity.
+
+    The latent counts are *not* sampled; instead we sample y_obs directly given
+    the intensity recursion driven by `y_history_for_intensity`.
+
+    Returns
+    -------
+    dict with arrays:
+      - y_obs: (n_paths, n_locations, horizon)
+      - intensity_obs: (n_paths, n_locations, horizon)
+    """
+
+    if horizon <= 0:
+        raise ValueError("horizon must be positive")
+    if n_paths <= 0:
+        raise ValueError("n_paths must be positive")
+    if not (0.0 < p_detect <= 1.0):
+        raise ValueError("p_detect must be in (0,1]")
+    if false_rate < 0.0:
+        raise ValueError("false_rate must be non-negative")
+
+    if y_history_for_intensity.ndim != 2:
+        raise ValueError("y_history_for_intensity must be 2D")
+    if y_history_for_intensity.shape[0] != world.n_locations:
+        raise ValueError("history first dimension must match world.n_locations")
+
+    rng = np.random.default_rng(seed)
+    n_locations = world.n_locations
+
+    y_obs_paths = np.zeros((n_paths, n_locations, horizon), dtype=int)
+    intensity_obs_paths = np.zeros((n_paths, n_locations, horizon), dtype=float)
+
+    y_hist = np.asarray(y_history_for_intensity, dtype=float)
+
+    for p in range(n_paths):
+        y_ext = y_hist.copy()
+        for k in range(horizon):
+            t = int(y_ext.shape[1])
+            h = _convolved_history(y_ext, kernel, t)
+            excitation = world.mobility @ h
+            lam_true = mu + alpha * excitation
+            lam_true = np.clip(lam_true, 0.0, None)
+
+            lam_obs = p_detect * lam_true + false_rate
+            lam_obs = np.clip(lam_obs, 0.0, None)
+
+            intensity_obs_paths[p, :, k] = lam_obs
+            y_next_obs = rng.poisson(lam=lam_obs)
+            y_obs_paths[p, :, k] = y_next_obs
+
+            # Roll-forward with expected observed counts for stability.
+            y_ext = np.concatenate([y_ext, lam_obs.reshape(n_locations, 1)], axis=1)
+
+    return {
+        "y_obs": y_obs_paths,
+        "intensity_obs": intensity_obs_paths,
+    }

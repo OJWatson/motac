@@ -20,6 +20,7 @@ from .hawkes import (
     discrete_exponential_kernel,
     predict_hawkes_intensity_multi_step,
     predict_hawkes_intensity_one_step,
+    sample_hawkes_observed_predictive_paths_poisson_approx,
     sample_hawkes_predictive_paths,
     simulate_hawkes_counts,
 )
@@ -40,6 +41,7 @@ __all__ = [
     "predict_hawkes_intensity_one_step",
     "predict_hawkes_intensity_multi_step",
     "sample_hawkes_predictive_paths",
+    "sample_hawkes_observed_predictive_paths_poisson_approx",
     "hawkes_intensity",
     "hawkes_loglik_poisson",
     "hawkes_loglik_poisson_observed",
