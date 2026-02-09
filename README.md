@@ -14,7 +14,7 @@ can forecast intensities (conditional Poisson means):
 - `predict_hawkes_intensity_multi_step(...)` rolls forward deterministically using
   expected counts: it sets future \(y(t) := \lambda(t)\).
 
-### CLI: kernel fitting / observed fit (quick QA)
+### CLI: quick QA commands
 
 If you have a simulation saved via `save_simulation_parquet`, you can fit
 `(mu, alpha, beta)` with an exponential kernel:
@@ -30,7 +30,21 @@ For simulator output with detection + clutter enabled, you can also fit
 motac sim fit-observed --parquet sim.parquet
 ```
 
-Both commands print JSON with fitted parameters and log-likelihood diagnostics.
+For an observed-only end-to-end workflow (fit -> sample -> summarize), you can
+forecast directly from a `y_obs` file (CSV or .npy) and get JSON output:
+
+```bash
+# CSV should be rows=locations, cols=time
+motac sim forecast-observed \
+  --y-obs y_obs.csv \
+  --horizon 20 \
+  --n-paths 200 \
+  --p-detect 0.7 \
+  --false-rate 0.2
+```
+
+These commands print JSON with fitted parameters and predictive summaries.
+(There is also a tiny end-to-end roundtrip smoke test in `tests/test_cli.py`.)
 
 Milestones
 ----------
