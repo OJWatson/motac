@@ -30,6 +30,7 @@ from .likelihood import (
     hawkes_loglik_poisson,
     hawkes_loglik_poisson_observed,
 )
+from .predictive import summarize_predictive_paths
 from .world import World, generate_random_world
 
 __all__ = [
@@ -45,6 +46,7 @@ __all__ = [
     "hawkes_intensity",
     "hawkes_loglik_poisson",
     "hawkes_loglik_poisson_observed",
+    "summarize_predictive_paths",
     "fit_hawkes_alpha_mu",
     "fit_hawkes_mle_alpha_mu",
     "fit_hawkes_mle_alpha_mu_beta",
