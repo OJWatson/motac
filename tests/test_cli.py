@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import json
+
+import numpy as np
 from click.testing import CliRunner
 from typer.main import get_command
 
@@ -25,6 +28,60 @@ def test_sim_forecast_observed_help() -> None:
     res = runner.invoke(get_command(app), ["sim", "forecast-observed", "--help"])
     assert res.exit_code == 0
     assert "Observed-only forecast" in res.stdout
+
+
+def test_sim_forecast_observed_roundtrip_csv(tmp_path) -> None:
+    # Tiny end-to-end smoke: write y_obs.csv -> run CLI -> parse JSON -> check shapes.
+    y_obs = np.zeros((3, 8), dtype=int)
+    y_obs[0, 2] = 1
+    y_obs[1, 3] = 2
+
+    path = tmp_path / "y_obs.csv"
+    np.savetxt(path, y_obs, fmt="%d", delimiter=",")
+
+    runner = CliRunner()
+    res = runner.invoke(
+        get_command(app),
+        [
+            "sim",
+            "forecast-observed",
+            "--y-obs",
+            str(path),
+            "--horizon",
+            "2",
+            "--n-paths",
+            "5",
+            "--seed",
+            "123",
+            "--p-detect",
+            "0.7",
+            "--false-rate",
+            "0.2",
+            "--n-lags",
+            "3",
+            "--beta",
+            "1.0",
+            "--maxiter",
+            "10",
+        ],
+    )
+
+    assert res.exit_code == 0, res.stdout
+    payload = json.loads(res.stdout)
+    assert set(payload.keys()) == {"fit", "predict"}
+
+    fit = payload["fit"]
+    assert "mu" in fit and "alpha" in fit
+    assert len(fit["mu"]) == 3
+
+    pred = payload["predict"]
+    q = pred["q"]
+    mean = np.asarray(pred["mean"], dtype=float)
+    quantiles = np.asarray(pred["quantiles"], dtype=float)
+
+    assert len(q) == quantiles.shape[0]
+    assert mean.shape == (3, 2)
+    assert quantiles.shape[1:] == (3, 2)
 
 
 def test_substrate_build_command(tmp_path) -> None:
