@@ -4,7 +4,11 @@ import numpy as np
 from scipy.optimize import minimize
 
 from .hawkes import _convolved_history, discrete_exponential_kernel
-from .likelihood import hawkes_loglik_poisson, hawkes_loglik_poisson_observed
+from .likelihood import (
+    hawkes_loglik_observed_exact,
+    hawkes_loglik_poisson,
+    hawkes_loglik_poisson_observed,
+)
 from .world import World
 
 
@@ -70,6 +74,10 @@ def fit_hawkes_alpha_mu(
 def _softplus(x: np.ndarray) -> np.ndarray:
     # Stable softplus.
     return np.log1p(np.exp(-np.abs(x))) + np.maximum(x, 0.0)
+
+
+def _sigmoid(x: np.ndarray) -> np.ndarray:
+    return 1.0 / (1.0 + np.exp(-x))
 
 
 def fit_hawkes_mle_alpha_mu(
@@ -382,6 +390,124 @@ def fit_hawkes_mle_alpha_mu_observed_poisson_approx(
     return {
         "mu": mu_hat,
         "alpha": float(alpha_hat),
+        "loglik": float(ll),
+        "loglik_init": float(ll_init),
+        "result": res,
+    }
+
+
+def fit_observation_params_exact(
+    *,
+    y_true: np.ndarray,
+    y_obs: np.ndarray,
+    init_p_detect: float = 0.8,
+    init_false_rate: float = 0.1,
+    maxiter: int = 400,
+) -> dict[str, float | object]:
+    """Fit (p_detect, false_rate) given (y_true, y_obs) under exact likelihood.
+
+    Uses :func:`motac.sim.hawkes_loglik_observed_exact` (thinning + clutter)
+    and enforces constraints via transforms:
+
+      - p_detect in (0,1) via sigmoid
+      - false_rate >= 0 via softplus
+
+    Returns
+    -------
+    dict with keys:
+      - p_detect: float
+      - false_rate: float
+      - loglik: float
+      - loglik_init: float
+      - result: scipy optimisation result
+
+    Notes
+    -----
+    This ignores the Hawkes intensity model entirely; it is purely an
+    observation-model fit conditional on y_true.
+    """
+
+    if y_true.shape != y_obs.shape:
+        raise ValueError("y_true and y_obs must have the same shape")
+    if y_true.ndim != 2:
+        raise ValueError("y_true must be 2D (n_locations, n_steps)")
+
+    n_locations = int(y_true.shape[0])
+    world = World(
+        xy=np.zeros((n_locations, 2), dtype=float),
+        mobility=np.eye(n_locations, dtype=float),
+    )
+    kernel = np.array([1.0], dtype=float)
+    mu = np.zeros((n_locations,), dtype=float)
+
+    p0 = float(np.clip(init_p_detect, 1e-6, 1.0 - 1e-6))
+    fr0 = float(max(init_false_rate, 0.0))
+
+    # Unconstrained params.
+    theta0 = np.array(
+        [
+            np.log(p0) - np.log1p(-p0),
+            np.log(np.expm1(fr0) + 1e-6),
+        ],
+        dtype=float,
+    )
+
+    def unpack(theta: np.ndarray) -> tuple[float, float]:
+        p = float(_sigmoid(np.array([theta[0]]))[0])
+        fr = float(_softplus(np.array([theta[1]]))[0])
+        return p, fr
+
+    p_init, fr_init = unpack(theta0)
+    ll_init = hawkes_loglik_observed_exact(
+        world=world,
+        kernel=kernel,
+        mu=mu,
+        alpha=0.0,
+        y_true_for_history=y_true,
+        y_true=y_true,
+        y_obs=y_obs,
+        p_detect=p_init,
+        false_rate=fr_init,
+    )
+
+    def objective(theta: np.ndarray) -> float:
+        p, fr = unpack(theta)
+        return -hawkes_loglik_observed_exact(
+            world=world,
+            kernel=kernel,
+            mu=mu,
+            alpha=0.0,
+            y_true_for_history=y_true,
+            y_true=y_true,
+            y_obs=y_obs,
+            p_detect=p,
+            false_rate=fr,
+        )
+
+    res = minimize(
+        objective,
+        theta0,
+        method="L-BFGS-B",
+        options={"maxiter": int(maxiter)},
+    )
+
+    theta_hat = np.asarray(res.x, dtype=float)
+    p_hat, fr_hat = unpack(theta_hat)
+    ll = hawkes_loglik_observed_exact(
+        world=world,
+        kernel=kernel,
+        mu=mu,
+        alpha=0.0,
+        y_true_for_history=y_true,
+        y_true=y_true,
+        y_obs=y_obs,
+        p_detect=p_hat,
+        false_rate=fr_hat,
+    )
+
+    return {
+        "p_detect": float(p_hat),
+        "false_rate": float(fr_hat),
         "loglik": float(ll),
         "loglik_init": float(ll_init),
         "result": res,
