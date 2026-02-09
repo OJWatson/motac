@@ -512,3 +512,75 @@ def fit_observation_params_exact(
         "loglik_init": float(ll_init),
         "result": res,
     }
+
+
+def fit_hawkes_mle_alpha_mu_complete_data_with_exact_obs(
+    *,
+    world: World,
+    kernel: np.ndarray,
+    y_true_for_history: np.ndarray,
+    y_true: np.ndarray,
+    y_obs: np.ndarray,
+    p_detect: float,
+    false_rate: float,
+    init_mu: np.ndarray | None = None,
+    init_alpha: float = 0.1,
+    maxiter: int = 600,
+) -> dict[str, np.ndarray | float | object]:
+    """Fit (mu, alpha) on complete data and report exact observation loglik.
+
+    This wrapper is useful for simulator QA when the latent counts `y_true` are
+    available. It fits (mu, alpha) by maximizing the latent Poisson Hawkes
+    likelihood (same objective as :func:`fit_hawkes_mle_alpha_mu`), and also
+    computes the exact observed likelihood term for `y_obs` given `y_true`:
+
+      log p(y_true | mu, alpha, ...) + log p(y_obs | y_true, p_detect, false_rate).
+
+    Notes
+    -----
+    The exact observation term does *not* depend on (mu, alpha) once y_true is
+    fixed; it is included for bookkeeping and to make it explicit what part of
+    the joint likelihood is being optimised.
+    """
+
+    if y_true.shape != y_obs.shape:
+        raise ValueError("y_true and y_obs must have the same shape")
+    if y_true_for_history.shape != y_true.shape:
+        raise ValueError("y_true_for_history and y_true must have the same shape")
+
+    fit = fit_hawkes_mle_alpha_mu(
+        world=world,
+        kernel=kernel,
+        y=y_true,
+        init_mu=init_mu,
+        init_alpha=init_alpha,
+        maxiter=maxiter,
+    )
+
+    mu_hat = np.asarray(fit["mu"], dtype=float)
+    alpha_hat = float(fit["alpha"])
+
+    ll_latent = hawkes_loglik_poisson(
+        world=world, kernel=kernel, mu=mu_hat, alpha=alpha_hat, y=y_true
+    )
+    ll_obs_exact = hawkes_loglik_observed_exact(
+        world=world,
+        kernel=kernel,
+        mu=mu_hat,
+        alpha=alpha_hat,
+        y_true_for_history=y_true_for_history,
+        y_true=y_true,
+        y_obs=y_obs,
+        p_detect=p_detect,
+        false_rate=false_rate,
+    )
+
+    out: dict[str, np.ndarray | float | object] = dict(fit)
+    out.update(
+        {
+            "loglik_latent": float(ll_latent),
+            "loglik_obs_exact": float(ll_obs_exact),
+            "loglik_joint": float(ll_latent + ll_obs_exact),
+        }
+    )
+    return out
