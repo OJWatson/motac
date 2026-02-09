@@ -34,6 +34,7 @@ from .likelihood import (
     hawkes_loglik_poisson_observed,
 )
 from .predictive import summarize_predictive_paths
+from .workflows import observed_fit_sample_summarize_poisson_approx
 from .world import World, generate_random_world
 
 __all__ = [
@@ -51,6 +52,7 @@ __all__ = [
     "hawkes_loglik_poisson_observed",
     "hawkes_loglik_observed_exact",
     "summarize_predictive_paths",
+    "observed_fit_sample_summarize_poisson_approx",
     "fit_hawkes_alpha_mu",
     "fit_hawkes_mle_alpha_mu",
     "fit_hawkes_mle_alpha_mu_beta",
