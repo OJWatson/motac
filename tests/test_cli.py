@@ -20,6 +20,13 @@ def test_sim_fit_observed_help() -> None:
     assert "Fit (mu, alpha)" in res.stdout
 
 
+def test_sim_forecast_observed_help() -> None:
+    runner = CliRunner()
+    res = runner.invoke(get_command(app), ["sim", "forecast-observed", "--help"])
+    assert res.exit_code == 0
+    assert "Observed-only forecast" in res.stdout
+
+
 def test_substrate_build_command(tmp_path) -> None:
     import json
 

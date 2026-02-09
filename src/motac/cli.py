@@ -132,6 +132,87 @@ def sim_fit_observed(
     typer.echo(json.dumps(payload))
 
 
+def _load_y_obs(path: str):
+    import numpy as np
+
+    p = str(path)
+    y = np.load(p) if p.endswith(".npy") else np.loadtxt(p, delimiter=",")
+
+    y = np.asarray(y)
+    if y.ndim != 2:
+        raise ValueError("y_obs must be a 2D array (n_locations, n_steps)")
+    return y
+
+
+@sim_app.command("forecast-observed")
+def sim_forecast_observed(
+    y_obs_path: str = typer.Option(
+        ..., "--y-obs", help="Path to y_obs as CSV (rows=locations) or .npy."
+    ),
+    horizon: int = typer.Option(20, "--horizon", min=1),
+    n_paths: int = typer.Option(200, "--n-paths", min=1),
+    seed: int = typer.Option(123, "--seed"),
+    p_detect: float = typer.Option(1.0, "--p-detect", min=0.0, max=1.0),
+    false_rate: float = typer.Option(0.0, "--false-rate", min=0.0),
+    n_lags: int = typer.Option(6, "--n-lags", min=1),
+    beta: float = typer.Option(1.0, "--beta", min=1e-12),
+    init_alpha: float = typer.Option(0.1, "--init-alpha", min=0.0),
+    maxiter: int = typer.Option(600, "--maxiter", min=1),
+) -> None:
+    """Observed-only forecast: fit -> sample -> summarize (Poisson approximation).
+
+    Loads y_obs from CSV/NPY, fits (mu, alpha) under the Poisson-approx observed
+    likelihood, samples predictive y_obs paths, and prints JSON containing the
+    fitted params and predictive mean/quantiles.
+    """
+
+    import json
+
+    import numpy as np
+
+    from .sim import generate_random_world
+    from .sim.hawkes import discrete_exponential_kernel
+    from .sim.workflows import observed_fit_sample_summarize_poisson_approx
+
+    y_obs = _load_y_obs(y_obs_path).astype(int)
+    world = generate_random_world(n_locations=y_obs.shape[0], seed=0, lengthscale=0.5)
+    kernel = discrete_exponential_kernel(n_lags=n_lags, beta=float(beta))
+
+    out = observed_fit_sample_summarize_poisson_approx(
+        world=world,
+        kernel=kernel,
+        y_obs=y_obs,
+        p_detect=float(p_detect),
+        false_rate=float(false_rate),
+        horizon=int(horizon),
+        n_paths=int(n_paths),
+        seed=int(seed),
+        init_alpha=float(init_alpha),
+        fit_maxiter=int(maxiter),
+    )
+
+    fit = out["fit"]
+    summary = out["summary"]
+
+    payload = {
+        "fit": {
+            "mu": np.asarray(fit["mu"], dtype=float).tolist(),
+            "alpha": float(fit["alpha"]),
+            "loglik": float(fit["loglik"]),
+            "loglik_init": float(fit["loglik_init"]),
+            "success": bool(getattr(fit["result"], "success", False)),
+            "message": str(getattr(fit["result"], "message", "")),
+        },
+        "predict": {
+            "q": np.asarray(summary["q"], dtype=float).tolist(),
+            "mean": np.asarray(summary["mean"], dtype=float).tolist(),
+            "quantiles": np.asarray(summary["quantiles"], dtype=float).tolist(),
+        },
+    }
+
+    typer.echo(json.dumps(payload))
+
+
 def main() -> None:
     """Entry point for `motac`."""
     app()
