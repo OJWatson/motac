@@ -154,6 +154,11 @@ def sim_forecast_observed(
         "--out",
         help="Optional path to write JSON output (stdout is always printed).",
     ),
+    q: str = typer.Option(
+        "0.05,0.5,0.95",
+        "--q",
+        help="Comma-separated quantiles for predictive summaries (e.g. 0.05,0.5,0.95).",
+    ),
     horizon: int = typer.Option(20, "--horizon", min=1),
     n_paths: int = typer.Option(200, "--n-paths", min=1),
     seed: int = typer.Option(123, "--seed"),
@@ -183,6 +188,12 @@ def sim_forecast_observed(
     world = generate_random_world(n_locations=y_obs.shape[0], seed=0, lengthscale=0.5)
     kernel = discrete_exponential_kernel(n_lags=n_lags, beta=float(beta))
 
+    q_levels = tuple(float(x) for x in q.split(",") if x.strip() != "")
+    if len(q_levels) == 0:
+        raise ValueError("--q must specify at least one quantile")
+    if any((qq < 0.0) or (qq > 1.0) for qq in q_levels):
+        raise ValueError("--q quantiles must be in [0,1]")
+
     workflow = observed_fit_sample_summarize_poisson_approx(
         world=world,
         kernel=kernel,
@@ -192,6 +203,7 @@ def sim_forecast_observed(
         horizon=int(horizon),
         n_paths=int(n_paths),
         seed=int(seed),
+        q=q_levels,
         init_alpha=float(init_alpha),
         fit_maxiter=int(maxiter),
     )

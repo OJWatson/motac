@@ -55,6 +55,8 @@ def test_sim_forecast_observed_roundtrip_csv(tmp_path) -> None:
             "2",
             "--n-paths",
             "5",
+            "--q",
+            "0.1,0.9",
             "--seed",
             "123",
             "--p-detect",
@@ -95,6 +97,7 @@ def test_sim_forecast_observed_roundtrip_csv(tmp_path) -> None:
     mean = np.asarray(pred["mean"], dtype=float)
     quantiles = np.asarray(pred["quantiles"], dtype=float)
 
+    assert q == [0.1, 0.9]
     assert len(q) == quantiles.shape[0]
     assert mean.shape == (3, 2)
     assert quantiles.shape[1:] == (3, 2)
