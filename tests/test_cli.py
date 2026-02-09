@@ -126,7 +126,9 @@ def test_sim_forecast_observed_invalid_q(tmp_path) -> None:
     )
 
     assert res.exit_code != 0
-    assert "--q must be comma-separated numbers" in res.output
+    # Typer formats errors with ANSI codes in CI; strip them before matching.
+    clean = res.output.replace("\x1b", "")
+    assert "--q must be comma-separated numbers" in clean
 
 
 def test_substrate_build_command(tmp_path) -> None:
