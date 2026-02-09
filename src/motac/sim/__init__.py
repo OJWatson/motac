@@ -27,6 +27,7 @@ from .hawkes import (
 from .io import load_simulation_parquet, save_simulation_parquet
 from .likelihood import (
     hawkes_intensity,
+    hawkes_loglik_observed_exact,
     hawkes_loglik_poisson,
     hawkes_loglik_poisson_observed,
 )
@@ -46,6 +47,7 @@ __all__ = [
     "hawkes_intensity",
     "hawkes_loglik_poisson",
     "hawkes_loglik_poisson_observed",
+    "hawkes_loglik_observed_exact",
     "summarize_predictive_paths",
     "fit_hawkes_alpha_mu",
     "fit_hawkes_mle_alpha_mu",
