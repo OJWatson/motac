@@ -43,7 +43,13 @@ motac sim forecast-observed \
   --false-rate 0.2
 ```
 
-These commands print JSON with fitted parameters and predictive summaries.
+`forecast-observed` prints JSON with three top-level keys:
+
+- `meta`: reproducibility fields (`n_locations`, `n_steps_history`, `horizon`, `n_paths`,
+  `n_lags`, `beta`, `p_detect`, `false_rate`)
+- `fit`: fitted parameters and optimisation diagnostics (`mu`, `alpha`, `loglik`, ...)
+- `predict`: predictive summaries (`q`, `mean`, `quantiles`)
+
 (There is also a tiny end-to-end roundtrip smoke test in `tests/test_cli.py`.)
 
 Milestones
