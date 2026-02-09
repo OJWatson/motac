@@ -39,6 +39,8 @@ def test_sim_forecast_observed_roundtrip_csv(tmp_path) -> None:
     path = tmp_path / "y_obs.csv"
     np.savetxt(path, y_obs, fmt="%d", delimiter=",")
 
+    out_path = tmp_path / "out.json"
+
     runner = CliRunner()
     res = runner.invoke(
         get_command(app),
@@ -47,6 +49,8 @@ def test_sim_forecast_observed_roundtrip_csv(tmp_path) -> None:
             "forecast-observed",
             "--y-obs",
             str(path),
+            "--out",
+            str(out_path),
             "--horizon",
             "2",
             "--n-paths",
@@ -69,6 +73,11 @@ def test_sim_forecast_observed_roundtrip_csv(tmp_path) -> None:
     assert res.exit_code == 0, res.stdout
     payload = json.loads(res.stdout)
     assert set(payload.keys()) == {"fit", "predict"}
+
+    # Also written to disk.
+    assert out_path.exists()
+    payload2 = json.loads(out_path.read_text())
+    assert payload2.keys() == payload.keys()
 
     fit = payload["fit"]
     assert "mu" in fit and "alpha" in fit

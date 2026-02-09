@@ -149,6 +149,11 @@ def sim_forecast_observed(
     y_obs_path: str = typer.Option(
         ..., "--y-obs", help="Path to y_obs as CSV (rows=locations) or .npy."
     ),
+    out_path: str | None = typer.Option(
+        None,
+        "--out",
+        help="Optional path to write JSON output (stdout is always printed).",
+    ),
     horizon: int = typer.Option(20, "--horizon", min=1),
     n_paths: int = typer.Option(200, "--n-paths", min=1),
     seed: int = typer.Option(123, "--seed"),
@@ -178,7 +183,7 @@ def sim_forecast_observed(
     world = generate_random_world(n_locations=y_obs.shape[0], seed=0, lengthscale=0.5)
     kernel = discrete_exponential_kernel(n_lags=n_lags, beta=float(beta))
 
-    out = observed_fit_sample_summarize_poisson_approx(
+    workflow = observed_fit_sample_summarize_poisson_approx(
         world=world,
         kernel=kernel,
         y_obs=y_obs,
@@ -191,8 +196,8 @@ def sim_forecast_observed(
         fit_maxiter=int(maxiter),
     )
 
-    fit = out["fit"]
-    summary = out["summary"]
+    fit = workflow["fit"]
+    summary = workflow["summary"]
 
     payload = {
         "fit": {
@@ -210,7 +215,12 @@ def sim_forecast_observed(
         },
     }
 
-    typer.echo(json.dumps(payload))
+    text = json.dumps(payload)
+    typer.echo(text)
+    if out_path is not None:
+        from pathlib import Path
+
+        Path(out_path).write_text(text)
 
 
 def main() -> None:
