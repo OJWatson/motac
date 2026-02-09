@@ -103,6 +103,32 @@ def test_sim_forecast_observed_roundtrip_csv(tmp_path) -> None:
     assert quantiles.shape[1:] == (3, 2)
 
 
+def test_sim_forecast_observed_invalid_q(tmp_path) -> None:
+    y_obs = np.zeros((2, 5), dtype=int)
+    path = tmp_path / "y_obs.csv"
+    np.savetxt(path, y_obs, fmt="%d", delimiter=",")
+
+    runner = CliRunner()
+    res = runner.invoke(
+        get_command(app),
+        [
+            "sim",
+            "forecast-observed",
+            "--y-obs",
+            str(path),
+            "--q",
+            "not-a-number",
+            "--horizon",
+            "1",
+            "--n-paths",
+            "2",
+        ],
+    )
+
+    assert res.exit_code != 0
+    assert "--q must be comma-separated numbers" in res.output
+
+
 def test_substrate_build_command(tmp_path) -> None:
     import json
 

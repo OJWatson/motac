@@ -188,11 +188,15 @@ def sim_forecast_observed(
     world = generate_random_world(n_locations=y_obs.shape[0], seed=0, lengthscale=0.5)
     kernel = discrete_exponential_kernel(n_lags=n_lags, beta=float(beta))
 
-    q_levels = tuple(float(x) for x in q.split(",") if x.strip() != "")
+    try:
+        q_levels = tuple(float(x) for x in q.split(",") if x.strip() != "")
+    except ValueError as e:
+        raise typer.BadParameter("--q must be comma-separated numbers") from e
+
     if len(q_levels) == 0:
-        raise ValueError("--q must specify at least one quantile")
+        raise typer.BadParameter("--q must specify at least one quantile")
     if any((qq < 0.0) or (qq > 1.0) for qq in q_levels):
-        raise ValueError("--q quantiles must be in [0,1]")
+        raise typer.BadParameter("--q quantiles must be in [0,1]")
 
     workflow = observed_fit_sample_summarize_poisson_approx(
         world=world,
