@@ -128,9 +128,9 @@ def test_sim_forecast_observed_invalid_q(tmp_path) -> None:
     assert res.exit_code != 0
     # Typer formats errors with ANSI codes in CI; strip them before matching.
     clean = res.output.replace("\x1b", "")
-    # Typer/Click error rendering differs between environments; assert on stable bits.
+    # Typer/Click/Rich error rendering differs between environments; assert on stable bits.
     assert "Invalid value" in clean
-    assert "--q" in clean
+    assert "Usage:" in clean
 
 
 def test_substrate_build_command(tmp_path) -> None:
