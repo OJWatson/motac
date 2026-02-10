@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import math
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -74,6 +76,22 @@ class SubstrateConfig:
 
 
 class SubstrateBuilder:
+    """Build a road-constrained substrate and persist cache artefacts.
+
+    Cache format (v1)
+    ---------------
+    When ``SubstrateConfig.cache_dir`` is set, ``build()`` writes a self-contained
+    artefact bundle:
+
+    - ``graph.graphml``: road network (OSMnx GraphML)
+    - ``grid.npz``: grid centroid lat/lon + cell_size_m
+    - ``neighbours.npz``: CSR travel-time neighbourhood matrix
+    - ``meta.json``: provenance + config hash + format version
+    - optionally ``poi.npz``: POI feature matrix
+    """
+
+    CACHE_FORMAT_VERSION = 1
+
     def __init__(self, config: SubstrateConfig):
         self.config = config
 
@@ -91,9 +109,15 @@ class SubstrateBuilder:
         if not self.config.disable_pois:
             poi = self._build_pois(grid)
 
-        substrate = Substrate(grid=grid, neighbours=neighbours, poi=poi, graphml_path=graphml_path)
+        # If caching, always persist a GraphML copy so the cache is self-contained.
         if cache_dir:
             cache_dir.mkdir(parents=True, exist_ok=True)
+            graphml_out = cache_dir / "graph.graphml"
+            ox.save_graphml(G, filepath=graphml_out)
+            graphml_path = str(graphml_out)
+
+        substrate = Substrate(grid=grid, neighbours=neighbours, poi=poi, graphml_path=graphml_path)
+        if cache_dir:
             self._save_cache(cache_dir, substrate)
         return substrate
 
@@ -293,12 +317,20 @@ class SubstrateBuilder:
 
     # -------------------------- cache -----------------------
     def _cache_exists(self, cache_dir: Path) -> bool:
-        return (cache_dir / "grid.npz").exists() and (cache_dir / "neighbours.npz").exists()
+        # Require minimal artefacts + a versioned meta file.
+        return (
+            (cache_dir / "graph.graphml").exists()
+            and (cache_dir / "grid.npz").exists()
+            and (cache_dir / "neighbours.npz").exists()
+            and (cache_dir / "meta.json").exists()
+        )
 
-    def _save_cache(self, cache_dir: Path, substrate):
+    def _save_cache(self, cache_dir: Path, substrate) -> None:
         from .types import Substrate
 
         assert isinstance(substrate, Substrate)
+
+        # Core arrays
         np.savez_compressed(
             cache_dir / "grid.npz",
             lat=substrate.grid.lat,
@@ -306,11 +338,40 @@ class SubstrateBuilder:
             cell_size_m=np.array([substrate.grid.cell_size_m], dtype=float),
         )
         sp.save_npz(cache_dir / "neighbours.npz", substrate.neighbours.travel_time_s)
+
+        # Provenance
+        cfg_dict = {
+            "north": self.config.north,
+            "south": self.config.south,
+            "east": self.config.east,
+            "west": self.config.west,
+            "place": self.config.place,
+            "graphml_path": self.config.graphml_path,
+            "cell_size_m": self.config.cell_size_m,
+            "max_travel_time_s": self.config.max_travel_time_s,
+            "disable_pois": self.config.disable_pois,
+            "poi_tags": self.config.poi_tags,
+            "poi_geojson_path": self.config.poi_geojson_path,
+        }
+        cfg_json = json.dumps(cfg_dict, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        cfg_hash = hashlib.sha256(cfg_json).hexdigest()
+
+        try:
+            from motac._version import __version__
+        except Exception:  # pragma: no cover
+            __version__ = "unknown"
+
         meta = {
+            "cache_format_version": self.CACHE_FORMAT_VERSION,
+            "built_at_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),  # noqa: UP017
+            "motac_version": __version__,
+            "config": cfg_dict,
+            "config_sha256": cfg_hash,
             "graphml_path": substrate.graphml_path,
             "has_poi": substrate.poi is not None,
         }
-        (cache_dir / "meta.json").write_text(json.dumps(meta, indent=2))
+        (cache_dir / "meta.json").write_text(json.dumps(meta, indent=2, sort_keys=True))
+
         if substrate.poi is not None:
             np.savez_compressed(
                 cache_dir / "poi.npz",
@@ -328,10 +389,7 @@ class SubstrateBuilder:
             cell_size_m=float(grid_npz["cell_size_m"][0]),
         )
         neighbours = NeighbourSets(travel_time_s=sp.load_npz(cache_dir / "neighbours.npz").tocsr())
-        if (cache_dir / "meta.json").exists():
-            meta = json.loads((cache_dir / "meta.json").read_text())
-        else:
-            meta = {}
+        meta = json.loads((cache_dir / "meta.json").read_text())
 
         poi = None
         if (cache_dir / "poi.npz").exists():
@@ -341,9 +399,12 @@ class SubstrateBuilder:
                 feature_names=[str(s) for s in list(poi_npz["feature_names"])],
             )
 
+        graphml_cache = cache_dir / "graph.graphml"
+        graphml_path = str(graphml_cache) if graphml_cache.exists() else meta.get("graphml_path")
+
         return Substrate(
             grid=grid,
             neighbours=neighbours,
             poi=poi,
-            graphml_path=meta.get("graphml_path"),
+            graphml_path=graphml_path,
         )

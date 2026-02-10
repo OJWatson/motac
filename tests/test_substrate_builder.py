@@ -76,9 +76,15 @@ def test_build_grid_neighbours_and_cache(tmp_path: Path) -> None:
     assert np.isclose(s.poi.x.sum(), 2.0)
 
     # cache written
+    assert (cache_dir / "graph.graphml").exists()
     assert (cache_dir / "grid.npz").exists()
     assert (cache_dir / "neighbours.npz").exists()
+    assert (cache_dir / "meta.json").exists()
     assert (cache_dir / "poi.npz").exists()
+
+    meta = json.loads((cache_dir / "meta.json").read_text())
+    assert meta["cache_format_version"] == 1
+    assert meta["config_sha256"]
 
     # load from cache yields same sizes
     s2 = SubstrateBuilder(cfg).build()
