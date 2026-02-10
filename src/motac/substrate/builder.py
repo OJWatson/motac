@@ -394,7 +394,8 @@ class SubstrateBuilder:
         version = meta.get("cache_format_version")
         if version != self.CACHE_FORMAT_VERSION:
             raise ValueError(
-                f"Unsupported substrate cache format version: {version} (expected {self.CACHE_FORMAT_VERSION})"
+                "Unsupported substrate cache format version: "
+                f"{version} (expected {self.CACHE_FORMAT_VERSION})"
             )
 
         poi = None
