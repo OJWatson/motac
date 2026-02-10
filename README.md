@@ -2,18 +2,15 @@
 
 Road-constrained spatio-temporal Hawkes processes for event forecasting on road networks.
 
-This repository is being realigned to the original project PDF spec ("Road-Constrained Spatio-Temporal Hawkes").
-The near-term goal is a clean, reproducible MVP: **build a road substrate → fit a parametric Hawkes count model → forecast → evaluate via rolling backtests**.
-
-- Documentation (GitHub Pages): https://ojwatson.github.io/motac
-- Spec gap review: [`spec_review_vs_pdf.md`](spec_review_vs_pdf.md)
-- Milestones / acceptance criteria: [`milestones_v2.md`](milestones_v2.md)
+- Documentation: https://ojwatson.github.io/motac
+- Paper artefact: [`paper/`](paper/)
+- Spec gap review (PDF vs repo): [`spec_review_vs_pdf.md`](spec_review_vs_pdf.md)
 
 ## Install
 
 Requirements: Python 3.11+
 
-Using `uv` (recommended):
+Using [`uv`](https://github.com/astral-sh/uv) (recommended):
 
 ```bash
 git clone https://github.com/OJWatson/motac
@@ -27,19 +24,15 @@ Run the CLI:
 uv run motac --help
 ```
 
-## Minimal quickstart (simulation → fit → forecast)
+## Quickstart (simulation → fit → forecast)
 
-The current codebase includes a lightweight discrete-time Hawkes-like simulator and Poisson MLE fitting utilities.
-
-### CLI
-
-Fit an exponential kernel Hawkes model to a saved simulation parquet:
+Fit an exponential-kernel Hawkes model to a saved simulator parquet:
 
 ```bash
 uv run motac sim fit-kernel --parquet sim.parquet --n-lags 6
 ```
 
-Forecast from an observed count matrix (CSV rows=locations, cols=time):
+Forecast from an observed count matrix (CSV with rows=locations, cols=time):
 
 ```bash
 uv run motac sim forecast-observed \
@@ -50,7 +43,7 @@ uv run motac sim forecast-observed \
   --false-rate 0.2
 ```
 
-### Python
+Python API (deterministic multi-step intensity forecast):
 
 ```python
 import numpy as np
@@ -73,7 +66,7 @@ lam = predict_hawkes_intensity_multi_step(world=world, params=params, y_history=
 assert lam.shape == (world.n_locations, 7)
 ```
 
-## Documentation
+## Docs
 
 Build the docs locally:
 
@@ -84,27 +77,23 @@ make html
 # open docs/_build/html/index.html
 ```
 
-## Status (milestones v2)
+## Reproducibility
 
-This section tracks progress against [`milestones_v2.md`](milestones_v2.md).
+See [`paper/README.md`](paper/README.md) for the current artefact / reproduction entrypoints.
 
-- **M0 — Project reset + spec alignment:** IN PROGRESS
-  - Spec review checked in: ✅
-  - README rewritten (user-facing): ✅
-  - Docs scaffold (Sphinx + API pages + tutorial placeholders): ✅
-  - Canonical schema module (`EventRecord`/`EventTable` + validation): ⏳ (next)
+## Development
 
-- **M1 — Substrate artefacts v1:** PLANNED
-- **M2 — POIs + baseline features v1:** PLANNED
-- **M3 — Parametric road-constrained Hawkes (counts) v1:** PLANNED
-- **M4 — Simulator v2:** PLANNED
-- **M5 — Evaluation harness:** PLANNED
-- **M6 — Chicago benchmark:** PLANNED
-- **M7 — ACLED Gaza benchmark:** PLANNED
-- **M8 — Neural kernel:** PLANNED
-- **M9 — Paper-grade artefact:** PLANNED
-- **M10 — Docs site + executed tutorials:** PARTIAL (site scaffold in place; executed notebooks planned)
+Run tests and lint:
+
+```bash
+uv run pytest
+uv run ruff check .
+```
+
+## License
+
+TBD.
 
 ## Citation
 
-**TODO:** add a proper citation entry once the paper artefact is in place.
+TBD (will be added once a paper/preprint is available).
