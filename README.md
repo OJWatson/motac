@@ -26,6 +26,10 @@ uv run motac --help
 
 ## Quickstart (simulation → fit → forecast)
 
+Canonical data schema (used by dataset loaders) lives in `motac.schema`:
+- `EventRecord`
+- `EventTable`
+
 Fit an exponential-kernel Hawkes model to a saved simulator parquet:
 
 ```bash

@@ -68,6 +68,9 @@ class EventTable:
     @staticmethod
     def from_records(records: Iterable[EventRecord]) -> EventTable:
         recs = list(records)
+        if len(recs) == 0:
+            raise ValueError("records must be non-empty")
+
         t = np.asarray([_as_datetime64_day(r.t) for r in recs], dtype="datetime64[D]")
         lat = np.asarray([r.lat for r in recs], dtype=float)
         lon = np.asarray([r.lon for r in recs], dtype=float)
@@ -95,17 +98,6 @@ class EventTable:
 
     def validate(self) -> None:
         """Validate this table (raises ValueError if invalid)."""
-
-        validate_event_table(self)
-
-    def validate(self) -> None:
-        """Validate this table.
-
-        Raises
-        ------
-        ValueError
-            If the table is invalid.
-        """
 
         validate_event_table(self)
 
@@ -140,7 +132,12 @@ def validate_event_record(e: EventRecord) -> None:
 def validate_event_table(tbl: EventTable) -> None:
     """Raise ``ValueError`` if an event table is invalid."""
 
-    for name, a in ("t", tbl.t), ("lat", tbl.lat), ("lon", tbl.lon), ("value", tbl.value):
+    for name, a in (
+        ("t", tbl.t),
+        ("lat", tbl.lat),
+        ("lon", tbl.lon),
+        ("value", tbl.value),
+    ):
         if not isinstance(a, np.ndarray):
             raise ValueError(f"{name} must be a numpy array")
         if a.ndim != 1:
@@ -170,11 +167,11 @@ def validate_event_table(tbl: EventTable) -> None:
     if tbl.meta is not None and len(tbl.meta) != n:
         raise ValueError("meta must have length n_events")
 
-    # Spot-check mark/meta types if present.
     if tbl.mark is not None:
         for m in tbl.mark:
             if m is not None and (not isinstance(m, str) or m == ""):
                 raise ValueError("mark entries must be non-empty strings or None")
+
     if tbl.meta is not None:
         for m in tbl.meta:
             if m is not None and not isinstance(m, Mapping):

@@ -6,12 +6,9 @@ __pycache__/
 .mypy_cache/
 .DS_Store
 
-# Sphinx
+# Sphinx build output
 docs/_build/
 
 # OpenClaw local status (do not commit)
 .openclaw/
-
-# Sphinx build output
-/docs/_build/
 
