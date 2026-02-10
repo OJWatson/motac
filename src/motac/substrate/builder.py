@@ -391,6 +391,12 @@ class SubstrateBuilder:
         neighbours = NeighbourSets(travel_time_s=sp.load_npz(cache_dir / "neighbours.npz").tocsr())
         meta = json.loads((cache_dir / "meta.json").read_text())
 
+        version = meta.get("cache_format_version")
+        if version != self.CACHE_FORMAT_VERSION:
+            raise ValueError(
+                f"Unsupported substrate cache format version: {version} (expected {self.CACHE_FORMAT_VERSION})"
+            )
+
         poi = None
         if (cache_dir / "poi.npz").exists():
             poi_npz = np.load(cache_dir / "poi.npz", allow_pickle=True)

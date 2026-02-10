@@ -92,3 +92,29 @@ def test_build_grid_neighbours_and_cache(tmp_path: Path) -> None:
     assert s2.neighbours.travel_time_s.nnz == s.neighbours.travel_time_s.nnz
     assert s2.poi is not None
     assert np.allclose(s2.poi.x, s.poi.x)
+
+
+def test_cache_format_version_mismatch_raises(tmp_path: Path) -> None:
+    graphml = tmp_path / "tiny.graphml"
+    _write_tiny_graphml(graphml)
+
+    cache_dir = tmp_path / "cache"
+    cfg = SubstrateConfig(
+        graphml_path=str(graphml),
+        cell_size_m=100.0,
+        max_travel_time_s=61.0,
+        disable_pois=True,
+        cache_dir=str(cache_dir),
+    )
+
+    _ = SubstrateBuilder(cfg).build()
+
+    meta_path = cache_dir / "meta.json"
+    meta = json.loads(meta_path.read_text())
+    meta["cache_format_version"] = 999
+    meta_path.write_text(json.dumps(meta))
+
+    import pytest
+
+    with pytest.raises(ValueError, match="cache format version"):
+        _ = SubstrateBuilder(cfg).build()
