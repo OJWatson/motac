@@ -1,10 +1,6 @@
 """Simulation utilities.
 
-Milestones
-----------
-M2: Discrete-time simulator for a network-coupled Hawkes-like count process.
-M4: Parametric prediction API for one-step and multi-step intensity forecasts
-    given a history of counts.
+Discrete-time Hawkes-like simulation, fitting, and forecasting helpers.
 """
 
 from __future__ import annotations
