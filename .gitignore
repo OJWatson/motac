@@ -8,3 +8,7 @@ __pycache__/
 
 # OpenClaw local status (do not commit)
 .openclaw/
+
+# Sphinx build output
+/docs/_build/
+
