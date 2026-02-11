@@ -13,6 +13,8 @@ from .eval import EvalConfig, evaluate_synthetic
 from .model import (
     RoadHawkesDataset,
     fit_road_hawkes_mle,
+    predict_intensity_in_sample,
+    predict_intensity_next_step,
     predict_intensity_one_step_road,
     road_loglik,
 )
@@ -28,6 +30,8 @@ __all__ = [
     "load_acled_events_csv",
     "RoadHawkesDataset",
     "predict_intensity_one_step_road",
+    "predict_intensity_in_sample",
+    "predict_intensity_next_step",
     "road_loglik",
     "fit_road_hawkes_mle",
     "NeuralIntensityBaseline",
