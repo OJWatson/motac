@@ -64,3 +64,49 @@ def min_travel_time_to_mask(
             out[i] = float(np.min(ts[sel]))
 
     return out
+
+
+def min_travel_time_feature_matrix(
+    *,
+    travel_time_s: sp.csr_matrix,
+    masks: dict[str, np.ndarray],
+    default: float,
+    suffix: str = "min_travel_time_s",
+) -> tuple[np.ndarray, list[str]]:
+    """Compute a feature matrix of min travel times for multiple target masks.
+
+    Parameters
+    ----------
+    travel_time_s:
+        CSR travel-time matrix.
+    masks:
+        Dict mapping feature prefix -> boolean mask of target cells.
+    default:
+        Default value if no target is reachable.
+    suffix:
+        Suffix appended to each feature name.
+
+    Returns
+    -------
+    x:
+        Array of shape (n_cells, n_features).
+    names:
+        Feature names in order.
+    """
+
+    names: list[str] = []
+    cols: list[np.ndarray] = []
+    for prefix, mask in masks.items():
+        col = min_travel_time_to_mask(
+            travel_time_s=travel_time_s,
+            mask=mask,
+            default=default,
+        )
+        cols.append(col.reshape(-1, 1))
+        names.append(f"{prefix}_{suffix}")
+
+    if len(cols) == 0:
+        n = int(travel_time_s.shape[0])
+        return np.zeros((n, 0), dtype=float), []
+
+    return np.concatenate(cols, axis=1), names

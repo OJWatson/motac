@@ -333,20 +333,46 @@ class SubstrateBuilder:
             x_total[int(cell), 0] = float(c)
         x_parts.append(x_total)
 
-        # Optional travel-time feature: min travel time to any POI cell.
+        # Optional travel-time features: min travel time to any POI cell, and
+        # (when available) to each selected POI breakout.
         if bool(self.config.poi_travel_time_features):
-            from .features import min_travel_time_to_mask
+            from .features import min_travel_time_feature_matrix
 
-            has_poi = x_total[:, 0] > 0
             default = float(self.config.max_travel_time_s)
-            min_tt = min_travel_time_to_mask(
-                travel_time_s=neighbours.travel_time_s,
-                mask=has_poi,
-                default=default,
-            ).reshape(-1, 1)
 
-            feature_names.append("poi_min_travel_time_s")
-            x_parts.append(min_tt)
+            masks: dict[str, np.ndarray] = {"poi": x_total[:, 0] > 0}
+
+            # For breakouts, the last len(feature_cols_filtered) x_parts correspond
+            # to the added tag columns; derive masks by re-computing counts on the
+            # fly to keep naming aligned.
+            for k, vv in feature_cols:
+                if k not in poi_utm.columns:
+                    continue
+
+                col = poi_utm[k]
+                if vv is None:
+                    mask_rows = col.notna()
+                    prefix = f"poi_{k}"
+                else:
+                    mask_rows = col.astype(str) == vv
+                    prefix = f"poi_{k}={vv}"
+
+                counts = poi_utm.loc[mask_rows].groupby("cell").size()
+                has = np.zeros((len(grid.lat),), dtype=bool)
+                for cell, c in counts.items():
+                    if int(c) > 0:
+                        has[int(cell)] = True
+                masks[prefix] = has
+
+            x_tt, names_tt = min_travel_time_feature_matrix(
+                travel_time_s=neighbours.travel_time_s,
+                masks=masks,
+                default=default,
+                suffix="min_travel_time_s",
+            )
+
+            x_parts.append(x_tt)
+            feature_names.extend(names_tt)
 
         # Breakouts by tag.
         for k, vv in feature_cols:
