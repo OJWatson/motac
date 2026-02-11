@@ -13,6 +13,8 @@ from .eval import EvalConfig, evaluate_synthetic
 from .model import (
     RoadHawkesDataset,
     fit_road_hawkes_mle,
+    forecast_intensity_horizon,
+    mean_negative_log_likelihood,
     predict_intensity_in_sample,
     predict_intensity_next_step,
     predict_intensity_one_step_road,
@@ -32,6 +34,8 @@ __all__ = [
     "predict_intensity_one_step_road",
     "predict_intensity_in_sample",
     "predict_intensity_next_step",
+    "forecast_intensity_horizon",
+    "mean_negative_log_likelihood",
     "road_loglik",
     "fit_road_hawkes_mle",
     "NeuralIntensityBaseline",
