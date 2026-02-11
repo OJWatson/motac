@@ -8,3 +8,6 @@ __pycache__/
 
 # Sphinx build output
 docs/_build/
+
+# Local assistant metadata (never commit)
+.openclaw/
