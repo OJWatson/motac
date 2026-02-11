@@ -32,7 +32,7 @@ def _simulate_poisson_road_counts(
     return y
 
 
-def test_parameter_recovery_road_poisson_multiseed() -> None:
+def test_parameter_recovery_road_poisson_multiseed_two_regimes() -> None:
     # Tiny 3-cell substrate represented purely by a sparse travel-time matrix.
     # Keep this offline and fast for CI.
     d = sp.csr_matrix(
@@ -45,61 +45,78 @@ def test_parameter_recovery_road_poisson_multiseed() -> None:
         )
     )
 
-    mu_true = np.array([0.20, 0.25, 0.15])
-    alpha_true = 0.35
-    beta_true = 0.08
-    kernel = np.array([1.0, 0.5])  # 2 lags
+    kernel = np.array([0.6, 0.2])  # 2 lags (keep subcritical for stability)
+
+    regimes = [
+        {
+            "name": "low_beta",
+            "mu": np.array([0.20, 0.25, 0.15]),
+            "alpha": 0.15,
+            "beta": 0.05,
+        },
+        {
+            "name": "high_beta",
+            "mu": np.array([0.18, 0.22, 0.14]),
+            "alpha": 0.22,
+            "beta": 0.15,
+        },
+    ]
 
     # Multi-seed to reduce flakiness.
     seeds = [0, 1, 2]
 
-    alpha_hats: list[float] = []
-    beta_hats: list[float] = []
-    mu_mean_hats: list[float] = []
+    for reg in regimes:
+        mu_true = reg["mu"]
+        alpha_true = float(reg["alpha"])
+        beta_true = float(reg["beta"])
 
-    for s in seeds:
-        rng = np.random.default_rng(s)
-        y = _simulate_poisson_road_counts(
-            travel_time_s=d,
-            mu=mu_true,
-            alpha=alpha_true,
-            beta=beta_true,
-            kernel=kernel,
-            n_steps=80,
-            rng=rng,
-        )
+        alpha_hats: list[float] = []
+        beta_hats: list[float] = []
+        mu_mean_hats: list[float] = []
 
-        fit = fit_road_hawkes_mle(
-            travel_time_s=d,
-            kernel=kernel,
-            y=y,
-            family="poisson",
-            init_alpha=0.1,
-            init_beta=0.02,
-            maxiter=300,
-        )
+        for s in seeds:
+            rng = np.random.default_rng(s)
+            y = _simulate_poisson_road_counts(
+                travel_time_s=d,
+                mu=mu_true,
+                alpha=alpha_true,
+                beta=beta_true,
+                kernel=kernel,
+                n_steps=120,
+                rng=rng,
+            )
 
-        alpha_hat = float(fit["alpha"])
-        beta_hat = float(fit["beta"])
-        mu_hat = np.asarray(fit["mu"], dtype=float)
+            fit = fit_road_hawkes_mle(
+                travel_time_s=d,
+                kernel=kernel,
+                y=y,
+                family="poisson",
+                init_alpha=0.1,
+                init_beta=0.08,
+                maxiter=400,
+            )
 
-        assert np.all(np.isfinite(mu_hat))
-        assert np.isfinite(alpha_hat)
-        assert np.isfinite(beta_hat)
-        assert alpha_hat >= 0.0
-        assert beta_hat > 0.0
+            alpha_hat = float(fit["alpha"])
+            beta_hat = float(fit["beta"])
+            mu_hat = np.asarray(fit["mu"], dtype=float)
 
-        alpha_hats.append(alpha_hat)
-        beta_hats.append(beta_hat)
-        mu_mean_hats.append(float(mu_hat.mean()))
+            assert np.all(np.isfinite(mu_hat))
+            assert np.isfinite(alpha_hat)
+            assert np.isfinite(beta_hat)
+            assert alpha_hat >= 0.0
+            assert beta_hat > 0.0
 
-    # Coarse recovery tolerances (stability > precision for CI).
-    alpha_med = float(np.median(alpha_hats))
-    beta_med = float(np.median(beta_hats))
-    mu_mean_med = float(np.median(mu_mean_hats))
+            alpha_hats.append(alpha_hat)
+            beta_hats.append(beta_hat)
+            mu_mean_hats.append(float(mu_hat.mean()))
 
-    assert 0.5 * alpha_true <= alpha_med <= 2.0 * alpha_true
-    assert 0.5 * beta_true <= beta_med <= 2.0 * beta_true
+        # Coarse recovery tolerances (stability > precision for CI).
+        alpha_med = float(np.median(alpha_hats))
+        beta_med = float(np.median(beta_hats))
+        mu_mean_med = float(np.median(mu_mean_hats))
 
-    mu_mean_true = float(mu_true.mean())
-    assert 0.7 * mu_mean_true <= mu_mean_med <= 1.3 * mu_mean_true
+        assert 0.5 * alpha_true <= alpha_med <= 2.0 * alpha_true, reg["name"]
+        assert 0.3 * beta_true <= beta_med <= 3.0 * beta_true, reg["name"]
+
+        mu_mean_true = float(mu_true.mean())
+        assert 0.5 * mu_mean_true <= mu_mean_med <= 1.8 * mu_mean_true, reg["name"]

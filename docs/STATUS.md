@@ -7,10 +7,13 @@ updatedAtUtc: 2026-02-11T19:37:43Z
 ```
 
 ## Next step
-- Land an offline multi-seed parameter-recovery test on a tiny substrate/graph:
-  - simulate counts from known parameters using the sparse road kernel,
-  - fit with the MLE entrypoint,
-  - assert recovered parameters are within coarse tolerances.
+- Parameter-recovery test is landed (multi-seed, tiny offline road matrix).
+- Next: decide whether M3 DoD is met; if not, extend coverage to:
+  - Negative Binomial recovery (fit with `family=negbin` on simulated data), or
+  - add a minimal predict wrapper for next-step intensity/in-sample intensity.
+
+Notes on the test:
+- Uses median-over-seeds with coarse tolerances to reduce CI flakiness.
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.
