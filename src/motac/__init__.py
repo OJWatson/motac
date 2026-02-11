@@ -7,9 +7,8 @@ road-network-constrained Hawkes models, simulators, and benchmarks.
 from __future__ import annotations
 
 from ._version import __version__
-from .acled import AcledData, load_acled_events_csv
-from .chicago import ChicagoData, load_y_obs_matrix
 from .eval import EvalConfig, evaluate_synthetic
+from .loaders import AcledData, ChicagoData, load_acled_events_csv, load_y_obs_matrix
 from .model import (
     RoadHawkesDataset,
     fit_road_hawkes_mle,
