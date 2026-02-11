@@ -1,9 +1,9 @@
 ```pm-status
 milestone: M4
-state: running
-headSha: 8add516adf501d5b838a5f5a88b2c3ac81b240e4
-ciRunUrl: https://github.com/OJWatson/motac/actions/runs/21923679996, https://github.com/OJWatson/motac/actions/runs/21923679984, https://github.com/OJWatson/motac/actions/runs/21923679787
-updatedAtUtc: 2026-02-11T21:28:37Z
+state: waiting-for-ci
+headSha: 7ad07d7cddf90a2383d719586c85c51de57376f4
+ciRunUrl: https://github.com/OJWatson/motac/actions/runs/21924198882
+updatedAtUtc: 2026-02-11T21:43:27Z
 ```
 
 ## Status
@@ -11,9 +11,11 @@ updatedAtUtc: 2026-02-11T21:28:37Z
 - Note: `forecast_intensity_horizon` + `mean_negative_log_likelihood` landed early; this work belongs to **M5** per `docs/ROADMAP.md` and will be treated as an early M5 slice.
 
 ## Next step (M4)
-- Package layout (structure-first): introduce/confirm clear top-level module separation for:
-  - loaders/schema, substrate, models, inference, sim, eval, cli, configs.
-- Update `docs/ROADMAP.md` only if any deliberate deviations are introduced.
+- Continue package layout separation (structure-first):
+  - decide next boundary to extract (e.g. `eval/` or `inference/`),
+  - keep stable imports (re-export stubs as needed),
+  - add/update a small test if import paths change.
+- Keep `docs/spec_alignment.md` and `docs/architecture.md` in sync.
 
 ## Next step (after M4, M5 continuation)
 - Add an end-to-end toy example (fit -> forecast -> score) as a unit test.
