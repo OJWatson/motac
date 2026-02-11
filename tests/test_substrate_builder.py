@@ -58,6 +58,7 @@ def test_build_grid_neighbours_and_cache(tmp_path: Path) -> None:
         cell_size_m=100.0,
         max_travel_time_s=61.0,  # should reach immediate neighbour only
         poi_geojson_path=str(poi_path),
+        poi_tags={"amenity": ["cafe"]},
         cache_dir=str(cache_dir),
     )
 
@@ -69,11 +70,12 @@ def test_build_grid_neighbours_and_cache(tmp_path: Path) -> None:
     # diagonal present
     assert mat.diagonal().min() == 0.0
 
-    # POI count feature exists
+    # POI features exist
     assert s.poi is not None
     assert s.poi.x.shape[0] == len(s.grid.lat)
-    assert s.poi.x.shape[1] == 1
-    assert np.isclose(s.poi.x.sum(), 2.0)
+    assert "poi_count" in s.poi.feature_names
+    # total count across grid equals number of POIs
+    assert np.isclose(s.poi.x[:, s.poi.feature_names.index("poi_count")].sum(), 2.0)
 
     # cache written
     assert (cache_dir / "graph.graphml").exists()
@@ -91,6 +93,7 @@ def test_build_grid_neighbours_and_cache(tmp_path: Path) -> None:
     assert len(s2.grid.lat) == len(s.grid.lat)
     assert s2.neighbours.travel_time_s.nnz == s.neighbours.travel_time_s.nnz
     assert s2.poi is not None
+    assert s2.poi.feature_names == s.poi.feature_names
     assert np.allclose(s2.poi.x, s.poi.x)
 
 

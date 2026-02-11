@@ -307,12 +307,54 @@ class SubstrateBuilder:
         _, idx = tree.query(poi_xy, k=1)
         poi_utm["cell"] = idx.astype(int)
 
-        # feature: count POIs (and optionally by tag key=value)
+        # Features: total POI count + (optional) counts by selected tag key/value.
+        #
+        # If `config.poi_tags` is provided, we interpret it as a *selection* of
+        # columns/values to break out into separate features. This works for both
+        # downloaded OSM features and local GeoJSON (as long as properties are present).
+        feature_cols: list[tuple[str, str | None]] = []
+        tags = self.config.poi_tags
+        if isinstance(tags, dict):
+            for k, v in tags.items():
+                if v is True:
+                    feature_cols.append((str(k), None))
+                elif isinstance(v, (list, tuple, set)):
+                    for vv in v:
+                        feature_cols.append((str(k), str(vv)))
+
+        # Always include total count.
         feature_names = ["poi_count"]
-        x = np.zeros((len(grid.lat), 1), dtype=float)
-        counts = poi_utm.groupby("cell").size()
-        for cell, c in counts.items():
-            x[int(cell), 0] = float(c)
+        x_parts: list[np.ndarray] = []
+
+        x_total = np.zeros((len(grid.lat), 1), dtype=float)
+        counts_total = poi_utm.groupby("cell").size()
+        for cell, c in counts_total.items():
+            x_total[int(cell), 0] = float(c)
+        x_parts.append(x_total)
+
+        # Breakouts by tag.
+        for k, vv in feature_cols:
+            if k not in poi_utm.columns:
+                continue
+            col = poi_utm[k]
+            if vv is None:
+                mask = col.notna()
+                name = k
+            else:
+                mask = col.astype(str) == vv
+                name = f"{k}={vv}"
+
+            counts = poi_utm.loc[mask].groupby("cell").size()
+            xi = np.zeros((len(grid.lat), 1), dtype=float)
+            for cell, c in counts.items():
+                xi[int(cell), 0] = float(c)
+            x_parts.append(xi)
+            feature_names.append(name)
+
+        if x_parts:
+            x = np.concatenate(x_parts, axis=1)
+        else:
+            x = np.zeros((len(grid.lat), 0), dtype=float)
         return POIFeatures(x=x, feature_names=feature_names)
 
     # -------------------------- cache -----------------------
