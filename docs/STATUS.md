@@ -1,9 +1,9 @@
 ```pm-status
 milestone: M3
 state: running
-headSha: 357d779163b35662333c7926618e4dc7281d24f4
-ciRunUrl: https://github.com/OJWatson/motac/actions/runs/21916380859
-updatedAtUtc: 2026-02-11T17:56:47Z
+headSha: f6cf59b9029744cb5c284ebff89d9778384c654b
+ciRunUrl: https://github.com/OJWatson/motac/actions/runs/21916684805, https://github.com/OJWatson/motac/actions/runs/21916684848
+updatedAtUtc: 2026-02-11T18:04:51Z
 ```
 
 ## Next step
