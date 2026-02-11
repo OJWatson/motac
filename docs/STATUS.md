@@ -1,9 +1,9 @@
 ```pm-status
 milestone: M4
-state: waiting-for-ci
+state: running
 headSha: 8add516adf501d5b838a5f5a88b2c3ac81b240e4
-ciRunUrl: https://github.com/OJWatson/motac/actions/runs/21923665484
-updatedAtUtc: 2026-02-11T21:26:15Z
+ciRunUrl: https://github.com/OJWatson/motac/actions/runs/21923679996, https://github.com/OJWatson/motac/actions/runs/21923679984, https://github.com/OJWatson/motac/actions/runs/21923679787
+updatedAtUtc: 2026-02-11T21:28:37Z
 ```
 
 ## Status
