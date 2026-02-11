@@ -71,11 +71,24 @@ relevant keys).
 }
 ```
 
-### Travel-time-to-nearest-POI
+### Travel-time-to-nearest-POI (min travel time)
 
-M2 v1 currently provides **count-based** POI features only. If you need
-travel-time-to-nearest-POI features, add them as a follow-on feature (and bump
-cache format if treated as breaking).
+If `SubstrateConfig.poi_travel_time_features=true`, the builder appends
+travel-time-based features computed from the sparse neighbourhood matrix
+`neighbours.travel_time_s`:
+
+- `poi_min_travel_time_s`: minimum travel time (seconds) from each cell to *any*
+  cell that contains at least one POI.
+
+If `poi_tags` defines breakout categories, we also add category-specific
+features using the same naming convention as the count breakouts:
+
+- `poi_<tag>_min_travel_time_s` for `<tag>: True` (e.g. `poi_amenity_min_travel_time_s`)
+- `poi_<tag>=<value>_min_travel_time_s` for `<tag>: [values]`
+  (e.g. `poi_amenity=school_min_travel_time_s`)
+
+If no POI target is reachable for a cell within the cached neighbourhood cutoff,
+we set the feature to `max_travel_time_s`.
 
 ---
 
