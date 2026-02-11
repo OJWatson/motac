@@ -1,9 +1,9 @@
 ```pm-status
 milestone: M3
 state: running
-headSha: 683e1a55638a195a7de74b3364bbd762f70a6a08
-ciRunUrl: https://github.com/OJWatson/motac/actions/runs/21916972221, https://github.com/OJWatson/motac/actions/runs/21916972228
-updatedAtUtc: 2026-02-11T18:09:59Z
+headSha: a9e2039ec83489275353ee44f1e38be14098824e
+ciRunUrl: https://github.com/OJWatson/motac/actions/runs/21915687990
+updatedAtUtc: 2026-02-11T18:17:57Z
 ```
 
 ## Next step
@@ -13,5 +13,5 @@ updatedAtUtc: 2026-02-11T18:09:59Z
   - assert recovered parameters are within coarse tolerances.
 
 ## Notes
-- Documentation build for this push: https://github.com/OJWatson/motac/actions/runs/21916380831
+- Documentation builds are tracked in CI; the status header points at the last meaningful code gate.
 - Keep commits small and CI-gated; update this file on each push/gate.
