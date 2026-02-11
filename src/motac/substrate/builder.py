@@ -56,6 +56,7 @@ class SubstrateConfig:
     disable_pois: bool = False
     poi_tags: dict[str, Any] | None = None
     poi_geojson_path: str | None = None
+    poi_travel_time_features: bool = False
 
     # caching
     cache_dir: str | None = None
@@ -107,7 +108,7 @@ class SubstrateBuilder:
         neighbours = self._build_neighbours(G, grid)
         poi = None
         if not self.config.disable_pois:
-            poi = self._build_pois(grid)
+            poi = self._build_pois(grid, neighbours)
 
         # If caching, always persist a GraphML copy so the cache is self-contained.
         if cache_dir:
@@ -253,7 +254,7 @@ class SubstrateBuilder:
         return NeighbourSets(travel_time_s=mat)
 
     # -------------------------- POIs ------------------------
-    def _build_pois(self, grid):
+    def _build_pois(self, grid, neighbours):
         import geopandas as gpd
         from shapely.geometry import shape
 
@@ -332,6 +333,21 @@ class SubstrateBuilder:
             x_total[int(cell), 0] = float(c)
         x_parts.append(x_total)
 
+        # Optional travel-time feature: min travel time to any POI cell.
+        if bool(self.config.poi_travel_time_features):
+            from .features import min_travel_time_to_mask
+
+            has_poi = x_total[:, 0] > 0
+            default = float(self.config.max_travel_time_s)
+            min_tt = min_travel_time_to_mask(
+                travel_time_s=neighbours.travel_time_s,
+                mask=has_poi,
+                default=default,
+            ).reshape(-1, 1)
+
+            feature_names.append("poi_min_travel_time_s")
+            x_parts.append(min_tt)
+
         # Breakouts by tag.
         for k, vv in feature_cols:
             if k not in poi_utm.columns:
@@ -394,6 +410,7 @@ class SubstrateBuilder:
             "disable_pois": self.config.disable_pois,
             "poi_tags": self.config.poi_tags,
             "poi_geojson_path": self.config.poi_geojson_path,
+            "poi_travel_time_features": self.config.poi_travel_time_features,
         }
         cfg_json = json.dumps(cfg_dict, sort_keys=True, separators=(",", ":")).encode("utf-8")
         cfg_hash = hashlib.sha256(cfg_json).hexdigest()
