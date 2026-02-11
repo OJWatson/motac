@@ -10,7 +10,12 @@ from ._version import __version__
 from .acled import AcledData, load_acled_events_csv
 from .chicago import ChicagoData, load_y_obs_matrix
 from .eval import EvalConfig, evaluate_synthetic
-from .model import RoadHawkesDataset, predict_intensity_one_step_road
+from .model import (
+    RoadHawkesDataset,
+    fit_road_hawkes_mle,
+    predict_intensity_one_step_road,
+    road_loglik,
+)
 from .neural import NeuralIntensityBaseline
 
 __all__ = [
@@ -23,5 +28,7 @@ __all__ = [
     "load_acled_events_csv",
     "RoadHawkesDataset",
     "predict_intensity_one_step_road",
+    "road_loglik",
+    "fit_road_hawkes_mle",
     "NeuralIntensityBaseline",
 ]
