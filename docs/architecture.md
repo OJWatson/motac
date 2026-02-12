@@ -17,3 +17,4 @@ This document describes the intended package/module separation.
 
 - Loaders moved under `motac.loaders` with backwards-compatible re-exports from
   `motac.acled` and `motac.chicago` to avoid breaking imports.
+- Evaluation module moved to a package: `motac.eval` is now a subpackage.

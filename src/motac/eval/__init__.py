@@ -5,7 +5,7 @@ from dataclasses import asdict, dataclass
 
 import numpy as np
 
-from .sim import (
+from ..sim import (
     HawkesDiscreteParams,
     discrete_exponential_kernel,
     fit_hawkes_mle_alpha_mu_beta,
@@ -13,7 +13,7 @@ from .sim import (
     sample_hawkes_predictive_paths,
     simulate_hawkes_counts,
 )
-from .sim.world import generate_random_world
+from ..sim.world import generate_random_world
 
 
 @dataclass(frozen=True, slots=True)
