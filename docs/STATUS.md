@@ -1,9 +1,9 @@
 ```pm-status
 milestone: M5
 state: running
-headSha: c647b5d41c50df3ddf8d194d1eb391d1959d3e52
-ciRunUrl: https://github.com/OJWatson/motac/actions/runs/21937018719
-updatedAtUtc: 2026-02-12T07:29:00Z
+headSha: 0855815b0e1e24a05ae0052c0fb0b6f5460d4ce1
+ciRunUrl: https://github.com/OJWatson/motac/actions?query=branch%3Amain
+updatedAtUtc: 2026-02-12T07:51:58Z
 ```
 
 ## Status
@@ -18,8 +18,7 @@ updatedAtUtc: 2026-02-12T07:29:00Z
 - M5 is **in progress**.
 
 ## Next step (M5)
-- Confirm M5 DoD is satisfied (minimal predict/eval utilities + toy tests).
-  - Added a tiny backtest helper wiring fit→forecast→NLL (`motac.eval.backtest_fit_forecast_nll`) + unit test.
+- Wait for CI on `0855815` to go green, then (if still satisfied) mark M5 complete and advance STATUS to M6.
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.
