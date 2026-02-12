@@ -3,7 +3,7 @@ milestone: M12
 state: running
 headSha: 4db512497db12e9b7e29f875d7f806096362a380
 ciRunUrl: https://github.com/OJWatson/motac/actions?query=branch%3Amain
-updatedAtUtc: 2026-02-12T16:20:58Z
+updatedAtUtc: 2026-02-12T16:42:30Z
 ```
 
 ## Status
@@ -45,9 +45,14 @@ updatedAtUtc: 2026-02-12T16:20:58Z
   - Synthetic eval JSON artefact now includes a minimal manifest (SHA/seed/config summary/timestamp).
   - Unit tests cover artefact write + manifest contract.
 
-## Next step (M12)
-- Implement deterministic substrate cache bundle write/load (see `docs/ROADMAP.md` → M12).
-  - Add an offline unit test that validates expected cache files + provenance/config hash.
+## M12 — Substrate cache artefacts v1 (implementation)
+- **Complete**:
+  - Deterministic substrate cache bundle writes/loads via `motac.substrate.builder.SubstrateBuilder`.
+  - Offline unit test validates expected cache files + provenance/config hash.
+
+## Next step (M2)
+- Implement POIs + baseline features v1 (see `docs/ROADMAP.md` → M2).
+  - Start with a minimal, offline unit test for one concrete POI feature contract and wire it through the substrate feature helpers.
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.
