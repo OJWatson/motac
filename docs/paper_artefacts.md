@@ -18,14 +18,27 @@ motac paper generate-artifacts --out-dir paper/artifacts --seed 7
 
 This writes:
 
-- `paper/artifacts/synthetic_eval_seed7.json`
+- `paper/artifacts/synthetic_eval_seed7.json` — the artefact payload (**contract is stable**)
+- `paper/artifacts/synthetic_eval_seed7.manifest.json` — small manifest (provenance + indexing)
 
-with keys:
+### Artefact payload (`synthetic_eval_seed7.json`)
+
+Keys (payload contract):
 
 - `config` — the evaluation configuration used
 - `fit` — fitted parameters / fit diagnostics
 - `forecasts` — forecast summaries for a small horizon
 - `metrics` — basic scalar metrics
+
+### Manifest (`synthetic_eval_seed7.manifest.json`)
+
+Keys:
+
+- `artifact` — artefact filename (e.g. `synthetic_eval_seed7.json`)
+- `gitSha` — git SHA at generation time
+- `seed` — seed used
+- `configSummary` — a copy of the payload `config` (small, JSON-serialisable)
+- `generatedAtUtc` — generation timestamp (UTC, ISO-8601)
 
 Python module entry point (equivalent):
 
