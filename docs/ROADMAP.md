@@ -86,3 +86,11 @@ for `motac`.
     - a mark representation (categorical/int) suitable for unit tests,
     - and a thin dataset wrapper or validation helpers.
   - CI-safe unit test asserts import-path stability for the new module/API.
+
+## M14 — Neural kernel scaffolding v1
+- Goal: establish a stable import path + minimal interface for learned/neural kernels (used by later nonparametric variants).
+- DoD:
+  - A small `motac.model.neural_kernels` (or similarly named) module exists with:
+    - a tiny, documented kernel interface (call signature + expected shapes),
+    - a toy implementation sufficient for unit tests.
+  - CI-safe import-path stability unit test for the new module/API.

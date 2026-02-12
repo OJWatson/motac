@@ -1,9 +1,9 @@
 ```pm-status
 milestone: M13
-state: running
+state: complete
 headSha: 43c17fb3f1422c357c9cc7bf26419fe1f7376937
 ciRunUrl: https://github.com/OJWatson/motac/actions/runs/21961447269
-updatedAtUtc: 2026-02-12T19:37:59Z
+updatedAtUtc: 2026-02-12T19:58:30Z
 ```
 
 ## Status
@@ -63,7 +63,7 @@ updatedAtUtc: 2026-02-12T19:37:59Z
   - Offline parameter-recovery tests on a tiny substrate for Poisson and NegBin.
 
 ## Next step
-- Review M13 DoD coverage (marked scaffolding module + helpers + import-path test + docs). If complete, mark M13 complete and define the next milestone.
+- Start M14 (Neural kernel scaffolding v1): add a minimal `motac.model.neural_kernels` module + import-path unit test + a short API doc page.
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.
