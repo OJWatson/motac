@@ -1,9 +1,9 @@
 ```pm-status
 milestone: M11
 state: running
-headSha: 0fc1134d4ecd01b1363b552e913023fd3b05228c
+headSha: e57e4e143da6f5f6f19c747bded6411f067aa02a
 ciRunUrl: https://github.com/OJWatson/motac/actions?query=branch%3Amain
-updatedAtUtc: 2026-02-12T15:18:16Z
+updatedAtUtc: 2026-02-12T15:37:47Z
 ```
 
 ## Status
@@ -41,7 +41,7 @@ updatedAtUtc: 2026-02-12T15:18:16Z
   - Docs note the interpretation gap: exact is conditional on `y_true`; Poisson-approx depends on Hawkes intensity/history proxying.
 
 ## Next step (M11)
-- Update `docs/paper_artefacts.md` to document the manifest file name + fields (and keep the JSON payload contract unchanged).
+- Wait for CI green on `e57e4e1` (docs-only). If green, mark M11 as complete and decide the next milestone to add to `docs/ROADMAP.md`.
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.
