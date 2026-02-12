@@ -2,23 +2,25 @@
 milestone: M4
 state: running
 headSha: bff1c950cc6f6b35a7550297f94d258599c0f02c
-ciRunUrl: https://github.com/OJWatson/motac/actions/runs/21934183342, https://github.com/OJWatson/motac/actions/runs/21934189521, https://github.com/OJWatson/motac/actions/runs/21934189505, https://github.com/OJWatson/motac/actions/runs/21934189484
-updatedAtUtc: 2026-02-12T05:06:12Z
+ciRunUrl: https://github.com/OJWatson/motac/actions/runs/21934183342
+updatedAtUtc: 2026-02-12T05:29:49Z
 ```
 
 ## Status
-- M3 is **complete** (CI green).
-- Note: `forecast_intensity_horizon` + `mean_negative_log_likelihood` landed early; this work belongs to **M5** per `docs/ROADMAP.md` and will be treated as an early M5 slice.
+- M4 is **in progress**. Completed so far:
+  - Spec checklist + mapping: `docs/spec_alignment.md`
+  - Architecture summary: `docs/architecture.md`
+  - Package boundaries extracted: `motac.loaders`, `motac.eval`
 
 ## Next step (M4)
-- Continue package layout separation (structure-first):
-  - decide next boundary to extract (e.g. `eval/` or `inference/`),
-  - keep stable imports (re-export stubs as needed),
-  - add/update a small test if import paths change.
-- Keep `docs/spec_alignment.md` and `docs/architecture.md` in sync.
+- Continue structure-first package layout separation (keep imports stable):
+  - introduce an `motac.inference` package stub (even if minimal) to establish the boundary,
+  - move/alias any inference-like utilities currently living elsewhere,
+  - add a small import-path test.
+- Ensure `docs/spec_alignment.md` and `docs/architecture.md` reflect the updated layout.
 
-## Next step (after M4, M5 continuation)
-- Add an end-to-end toy example (fit -> forecast -> score) as a unit test.
+## Next step (after M4 → M5)
+- Resume predict/eval plumbing work (some utilities already landed early; treat them as M5 scope).
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.
