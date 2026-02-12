@@ -1,9 +1,9 @@
 ```pm-status
-milestone: M9
+milestone: M10
 state: running
-headSha: e8bfbe39f7efcd70dd33a63d8dcb93e98f63666d
+headSha: TBD
 ciRunUrl: https://github.com/OJWatson/motac/actions?query=branch%3Amain
-updatedAtUtc: 2026-02-12T13:07:35Z
+updatedAtUtc: 2026-02-12T13:35:00Z
 ```
 
 ## Status
@@ -32,8 +32,12 @@ updatedAtUtc: 2026-02-12T13:07:35Z
 - M8 is **complete**:
   - CI-safe observed-data end-to-end unit test covers fit → predictive sample → score on toy data.
 
-## Next step (M9)
-- Implement and test exact observed log-likelihood v1 (start with toy-data parity checks vs current approximate workflow).
+- M9 is **complete**:
+  - Exact observed log-likelihood for thinning+clutter implemented (`motac.sim.hawkes_loglik_observed_exact`).
+  - Tests cover hand-computable toy case and exact-vs-approx parity assertions.
+
+## Next step (M10)
+- Add exact-vs-approx observed log-likelihood comparison harness (tests on toy/sim data; document expected gaps).
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.

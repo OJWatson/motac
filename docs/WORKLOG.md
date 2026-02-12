@@ -26,3 +26,4 @@ Guidelines:
 - 2026-02-12: Updated `docs/STATUS.md` (M8 next step + header) and appended to worklog; pushed `5456d0b`.
 - 2026-02-12: Adjusted STATUS header `headSha` to point at last code-gated commit (`e8bfbe3`); pushed `961bcb4`.
 - 2026-02-12: Reviewed M8 DoD coverage (observed-data end-to-end test exists) and advanced STATUS to M9.
+- 2026-02-12: Reviewed M9 DoD coverage (exact observed log-likelihood + tests exist) and advanced STATUS to M10.
