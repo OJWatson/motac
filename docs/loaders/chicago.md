@@ -24,6 +24,34 @@ This is the minimal, **deterministic** on-disk input contract consumed by
 - Shape: `(n_locations, n_locations)`.
 - If omitted, the loader uses the identity matrix.
 
+## CLI usage
+
+The CLI entry point `motac data chicago-load` reads a tiny JSON config and
+prints a small JSON summary (including the loaded `y_obs` shape).
+
+Example config (`chicago_raw.json`):
+
+```json
+{
+  "path": "/path/to/chicago_raw_v1",
+  "mobility_path": null
+}
+```
+
+Expected directory layout:
+
+```text
+/path/to/chicago_raw_v1/
+  y_obs.csv
+  mobility.npy   # optional
+```
+
+Run:
+
+```bash
+uv run motac data chicago-load --config chicago_raw.json
+```
+
 ## Determinism
 
 - Given identical bytes on disk, the loader returns identical `y_obs` and
