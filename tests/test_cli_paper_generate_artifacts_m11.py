@@ -8,7 +8,7 @@ from typer.main import get_command
 from motac.cli import app
 
 
-def test_paper_generate_artifacts_writes_json(tmp_path) -> None:
+def test_paper_generate_artifacts_writes_json_and_manifest(tmp_path) -> None:
     out_dir = tmp_path / "artifacts"
 
     runner = CliRunner()
@@ -24,3 +24,19 @@ def test_paper_generate_artifacts_writes_json(tmp_path) -> None:
 
     payload = json.loads((out_dir / "synthetic_eval_seed7.json").read_text())
     assert set(payload.keys()) == {"config", "fit", "forecasts", "metrics"}
+
+    manifest = json.loads(
+        (out_dir / "synthetic_eval_seed7.manifest.json").read_text()
+    )
+    assert set(manifest.keys()) == {
+        "artifact",
+        "gitSha",
+        "seed",
+        "configSummary",
+        "generatedAtUtc",
+    }
+    assert manifest["artifact"] == "synthetic_eval_seed7.json"
+    assert manifest["seed"] == 7
+    assert isinstance(manifest["gitSha"], str)
+    assert manifest["gitSha"] != ""
+    assert manifest["configSummary"] == payload["config"]

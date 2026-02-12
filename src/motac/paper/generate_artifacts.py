@@ -2,10 +2,28 @@ from __future__ import annotations
 
 import argparse
 import json
+import subprocess
 from dataclasses import asdict
+from datetime import UTC, datetime
 from pathlib import Path
 
 from motac.eval import EvalConfig, evaluate_synthetic
+
+
+def _get_git_sha() -> str:
+    """Best-effort git SHA for provenance.
+
+    CI runs in a git checkout; local runs should also have git available. We keep
+    this best-effort so artifact generation remains usable in environments
+    without git metadata (e.g. unpacked source tarballs).
+    """
+
+    try:
+        out = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True)
+    except Exception:
+        return "unknown"
+    sha = out.strip()
+    return sha if sha else "unknown"
 
 
 def generate_synthetic_eval_artifact(*, out_dir: Path, seed: int = 0) -> Path:
@@ -51,6 +69,18 @@ def generate_synthetic_eval_artifact(*, out_dir: Path, seed: int = 0) -> Path:
 
     path = out_dir / f"synthetic_eval_seed{seed}.json"
     path.write_text(json.dumps(payload))
+
+    manifest = {
+        "artifact": path.name,
+        "gitSha": _get_git_sha(),
+        "seed": int(seed),
+        "configSummary": payload["config"],
+        "generatedAtUtc": datetime.now(UTC).isoformat(),
+    }
+    (out_dir / f"synthetic_eval_seed{seed}.manifest.json").write_text(
+        json.dumps(manifest)
+    )
+
     return path
 
 
