@@ -1,16 +1,16 @@
 ```pm-status
 milestone: M4
-state: running
-headSha: 0963643fd9601afccda0a7b51d7473f244ab7c65
-ciRunUrl: https://github.com/OJWatson/motac/actions/runs/21934839731
-updatedAtUtc: 2026-02-12T05:37:59Z
+state: waiting-for-ci
+headSha: e1d83ee2c5ed32182c9491ae4441addc447664e7
+ciRunUrl: https://github.com/OJWatson/motac/actions/runs/21936118756
+updatedAtUtc: 2026-02-12T06:30:21Z
 ```
 
 ## Status
 - M4 is **in progress**. Completed so far:
   - Spec checklist + mapping: `docs/spec_alignment.md`
   - Architecture summary: `docs/architecture.md`
-  - Package boundaries extracted: `motac.loaders`, `motac.eval`, `motac.inference`
+  - Package boundaries extracted: `motac.loaders`, `motac.eval`, `motac.inference`, `motac.cli`
 
 ## Next step (M4)
 - Continue structure-first package layout separation (keep imports stable):
