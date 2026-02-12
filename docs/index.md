@@ -16,6 +16,7 @@ loaders/index
 :caption: Tutorials
 
 tutorials/01_synthetic_quickstart
+tutorials/02_poi_features
 ```
 
 ```{toctree}
