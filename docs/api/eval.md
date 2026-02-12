@@ -5,4 +5,9 @@
    :members:
    :undoc-members:
    :show-inheritance:
+
+.. automodule:: motac.eval.backtest
+   :members:
+   :undoc-members:
+   :show-inheritance:
 ```

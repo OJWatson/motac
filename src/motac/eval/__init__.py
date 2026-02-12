@@ -14,8 +14,19 @@ from ..sim import (
     simulate_hawkes_counts,
 )
 from ..sim.world import generate_random_world
+from .backtest import (
+    BacktestResult as BacktestResult,
+)
+from .backtest import (
+    backtest_fit_forecast_nll as backtest_fit_forecast_nll,
+)
 
-from .backtest import BacktestResult, backtest_fit_forecast_nll
+__all__ = [
+    "BacktestResult",
+    "backtest_fit_forecast_nll",
+    "EvalConfig",
+    "evaluate_synthetic",
+]
 
 
 @dataclass(frozen=True, slots=True)
