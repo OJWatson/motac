@@ -1,9 +1,9 @@
 ```pm-status
-milestone: M12
+milestone: M2
 state: running
-headSha: df8d469b1a8a6382d25ae0207d4fd5e0f0d2f0e2
+headSha: af768964497dff633e0bf80ff90e570b8503e5ed
 ciRunUrl: https://github.com/OJWatson/motac/actions?query=branch%3Amain
-updatedAtUtc: 2026-02-12T17:05:34Z
+updatedAtUtc: 2026-02-12T17:27:08Z
 ```
 
 ## Status
@@ -50,9 +50,14 @@ updatedAtUtc: 2026-02-12T17:05:34Z
   - Deterministic substrate cache bundle writes/loads via `motac.substrate.builder.SubstrateBuilder`.
   - Offline unit test validates expected cache files + provenance/config hash.
 
-## Next step (M2)
-- Implement POIs + baseline features v1 (see `docs/ROADMAP.md` → M2).
-  - Add user docs describing POI feature names and configuration knobs (count + tag breakouts + travel-time features).
+## M2 — POIs + baseline features v1
+- **Complete**:
+  - POI count features (incl. optional tag/value breakouts) implemented and tested.
+  - Travel-time-to-nearest-POI (min travel time) features implemented and tested.
+  - User tutorial added describing POI feature names + configuration knobs (`docs/tutorials/02_poi_features.md`).
+
+## Next step (M3)
+- Start M3 (parametric road-constrained Hawkes v1): add the smallest end-to-end offline parameter-recovery test on a tiny substrate (see `docs/ROADMAP.md` → M3).
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.
