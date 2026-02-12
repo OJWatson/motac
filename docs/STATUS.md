@@ -1,9 +1,9 @@
 ```pm-status
 milestone: M6
 state: running
-headSha: c1fdfe9885d94edec80d0e3e93a8c6e273d3b8a7
+headSha: 3fd47e0066ad3b62219fd667eba1eea98a664444
 ciRunUrl: https://github.com/OJWatson/motac/actions?query=branch%3Amain
-updatedAtUtc: 2026-02-12T09:36:31Z
+updatedAtUtc: 2026-02-12T09:57:35Z
 ```
 
 ## Status
@@ -20,7 +20,7 @@ updatedAtUtc: 2026-02-12T09:36:31Z
   - Toy unit test covers basic shape/consistency expectations.
 
 ## Next step (M6)
-- After CI is green for `c1fdfe9`, extend Chicago loader v1 beyond the placeholder matrix: accept a directory-based raw contract (e.g. `y_obs.csv` + optional `mobility.npy`) and add a minimal CLI/config entry point.
+- After CI is green for `3fd47e0`, add a minimal CLI/config entry point for the Chicago loader v1 raw contract.
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.
