@@ -1,9 +1,9 @@
 ```pm-status
 milestone: M6
 state: running
-headSha: 1558da0369cbefdc9bd588cce7e053bdf20997d4
+headSha: 2364677e0cc610bb35369c23843d4af4fb422ab1
 ciRunUrl: https://github.com/OJWatson/motac/actions?query=branch%3Amain
-updatedAtUtc: 2026-02-12T10:22:32Z
+updatedAtUtc: 2026-02-12T10:42:04Z
 ```
 
 ## Status
@@ -20,7 +20,7 @@ updatedAtUtc: 2026-02-12T10:22:32Z
   - Toy unit test covers basic shape/consistency expectations.
 
 ## Next step (M6)
-- After CI is green for `1558da0`, add a tiny docs snippet (or example JSON) showing how to run `motac data chicago-load` against the v1 raw contract.
+- After CI is green for `2364677`, decide whether M6 DoD is satisfied and (if so) advance STATUS to M7.
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.
