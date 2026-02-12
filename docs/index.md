@@ -34,4 +34,5 @@ api/cli
 :caption: Project
 
 contributing
+paper_artefacts
 ```
