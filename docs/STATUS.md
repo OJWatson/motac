@@ -1,9 +1,9 @@
 ```pm-status
 milestone: M14
-state: running
-headSha: 46a90ed956d5d4c98c7cfb775e463d6466600b5d
-ciRunUrl: (pending)
-updatedAtUtc: 2026-02-12T20:38:51Z
+state: complete
+headSha: 46a90ed9e220cb6e7019858b76aa16a7f38e92c0
+ciRunUrl: https://github.com/OJWatson/motac/actions/runs/21963411497
+updatedAtUtc: 2026-02-12T20:59:30Z
 ```
 
 ## Status
@@ -63,12 +63,13 @@ updatedAtUtc: 2026-02-12T20:38:51Z
   - Offline parameter-recovery tests on a tiny substrate for Poisson and NegBin.
 
 ## M14 — Neural kernel scaffolding v1
-- **Running**:
+- **Complete**:
   - Stable import path established: `motac.model.neural_kernels`.
   - Tiny deterministic toy kernel (`ExpDecayKernel`) + CI-safe unit tests.
+  - Sphinx API docs page exists and is wired into the docs index.
 
 ## Next step
-- Once CI is green for this docs change, review M14 DoD coverage and mark M14 complete in `docs/STATUS.md`.
+- Define the next milestone (M15) in `docs/ROADMAP.md` and set `docs/STATUS.md` to the new active milestone.
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.

@@ -47,3 +47,4 @@ Guidelines:
 - 2026-02-12: Reviewed M13 DoD coverage (marked Hawkes scaffolding module/helpers/tests/docs); marked M13 complete; added M14 (neural kernel scaffolding) milestone stub to roadmap and updated STATUS next step.
 - 2026-02-12: Started M14 by adding `motac.model.neural_kernels` scaffold (`ExpDecayKernel`) + CI-safe unit tests; ran `uv run ruff check .` + `uv run pytest` (82 passed); pushed `768b23c`.
 - 2026-02-12: Added Sphinx API page for `motac.model.neural_kernels` and linked it from the docs index; ran `uv run ruff check .` + `uv run pytest` (82 passed) + `uv run sphinx-build -b html docs docs/_build/html`; pushed `46a90ed`.
+- 2026-02-12: CI green for `46a90ed`; marked M14 (neural kernel scaffolding) complete in `docs/STATUS.md` and set next step to define M15.
