@@ -20,3 +20,4 @@ This document describes the intended package/module separation.
 - Evaluation module moved to a package: `motac.eval` is now a subpackage.
 - Inference boundary created: `motac.inference` (structure-first stub).
 - CLI module moved to a package: `motac.cli` is now a subpackage (with a re-export stub to keep imports stable).
+- Config boundary created: `motac.configs` (structure-first stub).
