@@ -17,3 +17,4 @@ Guidelines:
 - 2026-02-12: Extended Chicago loader `load_y_obs_matrix` to accept a raw directory (expects `y_obs.csv`, autodetects optional `mobility.npy`); added tests; ran `uv run ruff check .` + `uv run pytest` (69 passed); pushed `3fd47e0`.
 - 2026-02-12: Added minimal Chicago raw loader JSON config (`ChicagoRawConfig`) + CLI entry point `motac data chicago-load`; added CLI test; ran `uv run ruff check .` + `uv run pytest` (70 passed); pushed `1558da0`.
 - 2026-02-12: Documented `motac data chicago-load` usage + example JSON config in `docs/loaders/chicago.md`; ran `uv run ruff check .` + `uv run pytest` (70 passed); pushed `2364677`.
+- 2026-02-12: CI green; reviewed M6 DoD (Chicago loader deterministic + sanity tests) and advanced STATUS to M7 (ACLED loader next); pushed `b95b97a`.

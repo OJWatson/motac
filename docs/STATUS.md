@@ -1,9 +1,9 @@
 ```pm-status
-milestone: M6
+milestone: M7
 state: running
-headSha: 2364677e0cc610bb35369c23843d4af4fb422ab1
+headSha: b95b97a8c200d2ce0c017894a592999c9b36cbd2
 ciRunUrl: https://github.com/OJWatson/motac/actions?query=branch%3Amain
-updatedAtUtc: 2026-02-12T10:42:04Z
+updatedAtUtc: 2026-02-12T11:01:11Z
 ```
 
 ## Status
@@ -19,8 +19,13 @@ updatedAtUtc: 2026-02-12T10:42:04Z
   - Minimal fit→forecast→score backtest helper exists (`motac.eval.backtest.backtest_fit_forecast_nll`).
   - Toy unit test covers basic shape/consistency expectations.
 
-## Next step (M6)
-- After CI is green for `2364677`, decide whether M6 DoD is satisfied and (if so) advance STATUS to M7.
+- M6 is **complete**:
+  - Chicago raw loader exists (CSV + optional mobility `.npy`) and is deterministic (order preserved).
+  - Minimal config + CLI entry point exists (`motac data chicago-load`).
+  - Fixture-driven sanity tests cover happy path + basic validation (shape mismatch rejection).
+
+## Next step (M7)
+- Start ACLED loader v1: add a tiny committed fixture + deterministic loader + basic sanity tests.
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.
