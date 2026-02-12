@@ -1,9 +1,9 @@
 ```pm-status
 milestone: M13
 state: running
-headSha: 7ea8fcbcc652491e5e897a9b63472cb87a13b0aa
-ciRunUrl: https://github.com/OJWatson/motac/actions/runs/21959996053
-updatedAtUtc: 2026-02-12T18:54:21Z
+headSha: 2dd1ec3a0491e0649162bafc619b98ffa126fe7a
+ciRunUrl: https://github.com/OJWatson/motac/actions/runs/21960678695
+updatedAtUtc: 2026-02-12T19:14:45Z
 ```
 
 ## Status
@@ -63,7 +63,7 @@ updatedAtUtc: 2026-02-12T18:54:21Z
   - Offline parameter-recovery tests on a tiny substrate for Poisson and NegBin.
 
 ## Next step
-- Within M13, add a minimal mark *encoding* helper (e.g. one-hot categorical marks) and a tiny unit test asserting expected output shape/dtype.
+- Within M13, add a short docs note (API docstring or Sphinx stub) describing the categorical mark contract + one-hot encoding helper, and link it from the model API docs.
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.

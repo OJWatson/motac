@@ -41,3 +41,4 @@ Guidelines:
 - 2026-02-12: Reviewed M3 DoD coverage (Poisson+NegBin likelihoods + recovery tests) and marked M3 complete in `docs/STATUS.md`.
 - 2026-02-12: Advanced roadmap to M13 (marked Hawkes scaffolding) and added `motac.model.marked_hawkes` scaffold + import-path unit test; set STATUS to M13 running.
 - 2026-02-12: Defined v1 categorical mark contract via `validate_categorical_marks_matrix` + added CI-safe unit test for shape/dtype/range validation; ran `uv run ruff check .` + `uv run pytest`; CI green on `7ea8fcb` (run https://github.com/OJWatson/motac/actions/runs/21959996053).
+- 2026-02-12: Added `encode_categorical_marks_onehot` helper + tiny unit tests for shape/dtype/values; ran `uv run ruff check .` + `uv run pytest` (80 passed); CI green on `2dd1ec3` (run https://github.com/OJWatson/motac/actions/runs/21960678695).
