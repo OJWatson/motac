@@ -1,9 +1,9 @@
 ```pm-status
 milestone: M5
 state: running
-headSha: edfb3f190e8b063eb93b48c7905b3787936b46a7
-ciRunUrl: https://github.com/OJWatson/motac/actions/runs/21936826150
-updatedAtUtc: 2026-02-12T07:02:10Z
+headSha: c647b5d41c50df3ddf8d194d1eb391d1959d3e52
+ciRunUrl: https://github.com/OJWatson/motac/actions/runs/21937018719
+updatedAtUtc: 2026-02-12T07:10:16Z
 ```
 
 ## Status
@@ -18,8 +18,8 @@ updatedAtUtc: 2026-02-12T07:02:10Z
 - M5 is **in progress**.
 
 ## Next step (M5)
-- Land an end-to-end toy test: fit -> forecast -> score (mean NLL) using the road-constrained parametric model.
-- Add a Negative Binomial mean NLL smoke test (dispersion provided) to exercise the metric API.
+- Decide whether M5 DoD is satisfied (minimal predict/eval utilities + toy tests). If not:
+  - add a tiny backtest-style helper (train/test split + score) and a unit test.
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.
