@@ -1,9 +1,9 @@
 ```pm-status
 milestone: M8
 state: running
-headSha: 837291ed72e1991e340c27fd7e55f71f1ed62f67
+headSha: e8bfbe39f7efcd70dd33a63d8dcb93e98f63666d
 ciRunUrl: https://github.com/OJWatson/motac/actions?query=branch%3Amain
-updatedAtUtc: 2026-02-12T12:28:40Z
+updatedAtUtc: 2026-02-12T12:47:58Z
 ```
 
 ## Status
@@ -25,7 +25,7 @@ updatedAtUtc: 2026-02-12T12:28:40Z
   - Fixture-driven sanity tests cover happy path + basic validation (shape mismatch rejection).
 
 ## Next step (M8)
-- Add a minimal, CI-safe test that exercises an observed-data workflow end-to-end (fit → forecast/predictive sample → score) on toy data.
+- Review M8 DoD coverage; if the observed-data workflow tests are sufficient, advance STATUS to M9 (exact observed log-likelihood v1).
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.

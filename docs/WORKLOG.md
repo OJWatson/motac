@@ -10,7 +10,7 @@ Guidelines:
 - 2026-02-12: Added tiny backtest helper `backtest_fit_forecast_nll` (fit→forecast→score) and a toy unit test; ran full pytest in venv (64 passed).
 - 2026-02-12: Documented `motac.eval.backtest` in Sphinx API docs and added explicit eval-module re-exports; `uv run ruff check` + `uv run pytest` (64 passed); pushed `0855815`.
 - 2026-02-12: CI green on `0855815`; advanced STATUS from M5→M6; ran `uv run ruff check` + `uv run pytest` (64 passed).
-- 2026-02-12: Added committed Chicago loader CSV fixture + fixture-driven sanity test; ran `uv run ruff check` + `uv run pytest` (65 passed); pushed `c17c199`.
+- 2026-02-12: Added committed Chicago loader CSV fixture + fixture-driven sanity test; ran `uv run ruff check .` + `uv run pytest` (65 passed); pushed `c17c199`.
 - 2026-02-12: Added committed mobility `.npy` fixture + tests for `meta["mobility_source"]` and mismatched mobility shape rejection; ran `uv run ruff check .` + `uv run pytest` (66 passed); pushed `66bb0cd`.
 - 2026-02-12: Asserted identity default `meta["mobility_source"] == "identity"` in Chicago loader test; ran `uv run ruff check .` + `uv run pytest` (66 passed); pushed `fdde12f`.
 - 2026-02-12: Documented Chicago raw on-disk contract (v1 placeholder) and added test that loader preserves row ordering; ran `uv run ruff check .` + `uv run pytest` (67 passed); pushed `c1fdfe9`.
@@ -22,3 +22,4 @@ Guidelines:
 - 2026-02-12: Added minimal ACLED loader docs page + wired `docs/loaders/` into Sphinx toctree; ran `uv run ruff check .` + `uv run pytest` (71 passed); pushed `e071651`.
 - 2026-02-12: Added ACLED loader JSON config (`AcledEventsCsvConfig`) + CLI entry point `motac data acled-load`; added CLI test; ran `uv run ruff check .` + `uv run pytest` (72 passed); pushed `1ab9112`.
 - 2026-02-12: Documented `motac data acled-load` usage + example JSON config in `docs/loaders/acled.md`; ran `uv run ruff check .` + `uv run pytest` (72 passed); pushed `837291e`.
+- 2026-02-12: Added CI-safe observed-data end-to-end unit test (fit → predictive sample → score) on toy data; ran `uv run ruff check .` + `uv run pytest` (73 passed); pushed `e8bfbe3`.
