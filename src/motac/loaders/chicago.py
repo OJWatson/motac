@@ -20,9 +20,20 @@ class ChicagoData:
 def load_y_obs_matrix(*, path: str | Path, mobility_path: str | Path | None = None) -> ChicagoData:
     """Load observed counts under a minimal Chicago-style on-disk contract.
 
-    On-disk contract (v1 placeholder)
-    --------------------------------
-    - ``path``: CSV (no header) representing a dense matrix with shape
+    On-disk contract (v1)
+    ---------------------
+    This loader supports two equivalent entry points:
+
+    1) ``path`` points directly at a ``y_obs`` CSV file.
+
+    2) ``path`` points at a directory containing:
+
+       - ``y_obs.csv`` (required)
+       - ``mobility.npy`` (optional; defaults to identity if missing)
+
+    ``mobility_path`` can be provided explicitly in either case.
+
+    - ``y_obs`` CSV (no header) representing a dense matrix with shape
       ``(n_locations, n_steps)``.
 
       *Rows*: locations. Row ``i`` corresponds to *location index* ``i``.
@@ -44,6 +55,17 @@ def load_y_obs_matrix(*, path: str | Path, mobility_path: str | Path | None = No
     p = Path(path)
     if not p.exists():
         raise FileNotFoundError(str(p))
+
+    raw_dir: Path | None = None
+    if p.is_dir():
+        raw_dir = p
+        p = raw_dir / "y_obs.csv"
+        if not p.exists():
+            raise FileNotFoundError(str(p))
+        if mobility_path is None:
+            candidate = raw_dir / "mobility.npy"
+            if candidate.exists():
+                mobility_path = candidate
 
     y = np.loadtxt(p, delimiter=",")
     y = np.asarray(y)
@@ -92,5 +114,7 @@ def load_y_obs_matrix(*, path: str | Path, mobility_path: str | Path | None = No
         "n_steps": int(n_steps),
         "time_unit": "day",
     }
+    if raw_dir is not None:
+        meta["raw_dir"] = str(raw_dir)
 
     return ChicagoData(world=world, y_obs=y_obs, meta=meta)

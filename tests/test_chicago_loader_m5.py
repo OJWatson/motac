@@ -69,6 +69,37 @@ def test_load_y_obs_matrix_from_repo_fixture() -> None:
     assert np.allclose(out.world.mobility, np.array([[1.0, 0.1], [0.2, 1.0]]))
 
 
+def test_load_y_obs_matrix_from_raw_dir_autodetects_mobility(tmp_path) -> None:
+    raw_dir = tmp_path / "raw"
+    raw_dir.mkdir()
+
+    y_obs = np.array([[0, 1, 0], [2, 0, 1]], dtype=int)
+    np.savetxt(raw_dir / "y_obs.csv", y_obs, fmt="%d", delimiter=",")
+
+    mobility = np.array([[1.0, 0.2], [0.3, 1.0]], dtype=float)
+    np.save(raw_dir / "mobility.npy", mobility)
+
+    out = load_y_obs_matrix(path=raw_dir)
+
+    assert np.array_equal(out.y_obs, y_obs)
+    assert np.allclose(out.world.mobility, mobility)
+    assert out.meta["raw_dir"] == str(raw_dir)
+
+
+def test_load_y_obs_matrix_from_raw_dir_defaults_identity_when_missing(tmp_path) -> None:
+    raw_dir = tmp_path / "raw"
+    raw_dir.mkdir()
+
+    y_obs = np.array([[1, 0], [0, 1], [0, 0]], dtype=int)
+    np.savetxt(raw_dir / "y_obs.csv", y_obs, fmt="%d", delimiter=",")
+
+    out = load_y_obs_matrix(path=raw_dir)
+
+    assert out.meta["mobility_source"] == "identity"
+    assert np.allclose(out.world.mobility, np.eye(3))
+    assert out.meta["raw_dir"] == str(raw_dir)
+
+
 def test_load_y_obs_matrix_rejects_mismatched_mobility_shape(tmp_path) -> None:
     y_obs = np.array([[0, 1, 0], [2, 0, 1]], dtype=int)
     y_path = tmp_path / "y_obs.csv"
