@@ -1,9 +1,9 @@
 ```pm-status
 milestone: M13
 state: running
-headSha: 350740515d47fcd78cae45ac8dcda54a40fad5f7
-ciRunUrl: https://github.com/OJWatson/motac/actions?query=branch%3Amain
-updatedAtUtc: 2026-02-12T18:36:00Z
+headSha: 7ea8fcbcc652491e5e897a9b63472cb87a13b0aa
+ciRunUrl: https://github.com/OJWatson/motac/actions/runs/21959996053
+updatedAtUtc: 2026-02-12T18:54:21Z
 ```
 
 ## Status
@@ -63,7 +63,7 @@ updatedAtUtc: 2026-02-12T18:36:00Z
   - Offline parameter-recovery tests on a tiny substrate for Poisson and NegBin.
 
 ## Next step
-- Within M13, define the mark contract more concretely (encoding + validation helpers) and add a tiny, CI-safe unit test that exercises shape/validation on toy arrays.
+- Within M13, add a minimal mark *encoding* helper (e.g. one-hot categorical marks) and a tiny unit test asserting expected output shape/dtype.
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.
