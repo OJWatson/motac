@@ -1,9 +1,9 @@
 ```pm-status
 milestone: M14
 state: running
-headSha: 768b23c190cc147ddcbacbdbd4e90be1f110ae99
+headSha: 46a90ed956d5d4c98c7cfb775e463d6466600b5d
 ciRunUrl: (pending)
-updatedAtUtc: 2026-02-12T20:19:00Z
+updatedAtUtc: 2026-02-12T20:38:51Z
 ```
 
 ## Status
@@ -68,7 +68,7 @@ updatedAtUtc: 2026-02-12T20:19:00Z
   - Tiny deterministic toy kernel (`ExpDecayKernel`) + CI-safe unit tests.
 
 ## Next step
-- Add a short API doc page for `motac.model.neural_kernels` and link it from the docs index / API toctree.
+- Once CI is green for this docs change, review M14 DoD coverage and mark M14 complete in `docs/STATUS.md`.
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.
