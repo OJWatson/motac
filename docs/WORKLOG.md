@@ -15,3 +15,4 @@ Guidelines:
 - 2026-02-12: Asserted identity default `meta["mobility_source"] == "identity"` in Chicago loader test; ran `uv run ruff check .` + `uv run pytest` (66 passed); pushed `fdde12f`.
 - 2026-02-12: Documented Chicago raw on-disk contract (v1 placeholder) and added test that loader preserves row ordering; ran `uv run ruff check .` + `uv run pytest` (67 passed); pushed `c1fdfe9`.
 - 2026-02-12: Extended Chicago loader `load_y_obs_matrix` to accept a raw directory (expects `y_obs.csv`, autodetects optional `mobility.npy`); added tests; ran `uv run ruff check .` + `uv run pytest` (69 passed); pushed `3fd47e0`.
+- 2026-02-12: Added minimal Chicago raw loader JSON config (`ChicagoRawConfig`) + CLI entry point `motac data chicago-load`; added CLI test; ran `uv run ruff check .` + `uv run pytest` (70 passed); pushed `1558da0`.
