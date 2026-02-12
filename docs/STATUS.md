@@ -1,9 +1,9 @@
 ```pm-status
 milestone: M11
 state: running
-headSha: aa905e7cc13b00e2f651d0553af9dc4e02163f3c
+headSha: 2ac17443d5c12872a03ff9975509b799af8d6f03
 ciRunUrl: https://github.com/OJWatson/motac/actions?query=branch%3Amain
-updatedAtUtc: 2026-02-12T14:23:52Z
+updatedAtUtc: 2026-02-12T14:56:51Z
 ```
 
 ## Status
@@ -41,7 +41,7 @@ updatedAtUtc: 2026-02-12T14:23:52Z
   - Docs note the interpretation gap: exact is conditional on `y_true`; Poisson-approx depends on Hawkes intensity/history proxying.
 
 ## Next step (M11)
-- Start the paper artefacts pipeline by documenting the intended artefacts and adding the smallest CI-safe “generate artefacts” stub (no large downloads).
+- Add a minimal artefact **manifest** (include git SHA + seed + config summary) alongside the JSON payload, with a CI-safe unit test.
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.
