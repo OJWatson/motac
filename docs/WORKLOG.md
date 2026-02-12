@@ -32,3 +32,4 @@ Guidelines:
 - 2026-02-12: Added Sphinx page documenting the CI-safe paper artefacts stub (`motac paper generate-artifacts`) and wired it into docs; refactored artefact generation to return the written path; ran `uv run ruff check .` + `uv run pytest` (75 passed); pushed `2ac1744`.
 - 2026-02-12: Added minimal manifest alongside synthetic eval JSON artifact (git SHA + seed + config summary + timestamp) with CI-safe unit test; ran `uv run ruff check .` + `uv run pytest` (75 passed); pushed `0fc1134`.
 - 2026-02-12: Documented paper artefact manifest filename + fields in `docs/paper_artefacts.md`; ran `uv run ruff check .` + `uv run pytest` (75 passed); pushed `e57e4e1`.
+- 2026-02-12: Added helper script `scripts/check_github_ci.py` to query combined status + check-runs for a commit; ran `uv run ruff check .` + `uv run pytest` (75 passed); pushed `4db5124`.

@@ -1,9 +1,9 @@
 ```pm-status
 milestone: M11
 state: running
-headSha: e57e4e143da6f5f6f19c747bded6411f067aa02a
+headSha: 4db512497db12e9b7e29f875d7f806096362a380
 ciRunUrl: https://github.com/OJWatson/motac/actions?query=branch%3Amain
-updatedAtUtc: 2026-02-12T15:37:47Z
+updatedAtUtc: 2026-02-12T16:02:24Z
 ```
 
 ## Status
@@ -41,7 +41,10 @@ updatedAtUtc: 2026-02-12T15:37:47Z
   - Docs note the interpretation gap: exact is conditional on `y_true`; Poisson-approx depends on Hawkes intensity/history proxying.
 
 ## Next step (M11)
-- Wait for CI green on `e57e4e1` (docs-only). If green, mark M11 as complete and decide the next milestone to add to `docs/ROADMAP.md`.
+- Wait for CI green on `4db5124`.
+  - To check quickly from the CLI, run:
+    - `python scripts/check_github_ci.py --repo OJWatson/motac --sha 4db512497db12e9b7e29f875d7f806096362a380`
+- If green, mark M11 as complete and decide the next milestone to add to `docs/ROADMAP.md`.
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.
