@@ -35,7 +35,34 @@ The loader aggregates events to **daily** counts per inferred location.
 - Shape: `(n_locations, n_locations)`.
 - If omitted, the loader uses the identity matrix.
 
-## Example usage
+## CLI usage
+
+The CLI entry point `motac data acled-load` reads a tiny JSON config and prints
+a small JSON summary (including the loaded `y_obs` shape).
+
+Example config (`acled_events.json`):
+
+```json
+{
+  "path": "/path/to/acled.csv",
+  "mobility_path": null,
+  "value": "events"
+}
+```
+
+Run:
+
+```bash
+uv run motac data acled-load --config acled_events.json
+```
+
+Notes:
+
+- `value` can be:
+  - `"events"` (count events)
+  - `"fatalities"` (sum fatalities)
+
+## Example usage (Python)
 
 ```python
 from motac.loaders.acled import load_acled_events_csv
