@@ -26,6 +26,7 @@ tutorials/02_poi_features
 api/schema
 api/substrate
 api/sim
+api/model
 api/eval
 api/cli
 ```
