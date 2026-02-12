@@ -13,3 +13,4 @@ Guidelines:
 - 2026-02-12: Added committed Chicago loader CSV fixture + fixture-driven sanity test; ran `uv run ruff check` + `uv run pytest` (65 passed); pushed `c17c199`.
 - 2026-02-12: Added committed mobility `.npy` fixture + tests for `meta["mobility_source"]` and mismatched mobility shape rejection; ran `uv run ruff check .` + `uv run pytest` (66 passed); pushed `66bb0cd`.
 - 2026-02-12: Asserted identity default `meta["mobility_source"] == "identity"` in Chicago loader test; ran `uv run ruff check .` + `uv run pytest` (66 passed); pushed `fdde12f`.
+- 2026-02-12: Documented Chicago raw on-disk contract (v1 placeholder) and added test that loader preserves row ordering; ran `uv run ruff check .` + `uv run pytest` (67 passed); pushed `c1fdfe9`.
