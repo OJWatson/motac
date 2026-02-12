@@ -1,9 +1,9 @@
 ```pm-status
 milestone: M10
 state: running
-headSha: 9eb9e426f74bcba4992029c77b6d96aafdb3f268
+headSha: 23c99e41065428cc2d58d8c267fee340d29b6fec
 ciRunUrl: https://github.com/OJWatson/motac/actions?query=branch%3Amain
-updatedAtUtc: 2026-02-12T13:30:51Z
+updatedAtUtc: 2026-02-12T13:31:15Z
 ```
 
 ## Status
