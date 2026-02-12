@@ -1,8 +1,21 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import numpy as np
 
 from motac.acled import load_acled_events_csv
+
+
+def test_load_acled_events_csv_committed_fixture_identity_mobility() -> None:
+    fixture = Path(__file__).parent / "fixtures" / "acled" / "acled_small.csv"
+    out = load_acled_events_csv(path=fixture, mobility_path=None, value="events")
+
+    # 2 unique (lon,lat) locations; 2 unique days (sorted ISO order)
+    assert out.y_obs.shape == (2, 2)
+    assert out.meta["dates"] == ["2020-01-01", "2020-01-02"]
+    assert out.meta["mobility_source"] == "identity"
+    assert np.array_equal(out.world.mobility, np.eye(2))
 
 
 def test_load_acled_events_csv_aggregates_events_and_fatalities(tmp_path) -> None:
