@@ -1,9 +1,9 @@
 ```pm-status
-milestone: M13
-state: complete
-headSha: 43c17fb3f1422c357c9cc7bf26419fe1f7376937
-ciRunUrl: https://github.com/OJWatson/motac/actions/runs/21961447269
-updatedAtUtc: 2026-02-12T19:58:30Z
+milestone: M14
+state: running
+headSha: 768b23c190cc147ddcbacbdbd4e90be1f110ae99
+ciRunUrl: (pending)
+updatedAtUtc: 2026-02-12T20:15:00Z
 ```
 
 ## Status
@@ -62,8 +62,13 @@ updatedAtUtc: 2026-02-12T19:58:30Z
   - Poisson + NegBin likelihood support under a stable API.
   - Offline parameter-recovery tests on a tiny substrate for Poisson and NegBin.
 
+## M14 — Neural kernel scaffolding v1
+- **Running**:
+  - Stable import path established: `motac.model.neural_kernels`.
+  - Tiny deterministic toy kernel (`ExpDecayKernel`) + CI-safe unit tests.
+
 ## Next step
-- Start M14 (Neural kernel scaffolding v1): add a minimal `motac.model.neural_kernels` module + import-path unit test + a short API doc page.
+- Add a short API doc page for `motac.model.neural_kernels` and link it from the docs index / API toctree.
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.
