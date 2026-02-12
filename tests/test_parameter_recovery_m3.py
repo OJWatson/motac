@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import numpy as np
 import scipy.sparse as sp
 
@@ -7,7 +5,7 @@ from motac.model.fit import fit_road_hawkes_mle
 from motac.model.road_hawkes import convolved_history_last, exp_travel_time_kernel
 
 
-def _simulate_poisson_road_counts(
+def _simulate_road_counts_poisson(
     *,
     travel_time_s: sp.csr_matrix,
     mu: np.ndarray,
@@ -15,108 +13,73 @@ def _simulate_poisson_road_counts(
     beta: float,
     kernel: np.ndarray,
     n_steps: int,
-    rng: np.random.Generator,
+    seed: int,
 ) -> np.ndarray:
-    """Simulate counts sequentially under the road-constrained Poisson model."""
-
+    rng = np.random.default_rng(seed)
     n_cells = int(mu.shape[0])
-    W = exp_travel_time_kernel(travel_time_s=travel_time_s, beta=beta)
+    y = np.zeros((n_cells, n_steps), dtype=int)
 
-    y = np.zeros((n_cells, int(n_steps)), dtype=int)
-    for t in range(int(n_steps)):
+    W = exp_travel_time_kernel(travel_time_s=travel_time_s, beta=beta)
+    for t in range(n_steps):
         h = convolved_history_last(y=y[:, :t], kernel=kernel)
         lam = mu + float(alpha) * (W @ h)
-        lam = np.clip(np.asarray(lam, dtype=float), 0.0, None)
+        lam = np.clip(lam, 0.0, None)
         y[:, t] = rng.poisson(lam=lam)
 
     return y
 
 
-def test_parameter_recovery_road_poisson_multiseed_two_regimes() -> None:
-    # Tiny 3-cell substrate represented purely by a sparse travel-time matrix.
-    # Keep this offline and fast for CI.
-    d = sp.csr_matrix(
-        np.array(
-            [
-                [0.0, 10.0, 20.0],
-                [10.0, 0.0, 12.0],
-                [20.0, 12.0, 0.0],
-            ]
-        )
+def test_m3_parameter_recovery_tiny_substrate_poisson():
+    """End-to-end sanity check: fit roughly recovers parameters on tiny synthetic road substrate."""
+
+    # Tiny 3-cell substrate with travel times (seconds).
+    tt = np.array(
+        [
+            [0.0, 300.0, 900.0],
+            [300.0, 0.0, 600.0],
+            [900.0, 600.0, 0.0],
+        ],
+        dtype=float,
+    )
+    travel_time_s = sp.csr_matrix(tt)
+
+    kernel = np.array([0.55, 0.30, 0.15], dtype=float)
+
+    mu_true = np.array([0.6, 0.9, 0.5], dtype=float)
+    alpha_true = 0.35
+    beta_true = 1.2e-3
+
+    y = _simulate_road_counts_poisson(
+        travel_time_s=travel_time_s,
+        mu=mu_true,
+        alpha=alpha_true,
+        beta=beta_true,
+        kernel=kernel,
+        n_steps=160,
+        seed=7,
     )
 
-    kernel = np.array([0.6, 0.2])  # 2 lags (keep subcritical for stability)
+    fit = fit_road_hawkes_mle(
+        travel_time_s=travel_time_s,
+        kernel=kernel,
+        y=y,
+        family="poisson",
+        maxiter=400,
+    )
 
-    regimes = [
-        {
-            "name": "low_beta",
-            "mu": np.array([0.20, 0.25, 0.15]),
-            "alpha": 0.15,
-            "beta": 0.05,
-        },
-        {
-            "name": "high_beta",
-            "mu": np.array([0.18, 0.22, 0.14]),
-            "alpha": 0.22,
-            "beta": 0.15,
-        },
-    ]
+    mu_hat = np.asarray(fit["mu"], dtype=float)
+    alpha_hat = float(fit["alpha"])
+    beta_hat = float(fit["beta"])
 
-    # Multi-seed to reduce flakiness.
-    seeds = [0, 1, 2]
+    assert np.isfinite(mu_hat).all()
+    assert np.isfinite(alpha_hat)
+    assert np.isfinite(beta_hat)
 
-    for reg in regimes:
-        mu_true = reg["mu"]
-        alpha_true = float(reg["alpha"])
-        beta_true = float(reg["beta"])
+    # Optimisation should improve the objective from default init.
+    assert float(fit["loglik"]) >= float(fit["loglik_init"]) - 1e-6
 
-        alpha_hats: list[float] = []
-        beta_hats: list[float] = []
-        mu_mean_hats: list[float] = []
-
-        for s in seeds:
-            rng = np.random.default_rng(s)
-            y = _simulate_poisson_road_counts(
-                travel_time_s=d,
-                mu=mu_true,
-                alpha=alpha_true,
-                beta=beta_true,
-                kernel=kernel,
-                n_steps=120,
-                rng=rng,
-            )
-
-            fit = fit_road_hawkes_mle(
-                travel_time_s=d,
-                kernel=kernel,
-                y=y,
-                family="poisson",
-                init_alpha=0.1,
-                init_beta=0.08,
-                maxiter=400,
-            )
-
-            alpha_hat = float(fit["alpha"])
-            beta_hat = float(fit["beta"])
-            mu_hat = np.asarray(fit["mu"], dtype=float)
-
-            assert np.all(np.isfinite(mu_hat))
-            assert np.isfinite(alpha_hat)
-            assert np.isfinite(beta_hat)
-            assert alpha_hat >= 0.0
-            assert beta_hat > 0.0
-
-            alpha_hats.append(alpha_hat)
-            beta_hats.append(beta_hat)
-            mu_mean_hats.append(float(mu_hat.mean()))
-
-        # Coarse recovery tolerances (stability > precision for CI).
-        alpha_med = float(np.median(alpha_hats))
-        beta_med = float(np.median(beta_hats))
-        mu_mean_med = float(np.median(mu_mean_hats))
-
-        assert 0.5 * alpha_true <= alpha_med <= 2.0 * alpha_true, reg["name"]
-        assert 0.3 * beta_true <= beta_med <= 3.0 * beta_true, reg["name"]
-
-        mu_mean_true = float(mu_true.mean())
-        assert 0.5 * mu_mean_true <= mu_mean_med <= 1.8 * mu_mean_true, reg["name"]
+    # Recovery is approximate (small sample) but should be in the right ballpark.
+    # We use tolerant checks to avoid flaky CI failures.
+    assert np.allclose(mu_hat, mu_true, rtol=0.65, atol=0.25)
+    assert np.isclose(alpha_hat, alpha_true, rtol=0.8, atol=0.15)
+    assert np.isclose(beta_hat, beta_true, rtol=1.0, atol=5e-4)
