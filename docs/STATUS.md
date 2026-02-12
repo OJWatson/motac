@@ -1,9 +1,9 @@
 ```pm-status
 milestone: M6
 state: running
-headSha: 66bb0cd5991bf682414a481c2262603929260fa5
+headSha: fdde12fe23a60e97814e49cb6d6ed3ac57f4f53d
 ciRunUrl: https://github.com/OJWatson/motac/actions?query=branch%3Amain
-updatedAtUtc: 2026-02-12T08:53:49Z
+updatedAtUtc: 2026-02-12T09:14:27Z
 ```
 
 ## Status
@@ -20,7 +20,7 @@ updatedAtUtc: 2026-02-12T08:53:49Z
   - Toy unit test covers basic shape/consistency expectations.
 
 ## Next step (M6)
-- After CI is green for `66bb0cd`, extend the identity-mobility test to assert `meta["mobility_source"] == "identity"`.
+- After CI is green for `fdde12f`, start Chicago loader v1: define the on-disk raw input contract + a deterministic row ordering test.
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.
