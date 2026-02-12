@@ -27,6 +27,7 @@ api/schema
 api/substrate
 api/sim
 api/model
+api/neural_kernels
 api/eval
 api/cli
 ```
