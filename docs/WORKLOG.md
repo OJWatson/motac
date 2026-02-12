@@ -19,3 +19,4 @@ Guidelines:
 - 2026-02-12: Documented `motac data chicago-load` usage + example JSON config in `docs/loaders/chicago.md`; ran `uv run ruff check .` + `uv run pytest` (70 passed); pushed `2364677`.
 - 2026-02-12: CI green; reviewed M6 DoD (Chicago loader deterministic + sanity tests) and advanced STATUS to M7 (ACLED loader next); pushed `1af27be`.
 - 2026-02-12: Added committed ACLED CSV fixture + fixture-driven sanity test (identity mobility); ran `uv run ruff check .` + `uv run pytest` (71 passed); pushed `6e49a5e`.
+- 2026-02-12: Added minimal ACLED loader docs page + wired `docs/loaders/` into Sphinx toctree; ran `uv run ruff check .` + `uv run pytest` (71 passed); pushed `e071651`.

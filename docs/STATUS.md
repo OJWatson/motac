@@ -1,9 +1,9 @@
 ```pm-status
 milestone: M7
 state: running
-headSha: 6e49a5eef88d15397ab99203689e336370b72c39
+headSha: e0716515d1f1e97e7dcc1943e4dc5bbd9cc9a5c3
 ciRunUrl: https://github.com/OJWatson/motac/actions?query=branch%3Amain
-updatedAtUtc: 2026-02-12T11:22:17Z
+updatedAtUtc: 2026-02-12T11:50:00Z
 ```
 
 ## Status
@@ -25,7 +25,7 @@ updatedAtUtc: 2026-02-12T11:22:17Z
   - Fixture-driven sanity tests cover happy path + basic validation (shape mismatch rejection).
 
 ## Next step (M7)
-- Add minimal ACLED loader docs page (on-disk contract + example usage), and wire it into `docs/loaders/`.
+- Add minimal ACLED loader JSON config + CLI entry point (e.g. `motac data acled-load`) with a fixture-driven CLI test.
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.
