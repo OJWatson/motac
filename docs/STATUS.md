@@ -1,9 +1,9 @@
 ```pm-status
 milestone: M11
 state: running
-headSha: 2ac17443d5c12872a03ff9975509b799af8d6f03
+headSha: 0fc1134d4ecd01b1363b552e913023fd3b05228c
 ciRunUrl: https://github.com/OJWatson/motac/actions?query=branch%3Amain
-updatedAtUtc: 2026-02-12T14:56:51Z
+updatedAtUtc: 2026-02-12T15:18:16Z
 ```
 
 ## Status
@@ -41,7 +41,7 @@ updatedAtUtc: 2026-02-12T14:56:51Z
   - Docs note the interpretation gap: exact is conditional on `y_true`; Poisson-approx depends on Hawkes intensity/history proxying.
 
 ## Next step (M11)
-- Add a minimal artefact **manifest** (include git SHA + seed + config summary) alongside the JSON payload, with a CI-safe unit test.
+- Update `docs/paper_artefacts.md` to document the manifest file name + fields (and keep the JSON payload contract unchanged).
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.
