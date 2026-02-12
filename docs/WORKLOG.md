@@ -37,3 +37,4 @@ Guidelines:
 - 2026-02-12: Reviewed existing substrate cache bundle implementation/tests; updated `docs/STATUS.md` to mark M12 complete and set next step to M2 (POIs + baseline features v1).
 - 2026-02-12: Added offline unit test asserting POI `poi_count` + tag breakout feature columns from local GeoJSON; ran `uv run ruff check .` + `uv run pytest` (76 passed); pushed `df8d469`.
 - 2026-02-12: Added user tutorial for POI feature names/config (`docs/tutorials/02_poi_features.md`) and wired into docs index; ran `uv run ruff check .` + `uv run pytest` (76 passed); pushed `af76896`.
+- 2026-02-12: Added tiny end-to-end M3 parameter recovery unit test for road-constrained Hawkes Poisson fitter; ran `uv run ruff check .` + `uv run pytest` (76 passed); pushed `56996a0`.

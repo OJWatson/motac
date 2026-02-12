@@ -1,9 +1,9 @@
 ```pm-status
 milestone: M2
 state: running
-headSha: af768964497dff633e0bf80ff90e570b8503e5ed
+headSha: 56996a0d7b3c1d94a17363e159f75d251d1a2a1a
 ciRunUrl: https://github.com/OJWatson/motac/actions?query=branch%3Amain
-updatedAtUtc: 2026-02-12T17:27:08Z
+updatedAtUtc: 2026-02-12T17:48:42Z
 ```
 
 ## Status
@@ -57,7 +57,7 @@ updatedAtUtc: 2026-02-12T17:27:08Z
   - User tutorial added describing POI feature names + configuration knobs (`docs/tutorials/02_poi_features.md`).
 
 ## Next step (M3)
-- Start M3 (parametric road-constrained Hawkes v1): add the smallest end-to-end offline parameter-recovery test on a tiny substrate (see `docs/ROADMAP.md` → M3).
+- Review M3 DoD coverage (see `docs/ROADMAP.md` → M3) and, if satisfied, mark M3 complete and pick the next milestone.
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.
