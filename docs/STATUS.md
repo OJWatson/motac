@@ -1,9 +1,9 @@
 ```pm-status
-milestone: M10
+milestone: M11
 state: running
-headSha: 6cf9f8d69cd6cf6d076c37121d96f2e471cbce68
+headSha: aa905e7cc13b00e2f651d0553af9dc4e02163f3c
 ciRunUrl: https://github.com/OJWatson/motac/actions?query=branch%3Amain
-updatedAtUtc: 2026-02-12T13:52:20Z
+updatedAtUtc: 2026-02-12T14:18:55Z
 ```
 
 ## Status
@@ -36,8 +36,12 @@ updatedAtUtc: 2026-02-12T13:52:20Z
   - Exact observed log-likelihood for thinning+clutter implemented (`motac.sim.hawkes_loglik_observed_exact`).
   - Tests cover hand-computable toy case and exact-vs-approx parity assertions.
 
-## Next step (M10)
-- Document expected gaps/interpretation for exact-vs-approx observed log-likelihood (exact conditions on `y_true`; Poisson-approx depends on Hawkes intensity).
+- M10 is **complete**:
+  - Comparison harness + tests exist for exact-vs-approx observed log-likelihood.
+  - Docs note the interpretation gap: exact is conditional on `y_true`; Poisson-approx depends on Hawkes intensity/history proxying.
+
+## Next step (M11)
+- Start the paper artefacts pipeline by documenting the intended artefacts and adding the smallest CI-safe “generate artefacts” stub (no large downloads).
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.

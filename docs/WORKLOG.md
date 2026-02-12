@@ -28,3 +28,4 @@ Guidelines:
 - 2026-02-12: Reviewed M8 DoD coverage (observed-data end-to-end test exists) and advanced STATUS to M9.
 - 2026-02-12: Reviewed M9 DoD coverage (exact observed log-likelihood + tests exist) and advanced STATUS to M10.
 - 2026-02-12: Added public comparison harness `compare_observed_loglik_exact_vs_poisson_approx` + unit test; ran `uv run ruff check .` + `uv run pytest` (74 passed); pushed `6cf9f8d`.
+- 2026-02-12: Documented interpretation/expected gaps for exact-vs-Poisson-approx observed likelihoods in `docs/api/sim.md`; ran `uv run ruff check .` + `uv run pytest` (74 passed); pushed `aa905e7`.
