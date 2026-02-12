@@ -66,6 +66,45 @@ def validate_categorical_marks_matrix(
     return m
 
 
+def encode_categorical_marks_onehot(
+    marks: np.ndarray,
+    *,
+    y_obs: np.ndarray,
+    n_marks: int,
+    dtype: np.dtype | type = np.float32,
+) -> np.ndarray:
+    """Encode categorical mark labels as a one-hot tensor.
+
+    Parameters
+    ----------
+    marks:
+        Integer-coded categorical marks of shape ``(n_cells, n_steps)``.
+    y_obs:
+        Observation count matrix to align against.
+    n_marks:
+        Number of mark categories.
+    dtype:
+        Output dtype for the one-hot tensor.
+
+    Returns
+    -------
+    numpy.ndarray
+        One-hot encoding of shape ``(n_cells, n_steps, n_marks)``.
+    """
+
+    if n_marks <= 0:
+        raise ValueError("n_marks must be positive")
+
+    m = validate_categorical_marks_matrix(marks, y_obs=y_obs, n_marks=n_marks)
+    n_cells, n_steps = m.shape
+
+    out = np.zeros((n_cells, n_steps, n_marks), dtype=dtype)
+    cell_ix = np.arange(n_cells)[:, None]
+    step_ix = np.arange(n_steps)[None, :]
+    out[cell_ix, step_ix, m] = 1
+    return out
+
+
 @dataclass(frozen=True)
 class MarkedRoadHawkesDataset:
     """A thin wrapper around :class:`~motac.model.dataset.RoadHawkesDataset`.
