@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import numpy as np
 
 from motac.chicago import load_y_obs_matrix
@@ -35,3 +37,13 @@ def test_load_y_obs_matrix_defaults_identity_mobility(tmp_path) -> None:
     out = load_y_obs_matrix(path=y_path)
     assert out.world.mobility.shape == (3, 3)
     assert np.allclose(out.world.mobility, np.eye(3))
+
+
+def test_load_y_obs_matrix_from_repo_fixture() -> None:
+    fixture = Path(__file__).parent / "fixtures" / "chicago" / "y_obs_small.csv"
+    out = load_y_obs_matrix(path=fixture)
+
+    assert out.meta["schema"] == "placeholder-y_obs-matrix"
+    assert out.y_obs.shape == (2, 4)
+    assert np.array_equal(out.y_obs, np.array([[0, 1, 0, 2], [3, 0, 0, 1]], dtype=int))
+    assert np.allclose(out.world.mobility, np.eye(2))
