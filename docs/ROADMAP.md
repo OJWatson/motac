@@ -78,3 +78,11 @@ for `motac`.
 - DoD:
   - Substrate cache bundle writes/loads deterministically.
   - Offline unit test validates expected cache files + provenance/config hash.
+
+## M13 — Marked Hawkes scaffolding v1
+- Goal: introduce a minimal, stable *API surface* for marked Hawkes variants (event types/severities), without committing to a final modelling choice.
+- DoD:
+  - A small `motac.model.marked_hawkes` module exists with:
+    - a mark representation (categorical/int) suitable for unit tests,
+    - and a thin dataset wrapper or validation helpers.
+  - CI-safe unit test asserts import-path stability for the new module/API.

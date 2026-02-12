@@ -1,9 +1,9 @@
 ```pm-status
-milestone: M3
-state: complete
-headSha: 56996a0d7b3c1d94a17363e159f75d251d1a2a1a
+milestone: M13
+state: running
+headSha: 9b09f4dcbe123179130d9bf8c7fa605f0a0ad186
 ciRunUrl: https://github.com/OJWatson/motac/actions?query=branch%3Amain
-updatedAtUtc: 2026-02-12T18:07:00Z
+updatedAtUtc: 2026-02-12T18:29:00Z
 ```
 
 ## Status
@@ -63,7 +63,7 @@ updatedAtUtc: 2026-02-12T18:07:00Z
   - Offline parameter-recovery tests on a tiny substrate for Poisson and NegBin.
 
 ## Next step
-- Decide and document the next milestone after M12 (extend `docs/ROADMAP.md` for marked Hawkes / learned kernels, per the PDF), then pick the smallest implementation slice.
+- Within M13, define the mark contract more concretely (encoding + validation helpers) and add a tiny, CI-safe unit test that exercises shape/validation on toy arrays.
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.

@@ -39,3 +39,4 @@ Guidelines:
 - 2026-02-12: Added user tutorial for POI feature names/config (`docs/tutorials/02_poi_features.md`) and wired into docs index; ran `uv run ruff check .` + `uv run pytest` (76 passed); pushed `af76896`.
 - 2026-02-12: Added tiny end-to-end M3 parameter recovery unit test for road-constrained Hawkes Poisson fitter; ran `uv run ruff check .` + `uv run pytest` (76 passed); pushed `56996a0`.
 - 2026-02-12: Reviewed M3 DoD coverage (Poisson+NegBin likelihoods + recovery tests) and marked M3 complete in `docs/STATUS.md`.
+- 2026-02-12: Advanced roadmap to M13 (marked Hawkes scaffolding) and added `motac.model.marked_hawkes` scaffold + import-path unit test; set STATUS to M13 running.
