@@ -1,9 +1,9 @@
 ```pm-status
 milestone: M10
 state: running
-headSha: 23c99e41065428cc2d58d8c267fee340d29b6fec
+headSha: 6cf9f8d69cd6cf6d076c37121d96f2e471cbce68
 ciRunUrl: https://github.com/OJWatson/motac/actions?query=branch%3Amain
-updatedAtUtc: 2026-02-12T13:31:15Z
+updatedAtUtc: 2026-02-12T13:52:20Z
 ```
 
 ## Status
@@ -37,7 +37,7 @@ updatedAtUtc: 2026-02-12T13:31:15Z
   - Tests cover hand-computable toy case and exact-vs-approx parity assertions.
 
 ## Next step (M10)
-- Add exact-vs-approx observed log-likelihood comparison harness (tests on toy/sim data; document expected gaps).
+- Document expected gaps/interpretation for exact-vs-approx observed log-likelihood (exact conditions on `y_true`; Poisson-approx depends on Hawkes intensity).
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.

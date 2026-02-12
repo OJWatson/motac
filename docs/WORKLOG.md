@@ -27,3 +27,4 @@ Guidelines:
 - 2026-02-12: Adjusted STATUS header `headSha` to point at last code-gated commit (`e8bfbe3`); pushed `961bcb4`.
 - 2026-02-12: Reviewed M8 DoD coverage (observed-data end-to-end test exists) and advanced STATUS to M9.
 - 2026-02-12: Reviewed M9 DoD coverage (exact observed log-likelihood + tests exist) and advanced STATUS to M10.
+- 2026-02-12: Added public comparison harness `compare_observed_loglik_exact_vs_poisson_approx` + unit test; ran `uv run ruff check .` + `uv run pytest` (74 passed); pushed `6cf9f8d`.
