@@ -8,4 +8,8 @@ At M4 it may be minimal; content will be added in later milestones.
 
 from __future__ import annotations
 
-__all__: list[str] = []
+from .chicago import ChicagoRawConfig
+
+__all__ = [
+    "ChicagoRawConfig",
+]
