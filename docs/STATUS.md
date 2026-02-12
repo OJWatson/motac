@@ -1,9 +1,9 @@
 ```pm-status
 milestone: M12
 state: running
-headSha: 4db512497db12e9b7e29f875d7f806096362a380
+headSha: df8d469b1a8a6382d25ae0207d4fd5e0f0d2f0e2
 ciRunUrl: https://github.com/OJWatson/motac/actions?query=branch%3Amain
-updatedAtUtc: 2026-02-12T16:42:30Z
+updatedAtUtc: 2026-02-12T17:05:34Z
 ```
 
 ## Status
@@ -52,7 +52,7 @@ updatedAtUtc: 2026-02-12T16:42:30Z
 
 ## Next step (M2)
 - Implement POIs + baseline features v1 (see `docs/ROADMAP.md` → M2).
-  - Start with a minimal, offline unit test for one concrete POI feature contract and wire it through the substrate feature helpers.
+  - Add user docs describing POI feature names and configuration knobs (count + tag breakouts + travel-time features).
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.

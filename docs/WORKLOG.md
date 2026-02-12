@@ -35,3 +35,4 @@ Guidelines:
 - 2026-02-12: Added helper script `scripts/check_github_ci.py` to query combined status + check-runs for a commit; ran `uv run ruff check .` + `uv run pytest` (75 passed); pushed `4db5124`.
 - 2026-02-12: Confirmed CI check-runs success for `4db5124`; marked M11 complete in `docs/STATUS.md` and added M12 milestone to `docs/ROADMAP.md`.
 - 2026-02-12: Reviewed existing substrate cache bundle implementation/tests; updated `docs/STATUS.md` to mark M12 complete and set next step to M2 (POIs + baseline features v1).
+- 2026-02-12: Added offline unit test asserting POI `poi_count` + tag breakout feature columns from local GeoJSON; ran `uv run ruff check .` + `uv run pytest` (76 passed); pushed `df8d469`.
