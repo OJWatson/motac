@@ -1,9 +1,9 @@
 ```pm-status
-milestone: M8
+milestone: M9
 state: running
 headSha: e8bfbe39f7efcd70dd33a63d8dcb93e98f63666d
 ciRunUrl: https://github.com/OJWatson/motac/actions?query=branch%3Amain
-updatedAtUtc: 2026-02-12T12:49:30Z
+updatedAtUtc: 2026-02-12T13:07:35Z
 ```
 
 ## Status
@@ -24,8 +24,16 @@ updatedAtUtc: 2026-02-12T12:49:30Z
   - Minimal config + CLI entry point exists (`motac data chicago-load`).
   - Fixture-driven sanity tests cover happy path + basic validation (shape mismatch rejection).
 
-## Next step (M8)
-- Review M8 DoD coverage; if the observed-data workflow tests are sufficient, advance STATUS to M9 (exact observed log-likelihood v1).
+- M7 is **complete**:
+  - ACLED loader exists (CSV) and is deterministic (order preserved).
+  - Minimal config + CLI entry point exists (`motac data acled-load`).
+  - Fixture-driven sanity tests cover happy path + basic validation.
+
+- M8 is **complete**:
+  - CI-safe observed-data end-to-end unit test covers fit → predictive sample → score on toy data.
+
+## Next step (M9)
+- Implement and test exact observed log-likelihood v1 (start with toy-data parity checks vs current approximate workflow).
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.
