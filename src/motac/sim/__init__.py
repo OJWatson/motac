@@ -5,6 +5,10 @@ Discrete-time Hawkes-like simulation, fitting, and forecasting helpers.
 
 from __future__ import annotations
 
+from .compare import (
+    ObservedLoglikComparison,
+    compare_observed_loglik_exact_vs_poisson_approx,
+)
 from .fit import (
     fit_hawkes_alpha_mu,
     fit_hawkes_mle_alpha_mu,
@@ -36,6 +40,8 @@ from .world import World, generate_random_world
 __all__ = [
     "World",
     "generate_random_world",
+    "ObservedLoglikComparison",
+    "compare_observed_loglik_exact_vs_poisson_approx",
     "HawkesDiscreteParams",
     "discrete_exponential_kernel",
     "simulate_hawkes_counts",
