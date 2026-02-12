@@ -21,3 +21,4 @@ Guidelines:
 - 2026-02-12: Added committed ACLED CSV fixture + fixture-driven sanity test (identity mobility); ran `uv run ruff check .` + `uv run pytest` (71 passed); pushed `6e49a5e`.
 - 2026-02-12: Added minimal ACLED loader docs page + wired `docs/loaders/` into Sphinx toctree; ran `uv run ruff check .` + `uv run pytest` (71 passed); pushed `e071651`.
 - 2026-02-12: Added ACLED loader JSON config (`AcledEventsCsvConfig`) + CLI entry point `motac data acled-load`; added CLI test; ran `uv run ruff check .` + `uv run pytest` (72 passed); pushed `1ab9112`.
+- 2026-02-12: Documented `motac data acled-load` usage + example JSON config in `docs/loaders/acled.md`; ran `uv run ruff check .` + `uv run pytest` (72 passed); pushed `837291e`.

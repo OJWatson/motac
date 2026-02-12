@@ -1,9 +1,9 @@
 ```pm-status
-milestone: M7
+milestone: M8
 state: running
-headSha: 1ab9112dbf5a05d7a81824a1de71a74874ce15c3
+headSha: 837291ed72e1991e340c27fd7e55f71f1ed62f67
 ciRunUrl: https://github.com/OJWatson/motac/actions?query=branch%3Amain
-updatedAtUtc: 2026-02-12T12:05:15Z
+updatedAtUtc: 2026-02-12T12:28:40Z
 ```
 
 ## Status
@@ -24,8 +24,8 @@ updatedAtUtc: 2026-02-12T12:05:15Z
   - Minimal config + CLI entry point exists (`motac data chicago-load`).
   - Fixture-driven sanity tests cover happy path + basic validation (shape mismatch rejection).
 
-## Next step (M7)
-- Document `motac data acled-load` usage + example JSON config in `docs/loaders/acled.md`.
+## Next step (M8)
+- Add a minimal, CI-safe test that exercises an observed-data workflow end-to-end (fit → forecast/predictive sample → score) on toy data.
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.
