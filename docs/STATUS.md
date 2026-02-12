@@ -1,25 +1,24 @@
 ```pm-status
-milestone: M4
+milestone: M5
 state: running
 headSha: edfb3f190e8b063eb93b48c7905b3787936b46a7
-ciRunUrl: https://github.com/OJWatson/motac/actions/runs/21936278420
-updatedAtUtc: 2026-02-12T06:49:13Z
+ciRunUrl: https://github.com/OJWatson/motac/actions/runs/21936559312
+updatedAtUtc: 2026-02-12T06:52:10Z
 ```
 
 ## Status
-- M4 is **in progress**. Completed so far:
+- M4 is **complete**:
   - Spec checklist + mapping: `docs/spec_alignment.md`
   - Architecture summary: `docs/architecture.md`
-  - Package boundaries extracted: `motac.loaders`, `motac.eval`, `motac.inference`, `motac.cli`, `motac.configs`
+  - Package boundaries extracted (structure-first):
+    - `motac.loaders`, `motac.substrate`, `motac.model`, `motac.sim`, `motac.eval`, `motac.inference`, `motac.cli`, `motac.configs`
   - CLI internal boundary extracted: `motac.cli.commands` (while keeping the entry point stable)
   - Import-path smoke tests added for new packages.
 
-## Next step (M4)
-- Re-check M4 DoD against `docs/ROADMAP.md` now that an additional boundary has landed.
-- If satisfied, mark M4 complete and advance to M5.
+- M5 is **in progress**.
 
-## Next step (after M4 → M5)
-- Resume predict/eval plumbing work (some utilities already landed early; treat them as M5 scope).
+## Next step (M5)
+- Implement minimal predict/eval plumbing for the parametric model and add toy-data tests (shapes/consistency), per `docs/ROADMAP.md`.
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.
