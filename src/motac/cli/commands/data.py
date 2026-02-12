@@ -26,3 +26,28 @@ def data_chicago_load(
         "y_obs_shape": [int(x) for x in loaded.y_obs.shape],
     }
     typer.echo(json.dumps(payload))
+
+
+@data_app.command("acled-load")
+def data_acled_load(
+    config: str = typer.Option(
+        ..., "--config", help="Path to ACLED events CSV loader JSON config."
+    ),
+) -> None:
+    """Load ACLED events CSV (placeholder schema) and print a small JSON summary."""
+
+    from ...configs import AcledEventsCsvConfig
+    from ...loaders.acled import load_acled_events_csv
+
+    cfg = AcledEventsCsvConfig.from_json(config)
+    loaded = load_acled_events_csv(
+        path=cfg.path,
+        mobility_path=cfg.mobility_path,
+        value=cfg.value,
+    )
+
+    payload = {
+        "meta": loaded.meta,
+        "y_obs_shape": [int(x) for x in loaded.y_obs.shape],
+    }
+    typer.echo(json.dumps(payload))
