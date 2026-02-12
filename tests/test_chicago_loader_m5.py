@@ -40,6 +40,19 @@ def test_load_y_obs_matrix_defaults_identity_mobility(tmp_path) -> None:
     assert np.allclose(out.world.mobility, np.eye(3))
 
 
+def test_load_y_obs_matrix_preserves_row_order(tmp_path) -> None:
+    # Contract: row i corresponds to location index i; loader must not sort.
+    y_obs = np.array([[1, 0], [9, 0], [5, 0]], dtype=int)
+    perm = [2, 0, 1]
+    y_perm = y_obs[perm]
+
+    y_path = tmp_path / "y_obs_perm.csv"
+    np.savetxt(y_path, y_perm, fmt="%d", delimiter=",")
+
+    out = load_y_obs_matrix(path=y_path)
+    assert np.array_equal(out.y_obs, y_perm)
+
+
 def test_load_y_obs_matrix_from_repo_fixture() -> None:
     y_fixture = Path(__file__).parent / "fixtures" / "chicago" / "y_obs_small.csv"
     m_fixture = Path(__file__).parent / "fixtures" / "chicago" / "mobility_small.npy"

@@ -18,15 +18,23 @@ class ChicagoData:
 
 
 def load_y_obs_matrix(*, path: str | Path, mobility_path: str | Path | None = None) -> ChicagoData:
-    """Load observed counts under the placeholder Chicago schema.
+    """Load observed counts under a minimal Chicago-style on-disk contract.
 
-    Placeholder schema
-    ------------------
-    - `path`: CSV (no header) representing a dense matrix with shape
-      (n_locations, n_steps) where rows are location indices and columns are
-      daily time steps. Entries are non-negative integer counts.
-    - `mobility_path` (optional): `.npy` file containing a mobility matrix of
-      shape (n_locations, n_locations). If not provided, uses identity.
+    On-disk contract (v1 placeholder)
+    --------------------------------
+    - ``path``: CSV (no header) representing a dense matrix with shape
+      ``(n_locations, n_steps)``.
+
+      *Rows*: locations. Row ``i`` corresponds to *location index* ``i``.
+      The loader preserves file row order exactly (no sorting/reindexing).
+
+      *Columns*: daily time steps. Column ``t`` corresponds to time index ``t``.
+
+      *Values*: non-negative integer counts.
+
+    - ``mobility_path`` (optional): ``.npy`` containing a mobility matrix with
+      shape ``(n_locations, n_locations)``. If omitted, the loader uses the
+      identity matrix.
 
     Returns
     -------
