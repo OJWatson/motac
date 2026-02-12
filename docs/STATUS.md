@@ -11,12 +11,12 @@ updatedAtUtc: 2026-02-12T06:38:20Z
   - Spec checklist + mapping: `docs/spec_alignment.md`
   - Architecture summary: `docs/architecture.md`
   - Package boundaries extracted: `motac.loaders`, `motac.eval`, `motac.inference`, `motac.cli`, `motac.configs`
+  - CLI internal boundary extracted: `motac.cli.commands` (while keeping the entry point stable)
+  - Import-path smoke tests added for new packages.
 
 ## Next step (M4)
-- Continue structure-first package layout separation (keep imports stable):
-  - extract one more boundary (suggested: organise `motac.sim` internals into subpackages, or introduce `motac.substrate` internal subpackages if needed),
-  - add import-path smoke test(s) for any new package.
-- Re-check M4 DoD against `docs/ROADMAP.md` after the next boundary is extracted; if satisfied, mark M4 complete and advance to M5.
+- Re-check M4 DoD against `docs/ROADMAP.md` now that an additional boundary has landed.
+- If satisfied, mark M4 complete and advance to M5.
 
 ## Next step (after M4 → M5)
 - Resume predict/eval plumbing work (some utilities already landed early; treat them as M5 scope).
