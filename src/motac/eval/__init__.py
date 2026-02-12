@@ -15,6 +15,8 @@ from ..sim import (
 )
 from ..sim.world import generate_random_world
 
+from .backtest import BacktestResult, backtest_fit_forecast_nll
+
 
 @dataclass(frozen=True, slots=True)
 class EvalConfig:
