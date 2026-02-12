@@ -1,9 +1,9 @@
 ```pm-status
 milestone: M13
 state: running
-headSha: 2dd1ec3a0491e0649162bafc619b98ffa126fe7a
-ciRunUrl: https://github.com/OJWatson/motac/actions/runs/21960678695
-updatedAtUtc: 2026-02-12T19:14:45Z
+headSha: 7568439cba4704a5d63a5da9f9e812a44007724a
+ciRunUrl: https://github.com/OJWatson/motac/actions/runs/21961371948
+updatedAtUtc: 2026-02-12T19:36:38Z
 ```
 
 ## Status
@@ -63,7 +63,7 @@ updatedAtUtc: 2026-02-12T19:14:45Z
   - Offline parameter-recovery tests on a tiny substrate for Poisson and NegBin.
 
 ## Next step
-- Within M13, add a short docs note (API docstring or Sphinx stub) describing the categorical mark contract + one-hot encoding helper, and link it from the model API docs.
+- Review M13 DoD coverage (marked scaffolding module + helpers + import-path test + docs). If complete, mark M13 complete and define the next milestone.
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.
