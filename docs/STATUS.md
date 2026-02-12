@@ -2,8 +2,8 @@
 milestone: M5
 state: running
 headSha: edfb3f190e8b063eb93b48c7905b3787936b46a7
-ciRunUrl: https://github.com/OJWatson/motac/actions/runs/21936678278
-updatedAtUtc: 2026-02-12T06:56:10Z
+ciRunUrl: https://github.com/OJWatson/motac/actions/runs/21936278420
+updatedAtUtc: 2026-02-12T06:58:52Z
 ```
 
 ## Status
@@ -18,7 +18,8 @@ updatedAtUtc: 2026-02-12T06:56:10Z
 - M5 is **in progress**.
 
 ## Next step (M5)
-- Implement minimal predict/eval plumbing for the parametric model and add toy-data tests (shapes/consistency), per `docs/ROADMAP.md`.
+- Land an end-to-end toy test: fit -> forecast -> score (mean NLL) using the road-constrained parametric model.
+- Add a Negative Binomial mean NLL smoke test (dispersion provided) to exercise the metric API.
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.
