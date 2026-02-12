@@ -1,9 +1,9 @@
 ```pm-status
-milestone: M2
-state: running
+milestone: M3
+state: complete
 headSha: 56996a0d7b3c1d94a17363e159f75d251d1a2a1a
 ciRunUrl: https://github.com/OJWatson/motac/actions?query=branch%3Amain
-updatedAtUtc: 2026-02-12T17:48:42Z
+updatedAtUtc: 2026-02-12T18:07:00Z
 ```
 
 ## Status
@@ -56,8 +56,14 @@ updatedAtUtc: 2026-02-12T17:48:42Z
   - Travel-time-to-nearest-POI (min travel time) features implemented and tested.
   - User tutorial added describing POI feature names + configuration knobs (`docs/tutorials/02_poi_features.md`).
 
-## Next step (M3)
-- Review M3 DoD coverage (see `docs/ROADMAP.md` → M3) and, if satisfied, mark M3 complete and pick the next milestone.
+## M3 — Parametric road-constrained Hawkes v1 (Poisson + NegBin)
+- **Complete**:
+  - Sparse road-constrained intensity based on travel-time neighbourhoods and W(d_travel).
+  - Poisson + NegBin likelihood support under a stable API.
+  - Offline parameter-recovery tests on a tiny substrate for Poisson and NegBin.
+
+## Next step
+- Decide and document the next milestone after M12 (extend `docs/ROADMAP.md` for marked Hawkes / learned kernels, per the PDF), then pick the smallest implementation slice.
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.
