@@ -23,3 +23,4 @@ Guidelines:
 - 2026-02-12: Added ACLED loader JSON config (`AcledEventsCsvConfig`) + CLI entry point `motac data acled-load`; added CLI test; ran `uv run ruff check .` + `uv run pytest` (72 passed); pushed `1ab9112`.
 - 2026-02-12: Documented `motac data acled-load` usage + example JSON config in `docs/loaders/acled.md`; ran `uv run ruff check .` + `uv run pytest` (72 passed); pushed `837291e`.
 - 2026-02-12: Added CI-safe observed-data end-to-end unit test (fit → predictive sample → score) on toy data; ran `uv run ruff check .` + `uv run pytest` (73 passed); pushed `e8bfbe3`.
+- 2026-02-12: Updated `docs/STATUS.md` (M8 next step + header) and appended to worklog; pushed `5456d0b`.
