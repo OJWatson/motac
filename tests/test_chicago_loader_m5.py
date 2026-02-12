@@ -35,6 +35,7 @@ def test_load_y_obs_matrix_defaults_identity_mobility(tmp_path) -> None:
     np.savetxt(y_path, y_obs, fmt="%d", delimiter=",")
 
     out = load_y_obs_matrix(path=y_path)
+    assert out.meta["mobility_source"] == "identity"
     assert out.world.mobility.shape == (3, 3)
     assert np.allclose(out.world.mobility, np.eye(3))
 
