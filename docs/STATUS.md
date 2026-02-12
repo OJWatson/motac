@@ -1,9 +1,9 @@
 ```pm-status
-milestone: M11
+milestone: M12
 state: running
 headSha: 4db512497db12e9b7e29f875d7f806096362a380
 ciRunUrl: https://github.com/OJWatson/motac/actions?query=branch%3Amain
-updatedAtUtc: 2026-02-12T16:02:24Z
+updatedAtUtc: 2026-02-12T16:20:58Z
 ```
 
 ## Status
@@ -40,11 +40,14 @@ updatedAtUtc: 2026-02-12T16:02:24Z
   - Comparison harness + tests exist for exact-vs-approx observed log-likelihood.
   - Docs note the interpretation gap: exact is conditional on `y_true`; Poisson-approx depends on Hawkes intensity/history proxying.
 
-## Next step (M11)
-- Wait for CI green on `4db5124`.
-  - To check quickly from the CLI, run:
-    - `python scripts/check_github_ci.py --repo OJWatson/motac --sha 4db512497db12e9b7e29f875d7f806096362a380`
-- If green, mark M11 as complete and decide the next milestone to add to `docs/ROADMAP.md`.
+- M11 is **complete**:
+  - CI-safe paper artefact generation stub exists (`motac paper generate-artifacts`).
+  - Synthetic eval JSON artefact now includes a minimal manifest (SHA/seed/config summary/timestamp).
+  - Unit tests cover artefact write + manifest contract.
+
+## Next step (M12)
+- Implement deterministic substrate cache bundle write/load (see `docs/ROADMAP.md` → M12).
+  - Add an offline unit test that validates expected cache files + provenance/config hash.
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.

@@ -72,3 +72,9 @@ for `motac`.
 ## M11 — Paper artefacts pipeline v1
 - DoD:
   - Reproducible artefact generation with CI-safe tests.
+
+## M12 — Substrate cache artefacts v1 (implementation)
+- Goal: implement the M1 DoD in code (the roadmap already defines the desired outcome; this milestone is the concrete build-out).
+- DoD:
+  - Substrate cache bundle writes/loads deterministically.
+  - Offline unit test validates expected cache files + provenance/config hash.
