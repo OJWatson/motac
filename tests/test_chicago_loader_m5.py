@@ -40,10 +40,33 @@ def test_load_y_obs_matrix_defaults_identity_mobility(tmp_path) -> None:
 
 
 def test_load_y_obs_matrix_from_repo_fixture() -> None:
-    fixture = Path(__file__).parent / "fixtures" / "chicago" / "y_obs_small.csv"
-    out = load_y_obs_matrix(path=fixture)
+    y_fixture = Path(__file__).parent / "fixtures" / "chicago" / "y_obs_small.csv"
+    m_fixture = Path(__file__).parent / "fixtures" / "chicago" / "mobility_small.npy"
+
+    out = load_y_obs_matrix(path=y_fixture, mobility_path=m_fixture)
 
     assert out.meta["schema"] == "placeholder-y_obs-matrix"
+    assert out.meta["mobility_source"] == str(m_fixture)
+
     assert out.y_obs.shape == (2, 4)
     assert np.array_equal(out.y_obs, np.array([[0, 1, 0, 2], [3, 0, 0, 1]], dtype=int))
-    assert np.allclose(out.world.mobility, np.eye(2))
+
+    assert out.world.mobility.shape == (2, 2)
+    assert np.allclose(out.world.mobility, np.array([[1.0, 0.1], [0.2, 1.0]]))
+
+
+def test_load_y_obs_matrix_rejects_mismatched_mobility_shape(tmp_path) -> None:
+    y_obs = np.array([[0, 1, 0], [2, 0, 1]], dtype=int)
+    y_path = tmp_path / "y_obs.csv"
+    np.savetxt(y_path, y_obs, fmt="%d", delimiter=",")
+
+    mobility = np.eye(3, dtype=float)
+    m_path = tmp_path / "mobility_bad.npy"
+    np.save(m_path, mobility)
+
+    try:
+        load_y_obs_matrix(path=y_path, mobility_path=m_path)
+    except ValueError as e:
+        assert "mobility must have shape" in str(e)
+    else:
+        raise AssertionError("Expected ValueError for mismatched mobility shape")
