@@ -1,9 +1,9 @@
 ```pm-status
 milestone: M6
 state: running
-headSha: c17c199319b6ed1bf971de234147323354400070
+headSha: 66bb0cd5078d5bf6b152d9db6b97e08a119b8435
 ciRunUrl: https://github.com/OJWatson/motac/actions?query=branch%3Amain
-updatedAtUtc: 2026-02-12T08:32:37Z
+updatedAtUtc: 2026-02-12T08:53:49Z
 ```
 
 ## Status
@@ -20,7 +20,7 @@ updatedAtUtc: 2026-02-12T08:32:37Z
   - Toy unit test covers basic shape/consistency expectations.
 
 ## Next step (M6)
-- Add a small committed mobility fixture (e.g. `.npy`) and a sanity test that `load_y_obs_matrix(..., mobility_path=...)` records `meta["mobility_source"]` and rejects mismatched shapes.
+- After CI is green for `66bb0cd`, extend the identity-mobility test to assert `meta["mobility_source"] == "identity"`.
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.
