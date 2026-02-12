@@ -1,9 +1,9 @@
 ```pm-status
-milestone: M5
+milestone: M6
 state: running
 headSha: 0855815b0e1e24a05ae0052c0fb0b6f5460d4ce1
 ciRunUrl: https://github.com/OJWatson/motac/actions?query=branch%3Amain
-updatedAtUtc: 2026-02-12T07:51:58Z
+updatedAtUtc: 2026-02-12T08:13:44Z
 ```
 
 ## Status
@@ -15,10 +15,12 @@ updatedAtUtc: 2026-02-12T07:51:58Z
   - CLI internal boundary extracted: `motac.cli.commands` (while keeping the entry point stable)
   - Import-path smoke tests added for new packages.
 
-- M5 is **in progress**.
+- M5 is **complete**:
+  - Minimal fit→forecast→score backtest helper exists (`motac.eval.backtest.backtest_fit_forecast_nll`).
+  - Toy unit test covers basic shape/consistency expectations.
 
-## Next step (M5)
-- Wait for CI on `0855815` to go green, then (if still satisfied) mark M5 complete and advance STATUS to M6.
+## Next step (M6)
+- Start `motac.loaders.chicago`: add a deterministic loader skeleton + a tiny local CSV/fixture-driven sanity test (no network) to establish the public API + expected schema.
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.
