@@ -1,9 +1,9 @@
 ```pm-status
-milestone: M15
-state: complete
+milestone: M16
+state: running
 headSha: 4d5eeb401c662996d95e2fcc2ca4a6d8836b1d92
 ciRunUrl: https://github.com/OJWatson/motac/actions/runs/21974199542
-updatedAtUtc: 2026-02-13T04:23:00Z
+updatedAtUtc: 2026-02-13T04:51:50Z
 ```
 
 ## Status
@@ -74,7 +74,7 @@ updatedAtUtc: 2026-02-13T04:23:00Z
   - CI-safe unit tests cover happy path and key rejection cases (negative outputs, wrong shapes, non-array returns, non-finite weights).
 
 ## Next step
-- Define/pick the next milestone beyond M15 (e.g. begin downstream integration of neural kernels into a minimal model path, or add the next PDF-aligned scaffold).
+- Begin M16: add the smallest adapter + CI-safe test that exercises a validated `kernel_fn` in an existing model path.
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.

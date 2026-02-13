@@ -105,3 +105,13 @@ for `motac`.
     - happy-path validation on a reference kernel,
     - rejection of negative outputs,
     - rejection of incorrect output shapes.
+
+## M16 — Neural kernel minimal integration v1
+- Goal: wire the M14/M15 neural-kernel interface into at least one minimal
+  end-to-end model path, without committing to a full neural architecture.
+- DoD:
+  - A small adapter exists that uses a `kernel_fn` (validated via
+    `validate_kernel_fn`) to produce nonnegative travel-time weights compatible
+    with the existing road-constrained model plumbing.
+  - CI-safe unit test(s) cover the adapter on a tiny synthetic substrate and
+    assert basic shape/value invariants.
