@@ -1,6 +1,6 @@
 # Next tasks
 
 ## Now
-- [ ] M0.5 — feat: add config + run directory conventions
+- [ ] M1.1 — feat(spatial): grid builder + coordinate transforms
 ## Next
 - [ ]

@@ -2,5 +2,5 @@
 
 - state: running
 - milestone: M0
-- next: M0.5 — feat: add config + run directory conventions
+- next: M1.1 — feat(spatial): grid builder + coordinate transforms
 - blockers: none
