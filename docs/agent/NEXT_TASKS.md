@@ -1,6 +1,6 @@
 # Next tasks
 
 ## Now
-- [ ] M0.3 — ci: add github actions for lint+tests
+- [ ] M0.4 — feat: add canonical dataclasses (EventRecord, Dataset, Substrate)
 ## Next
 - [ ]

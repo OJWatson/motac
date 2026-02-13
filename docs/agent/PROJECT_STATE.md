@@ -2,5 +2,5 @@
 
 - state: running
 - milestone: M0
-- next: M0.3 — ci: add github actions for lint+tests
+- next: M0.4 — feat: add canonical dataclasses (EventRecord, Dataset, Substrate)
 - blockers: none
