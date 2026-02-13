@@ -55,3 +55,4 @@ Guidelines:
 - 2026-02-13: Hardened `scripts/check_github_ci.py` API headers + error reporting (more robust check-runs query); ran `uv run ruff check .` + `uv run pytest` (87 passed); pushed `4d5eeb4`.
 - 2026-02-13: Confirmed CI success for `4d5eeb4` (run https://github.com/OJWatson/motac/actions/runs/21974199542); updated STATUS `headSha` to the correct full SHA and marked M15 complete.
 - 2026-02-13: Added M16 milestone definition to `docs/ROADMAP.md` (neural kernel minimal integration) and advanced `docs/STATUS.md` to M16 running; ran `uv run ruff check .` + `uv run pytest` (87 passed).
+- 2026-02-13: Added M16 adapter `travel_time_kernel_from_fn` to build sparse travel-time weights from a validated `kernel_fn`, plus CI-safe unit test; ran `uv run ruff check .` + `uv run pytest` (88 passed); pushed `3275af2`.
