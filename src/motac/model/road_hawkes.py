@@ -136,12 +136,14 @@ def predict_intensity_one_step_road(
     beta: float,
     kernel: np.ndarray,
     y_history: np.ndarray,
+    kernel_fn: KernelFn | None = None,
+    validate_kernel: bool = True,
 ) -> np.ndarray:
     """One-step-ahead intensity forecast using sparse road-constrained neighbours.
 
     Model:
       h(t) = sum_l kernel[l-1] * y(t-l)
-      W = exp(-beta * d_travel)
+      W = exp(-beta * d_travel)  (or W = kernel_fn(d_travel))
       lambda(t) = mu + alpha * (W @ h(t))
 
     Parameters
@@ -153,11 +155,18 @@ def predict_intensity_one_step_road(
     alpha:
         Non-negative excitation scale.
     beta:
-        Positive travel-time decay rate.
+        Positive travel-time decay rate. Ignored when ``kernel_fn`` is provided.
     kernel:
         Discrete lag kernel.
     y_history:
         Past counts (n_cells, n_steps_history).
+    kernel_fn:
+        Optional neural-kernel callable mapping nonnegative travel times to
+        nonnegative weights. If provided, the kernel is validated via
+        ``validate_kernel_fn`` and used to build ``W`` with
+        ``travel_time_kernel_from_fn``.
+    validate_kernel:
+        If True (default), validate ``kernel_fn`` via ``validate_kernel_fn``.
 
     Returns
     -------
@@ -173,7 +182,16 @@ def predict_intensity_one_step_road(
         raise ValueError("mu must have shape (n_cells,)")
 
     h = convolved_history_last(y=y_history, kernel=kernel)
-    W = exp_travel_time_kernel(travel_time_s=travel_time_s, beta=beta)
+
+    if kernel_fn is None:
+        W = exp_travel_time_kernel(travel_time_s=travel_time_s, beta=beta)
+    else:
+        W = travel_time_kernel_from_fn(
+            travel_time_s=travel_time_s,
+            kernel_fn=kernel_fn,
+            validate=validate_kernel,
+        )
+
     excitation = W @ h
     lam = np.asarray(mu, dtype=float) + float(alpha) * np.asarray(excitation, dtype=float)
     return np.clip(lam, 0.0, None)

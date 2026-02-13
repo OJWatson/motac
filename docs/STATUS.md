@@ -1,9 +1,9 @@
 ```pm-status
 milestone: M16
 state: running
-headSha: 3275af2f6affb14b75f51683cdc593ca05397bbe
-ciRunUrl: https://github.com/OJWatson/motac/actions/runs/21974199542
-updatedAtUtc: 2026-02-13T05:14:34Z
+headSha: 20248e544d4d0139a6b9aef0d165f523090af833
+ciRunUrl: PENDING
+updatedAtUtc: 2026-02-13T05:36:27Z
 ```
 
 ## Status
@@ -74,7 +74,7 @@ updatedAtUtc: 2026-02-13T05:14:34Z
   - CI-safe unit tests cover happy path and key rejection cases (negative outputs, wrong shapes, non-array returns, non-finite weights).
 
 ## Next step
-- Begin M16: add the smallest adapter + CI-safe test that exercises a validated `kernel_fn` in an existing model path.
+- Continue M16: extend the in-sample/intensity-matrix path (and/or fitting) to accept an optional validated `kernel_fn`, not just the one-step forecast helper.
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.
