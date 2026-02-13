@@ -64,3 +64,4 @@ Guidelines:
 - 2026-02-13T07:12:02+00:00 M0.1 complete (job 6a4ca1af-ccf7-4ed4-99af-c74d6f36eb09): moved legacy docs; added ROADMAP_REBUILD.md
 - 2026-02-13T07:23:30+00:00 M0.2 complete (job e3a174e4-2da9-489e-8f38-6e3f3835e9b4): standardised tooling + pre-commit
 - 2026-02-13T07:30:58+00:00 M0.3 complete (job d4b43700-722d-422f-9302-cd0a4daffba2): CI workflow for lint+tests present
+- 2026-02-13T07:51:16+00:00 M0.4 complete (job 0466b8c6-6913-41ce-ad20-48ec3cb33b74): added canonical core types (legacy untouched)

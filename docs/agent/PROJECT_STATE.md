@@ -2,5 +2,5 @@
 
 - state: running
 - milestone: M0
-- next: M0.4 — feat: add canonical dataclasses (EventRecord, Dataset, Substrate)
+- next: M0.5 — feat: add config + run directory conventions
 - blockers: none

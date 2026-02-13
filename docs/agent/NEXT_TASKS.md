@@ -1,6 +1,6 @@
 # Next tasks
 
 ## Now
-- [ ] M0.4 — feat: add canonical dataclasses (EventRecord, Dataset, Substrate)
+- [ ] M0.5 — feat: add config + run directory conventions
 ## Next
 - [ ]
