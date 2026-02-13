@@ -1,5 +1,3 @@
-# Next tasks
+# NEXT_TASKS
 
-## Now
-- [ ] M1.3 — feat(spatial): add lon/lat → cell_id lookup helper
-## Next
+Now: M0.1 — chore: hard reset roadmap + move legacy docs
