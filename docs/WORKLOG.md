@@ -61,3 +61,4 @@ Guidelines:
 - 2026-02-13: Threaded optional validated `kernel_fn` through `fit_road_hawkes_mle` and added CI-safe unit test rejecting negative weights; ran `uv run ruff check .` + `uv run pytest` (91 passed); pushed `4468154`.
 - 2026-02-13: Updated STATUS header to latest commit and re-ran local checks; `uv run ruff check .` + `uv run pytest` (91 passed); pushed `eaa3505`.
 - 2026-02-13: Reverted STATUS `headSha` to last code-gated commit (`4468154`) (docs-only follow-ups); pushed `5ea236f`.
+- 2026-02-13T07:12:02+00:00 M0.1 complete (job 6a4ca1af-ccf7-4ed4-99af-c74d6f36eb09): moved legacy docs; added ROADMAP_REBUILD.md
