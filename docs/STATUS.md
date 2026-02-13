@@ -1,9 +1,9 @@
 ```pm-status
-milestone: M14
-state: complete
-headSha: 46a90ed9e220cb6e7019858b76aa16a7f38e92c0
-ciRunUrl: https://github.com/OJWatson/motac/actions/runs/21964077136
-updatedAtUtc: 2026-02-12T21:02:30Z
+milestone: M15
+state: running
+headSha: TBD
+ciRunUrl: (pending)
+updatedAtUtc: 2026-02-13T02:59:00Z
 ```
 
 ## Status
@@ -68,8 +68,13 @@ updatedAtUtc: 2026-02-12T21:02:30Z
   - Tiny deterministic toy kernel (`ExpDecayKernel`) + CI-safe unit tests.
   - Sphinx API docs page exists and is wired into the docs index.
 
+## M15 — Neural kernel contract hardening v1
+- **Running**:
+  - Add a tiny validation helper (`validate_kernel_fn`) to assert the v1 kernel contract.
+
 ## Next step
-- Define the next milestone (M15) in `docs/ROADMAP.md` and set `docs/STATUS.md` to the new active milestone.
+- Finish M15 by ensuring the kernel contract hardening helper is documented (if needed) and/or
+  extending coverage to any additional edge cases discovered by downstream usage.
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.

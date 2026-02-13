@@ -49,3 +49,4 @@ Guidelines:
 - 2026-02-12: Added Sphinx API page for `motac.model.neural_kernels` and linked it from the docs index; ran `uv run ruff check .` + `uv run pytest` (82 passed) + `uv run sphinx-build -b html docs docs/_build/html`; pushed `46a90ed`.
 - 2026-02-12: CI green for `46a90ed`; marked M14 (neural kernel scaffolding) complete in `docs/STATUS.md` and set next step to define M15.
 - 2026-02-12: CI green for STATUS/WORKLOG update commit `28d4459` (runs https://github.com/OJWatson/motac/actions/runs/21964077136, https://github.com/OJWatson/motac/actions/runs/21964077130); updated STATUS header to keep `headSha` on last code gate.
+- 2026-02-13: Advanced roadmap/status to M15 (running); added `validate_kernel_fn` helper for neural-kernel contract hardening + CI-safe unit tests; ran `uv run ruff check .` + `uv run pytest` (85 passed).

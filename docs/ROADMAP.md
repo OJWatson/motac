@@ -94,3 +94,14 @@ for `motac`.
     - a tiny, documented kernel interface (call signature + expected shapes),
     - a toy implementation sufficient for unit tests.
   - CI-safe import-path stability unit test for the new module/API.
+
+## M15 — Neural kernel contract hardening v1
+- Goal: harden the neural-kernel scaffold into a small utility surface that other
+  modules can safely depend on (without introducing a full neural model).
+- DoD:
+  - A tiny validation helper exists (e.g. `validate_kernel_fn`) that asserts the
+    v1 shape/value contract and fails fast on contract violations.
+  - CI-safe unit tests cover at least:
+    - happy-path validation on a reference kernel,
+    - rejection of negative outputs,
+    - rejection of incorrect output shapes.

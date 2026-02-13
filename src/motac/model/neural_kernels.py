@@ -27,6 +27,33 @@ class KernelFn(Protocol):
     def __call__(self, d: np.ndarray) -> np.ndarray: ...
 
 
+def validate_kernel_fn(kernel: KernelFn, *, name: str = "kernel") -> None:
+    """Validate that a kernel satisfies the minimal (v1) shape/value contract.
+
+    This is intentionally small and opinionated: it exists to catch accidental
+    contract drift early (e.g. returning negative weights or wrong shapes).
+
+    Parameters
+    ----------
+    kernel:
+        Callable to validate.
+    name:
+        Used in raised error messages.
+    """
+
+    d = np.asarray([[0.0, 1.0, 2.5], [0.0, 0.5, 3.0]], dtype=np.float64)
+    w = kernel(d)
+
+    if not isinstance(w, np.ndarray):
+        raise TypeError(f"{name} must return a numpy.ndarray, got {type(w).__name__}")
+    if w.shape != d.shape:
+        raise ValueError(f"{name} must return same shape as input: {w.shape} != {d.shape}")
+    if not np.all(np.isfinite(w)):
+        raise ValueError(f"{name} must return finite weights")
+    if np.any(w < 0):
+        raise ValueError(f"{name} must return nonnegative weights")
+
+
 @dataclass(frozen=True)
 class ExpDecayKernel:
     """A tiny, deterministic kernel implementation for unit tests.
