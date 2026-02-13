@@ -74,7 +74,7 @@ updatedAtUtc: 2026-02-13T05:36:51Z
   - CI-safe unit tests cover happy path and key rejection cases (negative outputs, wrong shapes, non-array returns, non-finite weights).
 
 ## Next step
-- Continue M16: extend the in-sample/intensity-matrix path (and/or fitting) to accept an optional validated `kernel_fn`, not just the one-step forecast helper.
+- Continue M16: extend a minimal fitting/estimation path to accept an optional validated `kernel_fn` (now supported by `road_intensity_matrix`/`road_loglik` and the one-step forecast helper).
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.

@@ -57,3 +57,4 @@ Guidelines:
 - 2026-02-13: Added M16 milestone definition to `docs/ROADMAP.md` (neural kernel minimal integration) and advanced `docs/STATUS.md` to M16 running; ran `uv run ruff check .` + `uv run pytest` (87 passed).
 - 2026-02-13: Added M16 adapter `travel_time_kernel_from_fn` to build sparse travel-time weights from a validated `kernel_fn`, plus CI-safe unit test; ran `uv run ruff check .` + `uv run pytest` (88 passed); pushed `3275af2`.
 - 2026-02-13: Integrated optional `kernel_fn` into `predict_intensity_one_step_road` (uses `travel_time_kernel_from_fn`) and added CI-safe unit test asserting correct excitation when off-diagonal weights are zeroed; ran `uv run ruff check .` + `uv run pytest` (89 passed).
+- 2026-02-13: Extended in-sample `road_intensity_matrix`/`road_loglik` to accept optional validated `kernel_fn` (uses `travel_time_kernel_from_fn`) with CI-safe unit test; ran `uv run ruff check .` + `uv run pytest` (90 passed).
