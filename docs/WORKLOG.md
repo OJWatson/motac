@@ -66,3 +66,4 @@ Guidelines:
 - 2026-02-13T07:30:58+00:00 M0.3 complete (job d4b43700-722d-422f-9302-cd0a4daffba2): CI workflow for lint+tests present
 - 2026-02-13T07:51:16+00:00 M0.4 complete (job 0466b8c6-6913-41ce-ad20-48ec3cb33b74): added canonical core types (legacy untouched)
 - 2026-02-13T07:53:34+00:00 M0.5 complete (job c0f1e6cb-bd50-45ef-a3e6-c4d2f99a1e0a): config + run dir conventions
+- 2026-02-13T08:21:20+00:00 M0.5 complete (job 5a0636d0-d12a-4b13-8774-9a988f884a0a): config + run dir conventions
