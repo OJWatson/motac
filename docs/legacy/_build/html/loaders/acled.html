@@ -1,0 +1,244 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ACLED loader: events CSV contract (v1 placeholder) &mdash; motac 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tutorial: Synthetic quickstart" href="../tutorials/01_synthetic_quickstart.html" />
+    <link rel="prev" title="Chicago loader: raw on-disk contract (v1 placeholder)" href="chicago.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            motac
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../model/00_overview.html">Model overview</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Loaders</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="chicago.html">Chicago loader: raw on-disk contract (v1 placeholder)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">ACLED loader: events CSV contract (v1 placeholder)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#file">File</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#acled-csv"><code class="docutils literal notranslate"><span class="pre">acled.csv</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#output-semantics">Output semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mobility-optional">Mobility (optional)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cli-usage">CLI usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-usage-python">Example usage (Python)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#determinism">Determinism</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/01_synthetic_quickstart.html">Tutorial: Synthetic quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/02_poi_features.html">Tutorial: POI features (baseline)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/schema.html">Schema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/substrate.html">Substrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/sim.html">Simulation and Hawkes utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/model.html">Model API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/neural_kernels.html">Neural kernels API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/eval.html">Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/cli.html">Command line interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paper_artefacts.html">Paper artefacts pipeline (M11)</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">motac</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Loaders</a></li>
+      <li class="breadcrumb-item active">ACLED loader: events CSV contract (v1 placeholder)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/loaders/acled.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="acled-loader-events-csv-contract-v1-placeholder">
+<h1>ACLED loader: events CSV contract (v1 placeholder)<a class="headerlink" href="#acled-loader-events-csv-contract-v1-placeholder" title="Link to this heading"></a></h1>
+<p>This is the minimal, <strong>deterministic</strong> on-disk input contract consumed by
+<code class="docutils literal notranslate"><span class="pre">motac.loaders.acled.load_acled_events_csv</span></code>.</p>
+<p>The implementation is intentionally lightweight (no pandas) and uses a
+<em>placeholder</em> schema that is sufficient for end-to-end wiring + tests.</p>
+<section id="file">
+<h2>File<a class="headerlink" href="#file" title="Link to this heading"></a></h2>
+<section id="acled-csv">
+<h3><code class="docutils literal notranslate"><span class="pre">acled.csv</span></code><a class="headerlink" href="#acled-csv" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Format: CSV <strong>with a header</strong>.</p></li>
+<li><p>Each row represents a single event.</p></li>
+<li><p>Required columns:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">event_date</span></code>: ISO date string <code class="docutils literal notranslate"><span class="pre">YYYY-MM-DD</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lat</span></code>: latitude (float, finite, in <code class="docutils literal notranslate"><span class="pre">[-90,</span> <span class="pre">90]</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lon</span></code>: longitude (float, finite, in <code class="docutils literal notranslate"><span class="pre">[-180,</span> <span class="pre">180]</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fatalities</span></code>: non-negative integer (encoded as number; must be integer-valued)</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="output-semantics">
+<h2>Output semantics<a class="headerlink" href="#output-semantics" title="Link to this heading"></a></h2>
+<p>The loader aggregates events to <strong>daily</strong> counts per inferred location.</p>
+<ul class="simple">
+<li><p>Locations are inferred as the unique <code class="docutils literal notranslate"><span class="pre">(lon,</span> <span class="pre">lat)</span></code> pairs present in the file.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">y_obs</span></code> has shape <code class="docutils literal notranslate"><span class="pre">(n_locations,</span> <span class="pre">n_days)</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">value</span></code> controls the aggregated quantity:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">value=&quot;events&quot;</span></code>: counts events per <code class="docutils literal notranslate"><span class="pre">(location,</span> <span class="pre">day)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">value=&quot;fatalities&quot;</span></code>: sums fatalities per <code class="docutils literal notranslate"><span class="pre">(location,</span> <span class="pre">day)</span></code></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="mobility-optional">
+<h2>Mobility (optional)<a class="headerlink" href="#mobility-optional" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Optional <code class="docutils literal notranslate"><span class="pre">mobility.npy</span></code> can be provided via <code class="docutils literal notranslate"><span class="pre">mobility_path</span></code>.</p></li>
+<li><p>Format: <code class="docutils literal notranslate"><span class="pre">numpy.save</span></code>/<code class="docutils literal notranslate"><span class="pre">numpy.load</span></code> <code class="docutils literal notranslate"><span class="pre">.npy</span></code> file.</p></li>
+<li><p>Shape: <code class="docutils literal notranslate"><span class="pre">(n_locations,</span> <span class="pre">n_locations)</span></code>.</p></li>
+<li><p>If omitted, the loader uses the identity matrix.</p></li>
+</ul>
+</section>
+<section id="cli-usage">
+<h2>CLI usage<a class="headerlink" href="#cli-usage" title="Link to this heading"></a></h2>
+<p>The CLI entry point <code class="docutils literal notranslate"><span class="pre">motac</span> <span class="pre">data</span> <span class="pre">acled-load</span></code> reads a tiny JSON config and prints
+a small JSON summary (including the loaded <code class="docutils literal notranslate"><span class="pre">y_obs</span></code> shape).</p>
+<p>Example config (<code class="docutils literal notranslate"><span class="pre">acled_events.json</span></code>):</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/path/to/acled.csv&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;mobility_path&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;events&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>run<span class="w"> </span>motac<span class="w"> </span>data<span class="w"> </span>acled-load<span class="w"> </span>--config<span class="w"> </span>acled_events.json
+</pre></div>
+</div>
+<p>Notes:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">value</span></code> can be:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;events&quot;</span></code> (count events)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;fatalities&quot;</span></code> (sum fatalities)</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="example-usage-python">
+<h2>Example usage (Python)<a class="headerlink" href="#example-usage-python" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">motac.loaders.acled</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_acled_events_csv</span>
+
+<span class="n">out</span> <span class="o">=</span> <span class="n">load_acled_events_csv</span><span class="p">(</span>
+    <span class="n">path</span><span class="o">=</span><span class="s2">&quot;/path/to/acled.csv&quot;</span><span class="p">,</span>
+    <span class="n">mobility_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">value</span><span class="o">=</span><span class="s2">&quot;events&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">y_obs</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;dates&quot;</span><span class="p">][:</span><span class="mi">3</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+<section id="determinism">
+<h2>Determinism<a class="headerlink" href="#determinism" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Given identical bytes on disk, the loader returns identical <code class="docutils literal notranslate"><span class="pre">y_obs</span></code> and
+mobility arrays.</p></li>
+<li><p>Locations are ordered by <code class="docutils literal notranslate"><span class="pre">numpy.unique</span></code> over <code class="docutils literal notranslate"><span class="pre">(lon,</span> <span class="pre">lat)</span></code> pairs (lexicographic
+by <code class="docutils literal notranslate"><span class="pre">lon</span></code>, then <code class="docutils literal notranslate"><span class="pre">lat</span></code>).</p></li>
+<li><p>Days are ordered by sorting ISO date strings <code class="docutils literal notranslate"><span class="pre">YYYY-MM-DD</span></code>.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="chicago.html" class="btn btn-neutral float-left" title="Chicago loader: raw on-disk contract (v1 placeholder)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../tutorials/01_synthetic_quickstart.html" class="btn btn-neutral float-right" title="Tutorial: Synthetic quickstart" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, OJ Watson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

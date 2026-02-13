@@ -1,0 +1,247 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutorial: POI features (baseline) &mdash; motac 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Schema" href="../api/schema.html" />
+    <link rel="prev" title="Tutorial: Synthetic quickstart" href="01_synthetic_quickstart.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            motac
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../model/00_overview.html">Model overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../loaders/index.html">Loaders</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="01_synthetic_quickstart.html">Tutorial: Synthetic quickstart</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial: POI features (baseline)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-you-get">What you get</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#count-features">Count features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#travel-time-to-nearest-features-min-travel-time">Travel-time-to-nearest features (min travel time)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#configuration-knobs-substrateconfig">Configuration knobs (SubstrateConfig)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-json-config">Example JSON config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#inspecting-feature-names">Inspecting feature names</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#related-reference">Related reference</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/schema.html">Schema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/substrate.html">Substrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/sim.html">Simulation and Hawkes utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/model.html">Model API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/neural_kernels.html">Neural kernels API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/eval.html">Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/cli.html">Command line interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paper_artefacts.html">Paper artefacts pipeline (M11)</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">motac</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Tutorial: POI features (baseline)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/02_poi_features.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="tutorial-poi-features-baseline">
+<h1>Tutorial: POI features (baseline)<a class="headerlink" href="#tutorial-poi-features-baseline" title="Link to this heading"></a></h1>
+<p>This tutorial describes the <strong>baseline Point-Of-Interest (POI) features</strong> that can
+be included in a substrate build (Roadmap <strong>M2</strong>).</p>
+<p>POI features are computed during substrate building and stored on the returned
+<code class="docutils literal notranslate"><span class="pre">Substrate</span></code> as <code class="docutils literal notranslate"><span class="pre">substrate.poi</span></code>.</p>
+<section id="what-you-get">
+<h2>What you get<a class="headerlink" href="#what-you-get" title="Link to this heading"></a></h2>
+<p>When POIs are enabled, <code class="docutils literal notranslate"><span class="pre">substrate.poi</span></code> is a <code class="docutils literal notranslate"><span class="pre">POIFeatures</span></code> object:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span></code>: a NumPy array with shape <code class="docutils literal notranslate"><span class="pre">(n_cells,</span> <span class="pre">n_features)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">feature_names</span></code>: list of feature names aligned to the columns of <code class="docutils literal notranslate"><span class="pre">x</span></code></p></li>
+</ul>
+<section id="count-features">
+<h3>Count features<a class="headerlink" href="#count-features" title="Link to this heading"></a></h3>
+<p>We always include the total count:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">poi_count</span></code></p></li>
+</ul>
+<p>Optionally, you can request <strong>tag/value breakout</strong> counts using <code class="docutils literal notranslate"><span class="pre">poi_tags</span></code>.</p>
+<p>Examples:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">{&quot;amenity&quot;:</span> <span class="pre">true}</span></code> adds a feature <code class="docutils literal notranslate"><span class="pre">amenity</span></code> counting POIs with a non-null
+<code class="docutils literal notranslate"><span class="pre">amenity</span></code> property.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">{&quot;amenity&quot;:</span> <span class="pre">[&quot;cafe&quot;,</span> <span class="pre">&quot;restaurant&quot;]}</span></code> adds <code class="docutils literal notranslate"><span class="pre">amenity=cafe</span></code> and
+<code class="docutils literal notranslate"><span class="pre">amenity=restaurant</span></code>.</p></li>
+</ul>
+</section>
+<section id="travel-time-to-nearest-features-min-travel-time">
+<h3>Travel-time-to-nearest features (min travel time)<a class="headerlink" href="#travel-time-to-nearest-features-min-travel-time" title="Link to this heading"></a></h3>
+<p>If <code class="docutils literal notranslate"><span class="pre">poi_travel_time_features=true</span></code>, the builder appends travel-time-based
+features derived from the cached sparse travel-time neighbourhoods:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">poi_min_travel_time_s</span></code>: minimum travel time (seconds) from each grid cell to
+<em>any</em> cell that contains at least one POI.</p></li>
+</ul>
+<p>If you also specify <code class="docutils literal notranslate"><span class="pre">poi_tags</span></code>, tag/value-specific min travel time features are
+added too:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">poi_&lt;tag&gt;_min_travel_time_s</span></code> for <code class="docutils literal notranslate"><span class="pre">&lt;tag&gt;:</span> <span class="pre">true</span></code> (e.g. <code class="docutils literal notranslate"><span class="pre">poi_amenity_min_travel_time_s</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">poi_&lt;tag&gt;=&lt;value&gt;_min_travel_time_s</span></code> for <code class="docutils literal notranslate"><span class="pre">&lt;tag&gt;:</span> <span class="pre">[values]</span></code>
+(e.g. <code class="docutils literal notranslate"><span class="pre">poi_amenity=school_min_travel_time_s</span></code>)</p></li>
+</ul>
+<p>If a POI target is not reachable within the neighbourhood cutoff, the feature is
+set to <code class="docutils literal notranslate"><span class="pre">max_travel_time_s</span></code>.</p>
+</section>
+</section>
+<section id="configuration-knobs-substrateconfig">
+<h2>Configuration knobs (SubstrateConfig)<a class="headerlink" href="#configuration-knobs-substrateconfig" title="Link to this heading"></a></h2>
+<p>POI behaviour is controlled by these <code class="docutils literal notranslate"><span class="pre">SubstrateConfig</span></code> fields:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">disable_pois</span></code> (bool, default <code class="docutils literal notranslate"><span class="pre">false</span></code>): disable all POI feature generation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">poi_geojson_path</span></code> (string, optional): path to a local GeoJSON file providing
+POIs (offline / tests / reproducible experiments).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">poi_tags</span></code> (object/dict, optional): tag/value selection for breakout features.
+Interpreted as:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">{&quot;tag&quot;:</span> <span class="pre">true}</span></code>: count all POIs where <code class="docutils literal notranslate"><span class="pre">properties[tag]</span></code> is non-null</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">{&quot;tag&quot;:</span> <span class="pre">[&quot;v1&quot;,</span> <span class="pre">&quot;v2&quot;]}</span></code>: count only specific values</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">poi_travel_time_features</span></code> (bool, default <code class="docutils literal notranslate"><span class="pre">false</span></code>): add min-travel-time
+features to the nearest POI target(s).</p></li>
+</ul>
+<p>POIs can be sourced either by:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">poi_geojson_path</span></code> (local file), or</p></li>
+<li><p>OSM-derived POIs using <code class="docutils literal notranslate"><span class="pre">poi_tags</span></code> together with a region spec (<code class="docutils literal notranslate"><span class="pre">place</span></code> or
+<code class="docutils literal notranslate"><span class="pre">north/south/east/west</span></code> or <code class="docutils literal notranslate"><span class="pre">graphml_path</span></code>).</p></li>
+</ul>
+</section>
+<section id="example-json-config">
+<h2>Example JSON config<a class="headerlink" href="#example-json-config" title="Link to this heading"></a></h2>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;place&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Camden, London, UK&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;cell_size_m&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">250.0</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;max_travel_time_s&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">900.0</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;poi_tags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;amenity&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;cafe&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;restaurant&quot;</span><span class="p">]},</span>
+<span class="w">  </span><span class="nt">&quot;poi_travel_time_features&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;cache_dir&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;./cache/camden&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="inspecting-feature-names">
+<h2>Inspecting feature names<a class="headerlink" href="#inspecting-feature-names" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">motac.substrate.builder</span><span class="w"> </span><span class="kn">import</span> <span class="n">SubstrateBuilder</span><span class="p">,</span> <span class="n">SubstrateConfig</span>
+
+<span class="n">cfg</span> <span class="o">=</span> <span class="n">SubstrateConfig</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="s2">&quot;./substrate.json&quot;</span><span class="p">)</span>
+<span class="n">sub</span> <span class="o">=</span> <span class="n">SubstrateBuilder</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">sub</span><span class="o">.</span><span class="n">poi</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;POIs disabled or not available&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">sub</span><span class="o">.</span><span class="n">poi</span><span class="o">.</span><span class="n">feature_names</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sub</span><span class="o">.</span><span class="n">poi</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="related-reference">
+<h2>Related reference<a class="headerlink" href="#related-reference" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>API reference: <code class="docutils literal notranslate"><span class="pre">docs/api/substrate.md</span></code> (includes a compact description of the
+same naming conventions)</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="01_synthetic_quickstart.html" class="btn btn-neutral float-left" title="Tutorial: Synthetic quickstart" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../api/schema.html" class="btn btn-neutral float-right" title="Schema" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, OJ Watson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

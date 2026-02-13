@@ -1,0 +1,393 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Evaluation &mdash; motac 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Command line interface" href="cli.html" />
+    <link rel="prev" title="Neural kernels API" href="neural_kernels.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            motac
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../model/00_overview.html">Model overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../loaders/index.html">Loaders</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/01_synthetic_quickstart.html">Tutorial: Synthetic quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/02_poi_features.html">Tutorial: POI features (baseline)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="schema.html">Schema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="substrate.html">Substrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sim.html">Simulation and Hawkes utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">Model API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="neural_kernels.html">Neural kernels API</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Evaluation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#motac.eval.BacktestResult"><code class="docutils literal notranslate"><span class="pre">BacktestResult</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#motac.eval.BacktestResult.n_train"><code class="docutils literal notranslate"><span class="pre">BacktestResult.n_train</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.eval.BacktestResult.horizon"><code class="docutils literal notranslate"><span class="pre">BacktestResult.horizon</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.eval.BacktestResult.nll"><code class="docutils literal notranslate"><span class="pre">BacktestResult.nll</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.eval.BacktestResult.__init__"><code class="docutils literal notranslate"><span class="pre">BacktestResult.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#motac.eval.backtest_fit_forecast_nll"><code class="docutils literal notranslate"><span class="pre">backtest_fit_forecast_nll()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#motac.eval.EvalConfig"><code class="docutils literal notranslate"><span class="pre">EvalConfig</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#motac.eval.EvalConfig.seed"><code class="docutils literal notranslate"><span class="pre">EvalConfig.seed</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.eval.EvalConfig.n_locations"><code class="docutils literal notranslate"><span class="pre">EvalConfig.n_locations</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.eval.EvalConfig.n_steps_train"><code class="docutils literal notranslate"><span class="pre">EvalConfig.n_steps_train</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.eval.EvalConfig.horizon"><code class="docutils literal notranslate"><span class="pre">EvalConfig.horizon</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.eval.EvalConfig.mu"><code class="docutils literal notranslate"><span class="pre">EvalConfig.mu</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.eval.EvalConfig.alpha"><code class="docutils literal notranslate"><span class="pre">EvalConfig.alpha</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.eval.EvalConfig.n_lags"><code class="docutils literal notranslate"><span class="pre">EvalConfig.n_lags</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.eval.EvalConfig.beta"><code class="docutils literal notranslate"><span class="pre">EvalConfig.beta</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.eval.EvalConfig.p_detect"><code class="docutils literal notranslate"><span class="pre">EvalConfig.p_detect</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.eval.EvalConfig.false_rate"><code class="docutils literal notranslate"><span class="pre">EvalConfig.false_rate</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.eval.EvalConfig.fit_maxiter"><code class="docutils literal notranslate"><span class="pre">EvalConfig.fit_maxiter</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.eval.EvalConfig.n_paths"><code class="docutils literal notranslate"><span class="pre">EvalConfig.n_paths</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.eval.EvalConfig.q"><code class="docutils literal notranslate"><span class="pre">EvalConfig.q</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.eval.EvalConfig.to_json"><code class="docutils literal notranslate"><span class="pre">EvalConfig.to_json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.eval.EvalConfig.from_json"><code class="docutils literal notranslate"><span class="pre">EvalConfig.from_json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.eval.EvalConfig.__init__"><code class="docutils literal notranslate"><span class="pre">EvalConfig.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#motac.eval.evaluate_synthetic"><code class="docutils literal notranslate"><span class="pre">evaluate_synthetic()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#motac.eval.backtest.BacktestResult"><code class="docutils literal notranslate"><span class="pre">BacktestResult</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#motac.eval.backtest.BacktestResult.n_train"><code class="docutils literal notranslate"><span class="pre">BacktestResult.n_train</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.eval.backtest.BacktestResult.horizon"><code class="docutils literal notranslate"><span class="pre">BacktestResult.horizon</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.eval.backtest.BacktestResult.nll"><code class="docutils literal notranslate"><span class="pre">BacktestResult.nll</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.eval.backtest.BacktestResult.__init__"><code class="docutils literal notranslate"><span class="pre">BacktestResult.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#motac.eval.backtest.backtest_fit_forecast_nll"><code class="docutils literal notranslate"><span class="pre">backtest_fit_forecast_nll()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Command line interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paper_artefacts.html">Paper artefacts pipeline (M11)</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">motac</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Evaluation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/eval.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="module-motac.eval">
+<span id="evaluation"></span><h1>Evaluation<a class="headerlink" href="#module-motac.eval" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="motac.eval.BacktestResult">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motac.eval.</span></span><span class="sig-name descname"><span class="pre">BacktestResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nll</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/eval/backtest.html#BacktestResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.eval.BacktestResult" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Result from a tiny train/test backtest run.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.eval.BacktestResult.n_train">
+<span class="sig-name descname"><span class="pre">n_train</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><a class="headerlink" href="#motac.eval.BacktestResult.n_train" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.eval.BacktestResult.horizon">
+<span class="sig-name descname"><span class="pre">horizon</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><a class="headerlink" href="#motac.eval.BacktestResult.horizon" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.eval.BacktestResult.nll">
+<span class="sig-name descname"><span class="pre">nll</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#motac.eval.BacktestResult.nll" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.eval.BacktestResult.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nll</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#motac.eval.BacktestResult.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.eval.backtest_fit_forecast_nll">
+<span class="sig-prename descclassname"><span class="pre">motac.eval.</span></span><span class="sig-name descname"><span class="pre">backtest_fit_forecast_nll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">travel_time_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'poisson'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dispersion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">250</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/eval/backtest.html#backtest_fit_forecast_nll"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.eval.backtest_fit_forecast_nll" title="Link to this definition"></a></dt>
+<dd><p>Fit on a training window then score NLL on a held-out horizon.</p>
+<p>This is intentionally tiny (toy-data sized): it supports M5 by providing a
+single helper that wires together fit -&gt; forecast -&gt; scoring.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>travel_time_s</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csr_matrix.html#scipy.sparse.csr_matrix" title="(in SciPy v1.17.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">csr_matrix</span></code></a></span>) – Sparse travel-time matrix in seconds.</p></li>
+<li><p><strong>kernel</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>) – Discrete lag kernel used by the model.</p></li>
+<li><p><strong>y</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>) – Count matrix (n_cells, n_steps).</p></li>
+<li><p><strong>n_train</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Number of steps to use for training.</p></li>
+<li><p><strong>horizon</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Number of held-out steps to score.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>BacktestResult with mean negative log likelihood on the held-out window.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motac.eval.EvalConfig">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motac.eval.</span></span><span class="sig-name descname"><span class="pre">EvalConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_locations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_steps_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_lags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_detect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">false_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_maxiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_paths</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.05,</span> <span class="pre">0.5,</span> <span class="pre">0.95)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/eval.html#EvalConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.eval.EvalConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Configuration for a small synthetic evaluation run.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.eval.EvalConfig.seed">
+<span class="sig-name descname"><span class="pre">seed</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><a class="headerlink" href="#motac.eval.EvalConfig.seed" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.eval.EvalConfig.n_locations">
+<span class="sig-name descname"><span class="pre">n_locations</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><a class="headerlink" href="#motac.eval.EvalConfig.n_locations" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.eval.EvalConfig.n_steps_train">
+<span class="sig-name descname"><span class="pre">n_steps_train</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><a class="headerlink" href="#motac.eval.EvalConfig.n_steps_train" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.eval.EvalConfig.horizon">
+<span class="sig-name descname"><span class="pre">horizon</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><a class="headerlink" href="#motac.eval.EvalConfig.horizon" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.eval.EvalConfig.mu">
+<span class="sig-name descname"><span class="pre">mu</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#motac.eval.EvalConfig.mu" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.eval.EvalConfig.alpha">
+<span class="sig-name descname"><span class="pre">alpha</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#motac.eval.EvalConfig.alpha" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.eval.EvalConfig.n_lags">
+<span class="sig-name descname"><span class="pre">n_lags</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><a class="headerlink" href="#motac.eval.EvalConfig.n_lags" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.eval.EvalConfig.beta">
+<span class="sig-name descname"><span class="pre">beta</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#motac.eval.EvalConfig.beta" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.eval.EvalConfig.p_detect">
+<span class="sig-name descname"><span class="pre">p_detect</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#motac.eval.EvalConfig.p_detect" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.eval.EvalConfig.false_rate">
+<span class="sig-name descname"><span class="pre">false_rate</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#motac.eval.EvalConfig.false_rate" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.eval.EvalConfig.fit_maxiter">
+<span class="sig-name descname"><span class="pre">fit_maxiter</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><a class="headerlink" href="#motac.eval.EvalConfig.fit_maxiter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.eval.EvalConfig.n_paths">
+<span class="sig-name descname"><span class="pre">n_paths</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><a class="headerlink" href="#motac.eval.EvalConfig.n_paths" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.eval.EvalConfig.q">
+<span class="sig-name descname"><span class="pre">q</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#motac.eval.EvalConfig.q" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.eval.EvalConfig.to_json">
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/eval.html#EvalConfig.to_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.eval.EvalConfig.to_json" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.eval.EvalConfig.from_json">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/eval.html#EvalConfig.from_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.eval.EvalConfig.from_json" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#motac.eval.EvalConfig" title="motac.eval.EvalConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">EvalConfig</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.eval.EvalConfig.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_locations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_steps_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_lags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_detect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">false_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_maxiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_paths</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.05,</span> <span class="pre">0.5,</span> <span class="pre">0.95)</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#motac.eval.EvalConfig.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.eval.evaluate_synthetic">
+<span class="sig-prename descclassname"><span class="pre">motac.eval.</span></span><span class="sig-name descname"><span class="pre">evaluate_synthetic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/eval.html#evaluate_synthetic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.eval.evaluate_synthetic" title="Link to this definition"></a></dt>
+<dd><p>Run a tiny, deterministic end-to-end backtest on synthetic data.</p>
+<section id="steps">
+<h2>Steps<a class="headerlink" href="#steps" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Generate a random world and simulate counts for train+horizon steps.</p></li>
+<li><p>Fit (mu, alpha, beta) by MLE on the training window.</p></li>
+<li><p>Produce horizon-step predictive samples and predictive summaries.</p></li>
+<li><p>Compute a minimal metric set (held-out NLL, RMSE/MAE, quantile coverage).</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>config: dict</p></li>
+<li><p>fit: dict</p></li>
+<li><p>forecasts: dict</p></li>
+<li><p>metrics: dict</p></li>
+</ul>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict with keys</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py class" id="module-motac.eval.backtest">
+<dt class="sig sig-object py" id="motac.eval.backtest.BacktestResult">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motac.eval.backtest.</span></span><span class="sig-name descname"><span class="pre">BacktestResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nll</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/eval/backtest.html#BacktestResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.eval.backtest.BacktestResult" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Result from a tiny train/test backtest run.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.eval.backtest.BacktestResult.n_train">
+<span class="sig-name descname"><span class="pre">n_train</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><a class="headerlink" href="#motac.eval.backtest.BacktestResult.n_train" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.eval.backtest.BacktestResult.horizon">
+<span class="sig-name descname"><span class="pre">horizon</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><a class="headerlink" href="#motac.eval.backtest.BacktestResult.horizon" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.eval.backtest.BacktestResult.nll">
+<span class="sig-name descname"><span class="pre">nll</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#motac.eval.backtest.BacktestResult.nll" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.eval.backtest.BacktestResult.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nll</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#motac.eval.backtest.BacktestResult.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.eval.backtest.backtest_fit_forecast_nll">
+<span class="sig-prename descclassname"><span class="pre">motac.eval.backtest.</span></span><span class="sig-name descname"><span class="pre">backtest_fit_forecast_nll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">travel_time_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'poisson'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dispersion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">250</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/eval/backtest.html#backtest_fit_forecast_nll"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.eval.backtest.backtest_fit_forecast_nll" title="Link to this definition"></a></dt>
+<dd><p>Fit on a training window then score NLL on a held-out horizon.</p>
+<p>This is intentionally tiny (toy-data sized): it supports M5 by providing a
+single helper that wires together fit -&gt; forecast -&gt; scoring.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>travel_time_s</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csr_matrix.html#scipy.sparse.csr_matrix" title="(in SciPy v1.17.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">csr_matrix</span></code></a></span>) – Sparse travel-time matrix in seconds.</p></li>
+<li><p><strong>kernel</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>) – Discrete lag kernel used by the model.</p></li>
+<li><p><strong>y</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>) – Count matrix (n_cells, n_steps).</p></li>
+<li><p><strong>n_train</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Number of steps to use for training.</p></li>
+<li><p><strong>horizon</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Number of held-out steps to score.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>BacktestResult with mean negative log likelihood on the held-out window.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="neural_kernels.html" class="btn btn-neutral float-left" title="Neural kernels API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cli.html" class="btn btn-neutral float-right" title="Command line interface" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, OJ Watson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

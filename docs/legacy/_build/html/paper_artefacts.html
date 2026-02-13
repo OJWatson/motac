@@ -1,0 +1,197 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paper artefacts pipeline (M11) &mdash; motac 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=01f34227"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Contributing" href="contributing.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            motac
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model/00_overview.html">Model overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loaders/index.html">Loaders</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/01_synthetic_quickstart.html">Tutorial: Synthetic quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/02_poi_features.html">Tutorial: POI features (baseline)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/schema.html">Schema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/substrate.html">Substrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/sim.html">Simulation and Hawkes utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/model.html">Model API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/neural_kernels.html">Neural kernels API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/eval.html">Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/cli.html">Command line interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Paper artefacts pipeline (M11)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#current-ci-safe-stub">Current CI-safe stub</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#artefact-payload-synthetic-eval-seed7-json">Artefact payload (<code class="docutils literal notranslate"><span class="pre">synthetic_eval_seed7.json</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#manifest-synthetic-eval-seed7-manifest-json">Manifest (<code class="docutils literal notranslate"><span class="pre">synthetic_eval_seed7.manifest.json</span></code>)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#intended-artefacts-planned">Intended artefacts (planned)</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">motac</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Paper artefacts pipeline (M11)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/paper_artefacts.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="paper-artefacts-pipeline-m11">
+<h1>Paper artefacts pipeline (M11)<a class="headerlink" href="#paper-artefacts-pipeline-m11" title="Link to this heading"></a></h1>
+<p>This repository aims to support <strong>reproducible paper artefacts</strong> (tables/figures) in a way that is:</p>
+<ul class="simple">
+<li><p>deterministic (seeded)</p></li>
+<li><p>CI-safe (no large downloads)</p></li>
+<li><p>easy to run locally</p></li>
+</ul>
+<section id="current-ci-safe-stub">
+<h2>Current CI-safe stub<a class="headerlink" href="#current-ci-safe-stub" title="Link to this heading"></a></h2>
+<p>The smallest artefact generator is implemented as a <strong>synthetic evaluation</strong> run that writes a single JSON payload.</p>
+<p>CLI:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>motac<span class="w"> </span>paper<span class="w"> </span>generate-artifacts<span class="w"> </span>--out-dir<span class="w"> </span>paper/artifacts<span class="w"> </span>--seed<span class="w"> </span><span class="m">7</span>
+</pre></div>
+</div>
+<p>This writes:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">paper/artifacts/synthetic_eval_seed7.json</span></code> — the artefact payload (<strong>contract is stable</strong>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">paper/artifacts/synthetic_eval_seed7.manifest.json</span></code> — small manifest (provenance + indexing)</p></li>
+</ul>
+<section id="artefact-payload-synthetic-eval-seed7-json">
+<h3>Artefact payload (<code class="docutils literal notranslate"><span class="pre">synthetic_eval_seed7.json</span></code>)<a class="headerlink" href="#artefact-payload-synthetic-eval-seed7-json" title="Link to this heading"></a></h3>
+<p>Keys (payload contract):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">config</span></code> — the evaluation configuration used</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fit</span></code> — fitted parameters / fit diagnostics</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">forecasts</span></code> — forecast summaries for a small horizon</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">metrics</span></code> — basic scalar metrics</p></li>
+</ul>
+</section>
+<section id="manifest-synthetic-eval-seed7-manifest-json">
+<h3>Manifest (<code class="docutils literal notranslate"><span class="pre">synthetic_eval_seed7.manifest.json</span></code>)<a class="headerlink" href="#manifest-synthetic-eval-seed7-manifest-json" title="Link to this heading"></a></h3>
+<p>Keys:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">artifact</span></code> — artefact filename (e.g. <code class="docutils literal notranslate"><span class="pre">synthetic_eval_seed7.json</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gitSha</span></code> — git SHA at generation time</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">seed</span></code> — seed used</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">configSummary</span></code> — a copy of the payload <code class="docutils literal notranslate"><span class="pre">config</span></code> (small, JSON-serialisable)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">generatedAtUtc</span></code> — generation timestamp (UTC, ISO-8601)</p></li>
+</ul>
+<p>Python module entry point (equivalent):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>motac.paper.generate_artifacts<span class="w"> </span>--out-dir<span class="w"> </span>paper/artifacts<span class="w"> </span>--seed<span class="w"> </span><span class="m">7</span>
+</pre></div>
+</div>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>The artefact is deliberately small and uses <strong>toy/synthetic data</strong>.</p></li>
+<li><p>Plotting is intentionally not part of the CI path.</p></li>
+</ul>
+</section>
+</section>
+<section id="intended-artefacts-planned">
+<h2>Intended artefacts (planned)<a class="headerlink" href="#intended-artefacts-planned" title="Link to this heading"></a></h2>
+<p>As the paper solidifies, this pipeline is expected to produce:</p>
+<ul class="simple">
+<li><p>a small, versioned <strong>artefact manifest</strong> (what was generated, from which config, git SHA)</p></li>
+<li><p>core paper tables (e.g. accuracy/calibration summaries)</p></li>
+<li><p>figure-ready data exports (CSV/JSON) for plotting outside CI</p></li>
+</ul>
+<p>The goal is that a single command can regenerate the minimal set of artefacts required to validate the paper’s claims.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="contributing.html" class="btn btn-neutral float-left" title="Contributing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, OJ Watson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

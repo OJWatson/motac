@@ -19,7 +19,7 @@ class LonLatToXY:
     to_ll: Transformer
 
     @classmethod
-    def for_lonlat(cls, lon0: float, lat0: float) -> 'LonLatToXY':
+    def for_lonlat(cls, lon0: float, lat0: float) -> LonLatToXY:
         crs_ll = CRS.from_epsg(4326)
         crs_xy = utm_crs_for_lonlat(lon0, lat0)
         to_xy = Transformer.from_crs(crs_ll, crs_xy, always_xy=True)

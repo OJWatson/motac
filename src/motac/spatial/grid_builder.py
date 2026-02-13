@@ -32,4 +32,8 @@ def build_regular_grid(bounds: LonLatBounds, cell_size_m: float) -> Grid:
         raise ValueError('bounds too small for given cell_size_m')
     xx, yy = np.meshgrid(xs, ys)
     lon, lat = tf.to_ll.transform(xx.ravel(), yy.ravel())
-    return Grid(lat=np.asarray(lat, dtype=float), lon=np.asarray(lon, dtype=float), cell_size_m=float(cell_size_m))
+    return Grid(
+        lat=np.asarray(lat, dtype=float),
+        lon=np.asarray(lon, dtype=float),
+        cell_size_m=float(cell_size_m),
+    )

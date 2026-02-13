@@ -30,3 +30,7 @@ open _build/html/index.html
 
 Docs are built in GitHub Actions via `.github/workflows/docs.yml` and deployed
 to GitHub Pages on pushes to `main`.
+
+## Legacy docs build
+
+A previous generated Sphinx HTML build is preserved under .

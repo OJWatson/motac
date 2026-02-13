@@ -1,0 +1,173 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Work log &mdash; motac 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=01f34227"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            motac
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model/00_overview.html">Model overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loaders/index.html">Loaders</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/01_synthetic_quickstart.html">Tutorial: Synthetic quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/02_poi_features.html">Tutorial: POI features (baseline)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/schema.html">Schema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/substrate.html">Substrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/sim.html">Simulation and Hawkes utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/model.html">Model API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/neural_kernels.html">Neural kernels API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/eval.html">Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/cli.html">Command line interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="paper_artefacts.html">Paper artefacts pipeline (M11)</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">motac</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Work log</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/WORKLOG.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="work-log">
+<h1>Work log<a class="headerlink" href="#work-log" title="Link to this heading"></a></h1>
+<p>Short, append-only notes intended to preserve continuity across short-lived builder runs.</p>
+<p>Guidelines:</p>
+<ul class="simple">
+<li><p>One dated bullet per meaningful action.</p></li>
+<li><p>Record failures (CI link, error snippet) and the next concrete step.</p></li>
+<li><p>Keep this file small.</p></li>
+<li><p>2026-02-12: Added tiny backtest helper <code class="docutils literal notranslate"><span class="pre">backtest_fit_forecast_nll</span></code> (fit→forecast→score) and a toy unit test; ran full pytest in venv (64 passed).</p></li>
+<li><p>2026-02-12: Documented <code class="docutils literal notranslate"><span class="pre">motac.eval.backtest</span></code> in Sphinx API docs and added explicit eval-module re-exports; <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">ruff</span> <span class="pre">check</span></code> + <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">pytest</span></code> (64 passed); pushed <code class="docutils literal notranslate"><span class="pre">0855815</span></code>.</p></li>
+<li><p>2026-02-12: CI green on <code class="docutils literal notranslate"><span class="pre">0855815</span></code>; advanced STATUS from M5→M6; ran <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">ruff</span> <span class="pre">check</span></code> + <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">pytest</span></code> (64 passed).</p></li>
+<li><p>2026-02-12: Added committed Chicago loader CSV fixture + fixture-driven sanity test; ran <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">ruff</span> <span class="pre">check</span> <span class="pre">.</span></code> + <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">pytest</span></code> (65 passed); pushed <code class="docutils literal notranslate"><span class="pre">c17c199</span></code>.</p></li>
+<li><p>2026-02-12: Added committed mobility <code class="docutils literal notranslate"><span class="pre">.npy</span></code> fixture + tests for <code class="docutils literal notranslate"><span class="pre">meta[&quot;mobility_source&quot;]</span></code> and mismatched mobility shape rejection; ran <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">ruff</span> <span class="pre">check</span> <span class="pre">.</span></code> + <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">pytest</span></code> (66 passed); pushed <code class="docutils literal notranslate"><span class="pre">66bb0cd</span></code>.</p></li>
+<li><p>2026-02-12: Asserted identity default <code class="docutils literal notranslate"><span class="pre">meta[&quot;mobility_source&quot;]</span> <span class="pre">==</span> <span class="pre">&quot;identity&quot;</span></code> in Chicago loader test; ran <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">ruff</span> <span class="pre">check</span> <span class="pre">.</span></code> + <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">pytest</span></code> (66 passed); pushed <code class="docutils literal notranslate"><span class="pre">fdde12f</span></code>.</p></li>
+<li><p>2026-02-12: Documented Chicago raw on-disk contract (v1 placeholder) and added test that loader preserves row ordering; ran <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">ruff</span> <span class="pre">check</span> <span class="pre">.</span></code> + <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">pytest</span></code> (67 passed); pushed <code class="docutils literal notranslate"><span class="pre">c1fdfe9</span></code>.</p></li>
+<li><p>2026-02-12: Extended Chicago loader <code class="docutils literal notranslate"><span class="pre">load_y_obs_matrix</span></code> to accept a raw directory (expects <code class="docutils literal notranslate"><span class="pre">y_obs.csv</span></code>, autodetects optional <code class="docutils literal notranslate"><span class="pre">mobility.npy</span></code>); added tests; ran <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">ruff</span> <span class="pre">check</span> <span class="pre">.</span></code> + <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">pytest</span></code> (69 passed); pushed <code class="docutils literal notranslate"><span class="pre">3fd47e0</span></code>.</p></li>
+<li><p>2026-02-12: Added minimal Chicago raw loader JSON config (<code class="docutils literal notranslate"><span class="pre">ChicagoRawConfig</span></code>) + CLI entry point <code class="docutils literal notranslate"><span class="pre">motac</span> <span class="pre">data</span> <span class="pre">chicago-load</span></code>; added CLI test; ran <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">ruff</span> <span class="pre">check</span> <span class="pre">.</span></code> + <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">pytest</span></code> (70 passed); pushed <code class="docutils literal notranslate"><span class="pre">1558da0</span></code>.</p></li>
+<li><p>2026-02-12: Documented <code class="docutils literal notranslate"><span class="pre">motac</span> <span class="pre">data</span> <span class="pre">chicago-load</span></code> usage + example JSON config in <code class="docutils literal notranslate"><span class="pre">docs/loaders/chicago.md</span></code>; ran <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">ruff</span> <span class="pre">check</span> <span class="pre">.</span></code> + <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">pytest</span></code> (70 passed); pushed <code class="docutils literal notranslate"><span class="pre">2364677</span></code>.</p></li>
+<li><p>2026-02-12: CI green; reviewed M6 DoD (Chicago loader deterministic + sanity tests) and advanced STATUS to M7 (ACLED loader next); pushed <code class="docutils literal notranslate"><span class="pre">1af27be</span></code>.</p></li>
+<li><p>2026-02-12: Added committed ACLED CSV fixture + fixture-driven sanity test (identity mobility); ran <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">ruff</span> <span class="pre">check</span> <span class="pre">.</span></code> + <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">pytest</span></code> (71 passed); pushed <code class="docutils literal notranslate"><span class="pre">6e49a5e</span></code>.</p></li>
+<li><p>2026-02-12: Added minimal ACLED loader docs page + wired <code class="docutils literal notranslate"><span class="pre">docs/loaders/</span></code> into Sphinx toctree; ran <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">ruff</span> <span class="pre">check</span> <span class="pre">.</span></code> + <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">pytest</span></code> (71 passed); pushed <code class="docutils literal notranslate"><span class="pre">e071651</span></code>.</p></li>
+<li><p>2026-02-12: Added ACLED loader JSON config (<code class="docutils literal notranslate"><span class="pre">AcledEventsCsvConfig</span></code>) + CLI entry point <code class="docutils literal notranslate"><span class="pre">motac</span> <span class="pre">data</span> <span class="pre">acled-load</span></code>; added CLI test; ran <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">ruff</span> <span class="pre">check</span> <span class="pre">.</span></code> + <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">pytest</span></code> (72 passed); pushed <code class="docutils literal notranslate"><span class="pre">1ab9112</span></code>.</p></li>
+<li><p>2026-02-12: Documented <code class="docutils literal notranslate"><span class="pre">motac</span> <span class="pre">data</span> <span class="pre">acled-load</span></code> usage + example JSON config in <code class="docutils literal notranslate"><span class="pre">docs/loaders/acled.md</span></code>; ran <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">ruff</span> <span class="pre">check</span> <span class="pre">.</span></code> + <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">pytest</span></code> (72 passed); pushed <code class="docutils literal notranslate"><span class="pre">837291e</span></code>.</p></li>
+<li><p>2026-02-12: Added CI-safe observed-data end-to-end unit test (fit → predictive sample → score) on toy data; ran <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">ruff</span> <span class="pre">check</span> <span class="pre">.</span></code> + <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">pytest</span></code> (73 passed); pushed <code class="docutils literal notranslate"><span class="pre">e8bfbe3</span></code>.</p></li>
+<li><p>2026-02-12: Updated <code class="docutils literal notranslate"><span class="pre">docs/STATUS.md</span></code> (M8 next step + header) and appended to worklog; pushed <code class="docutils literal notranslate"><span class="pre">5456d0b</span></code>.</p></li>
+<li><p>2026-02-12: Adjusted STATUS header <code class="docutils literal notranslate"><span class="pre">headSha</span></code> to point at last code-gated commit (<code class="docutils literal notranslate"><span class="pre">e8bfbe3</span></code>); pushed <code class="docutils literal notranslate"><span class="pre">961bcb4</span></code>.</p></li>
+<li><p>2026-02-12: Reviewed M8 DoD coverage (observed-data end-to-end test exists) and advanced STATUS to M9.</p></li>
+<li><p>2026-02-12: Reviewed M9 DoD coverage (exact observed log-likelihood + tests exist) and advanced STATUS to M10.</p></li>
+<li><p>2026-02-12: Added public comparison harness <code class="docutils literal notranslate"><span class="pre">compare_observed_loglik_exact_vs_poisson_approx</span></code> + unit test; ran <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">ruff</span> <span class="pre">check</span> <span class="pre">.</span></code> + <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">pytest</span></code> (74 passed); pushed <code class="docutils literal notranslate"><span class="pre">6cf9f8d</span></code>.</p></li>
+<li><p>2026-02-12: Documented interpretation/expected gaps for exact-vs-Poisson-approx observed likelihoods in <code class="docutils literal notranslate"><span class="pre">docs/api/sim.md</span></code>; ran <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">ruff</span> <span class="pre">check</span> <span class="pre">.</span></code> + <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">pytest</span></code> (74 passed); pushed <code class="docutils literal notranslate"><span class="pre">aa905e7</span></code>.</p></li>
+<li><p>2026-02-12: Added Sphinx page documenting the CI-safe paper artefacts stub (<code class="docutils literal notranslate"><span class="pre">motac</span> <span class="pre">paper</span> <span class="pre">generate-artifacts</span></code>) and wired it into docs; refactored artefact generation to return the written path; ran <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">ruff</span> <span class="pre">check</span> <span class="pre">.</span></code> + <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">pytest</span></code> (75 passed); pushed <code class="docutils literal notranslate"><span class="pre">2ac1744</span></code>.</p></li>
+<li><p>2026-02-12: Added minimal manifest alongside synthetic eval JSON artifact (git SHA + seed + config summary + timestamp) with CI-safe unit test; ran <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">ruff</span> <span class="pre">check</span> <span class="pre">.</span></code> + <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">pytest</span></code> (75 passed); pushed <code class="docutils literal notranslate"><span class="pre">0fc1134</span></code>.</p></li>
+<li><p>2026-02-12: Documented paper artefact manifest filename + fields in <code class="docutils literal notranslate"><span class="pre">docs/paper_artefacts.md</span></code>; ran <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">ruff</span> <span class="pre">check</span> <span class="pre">.</span></code> + <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">pytest</span></code> (75 passed); pushed <code class="docutils literal notranslate"><span class="pre">e57e4e1</span></code>.</p></li>
+<li><p>2026-02-12: Added helper script <code class="docutils literal notranslate"><span class="pre">scripts/check_github_ci.py</span></code> to query combined status + check-runs for a commit; ran <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">ruff</span> <span class="pre">check</span> <span class="pre">.</span></code> + <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">pytest</span></code> (75 passed); pushed <code class="docutils literal notranslate"><span class="pre">4db5124</span></code>.</p></li>
+<li><p>2026-02-12: Confirmed CI check-runs success for <code class="docutils literal notranslate"><span class="pre">4db5124</span></code>; marked M11 complete in <code class="docutils literal notranslate"><span class="pre">docs/STATUS.md</span></code> and added M12 milestone to <code class="docutils literal notranslate"><span class="pre">docs/ROADMAP.md</span></code>.</p></li>
+<li><p>2026-02-12: Reviewed existing substrate cache bundle implementation/tests; updated <code class="docutils literal notranslate"><span class="pre">docs/STATUS.md</span></code> to mark M12 complete and set next step to M2 (POIs + baseline features v1).</p></li>
+<li><p>2026-02-12: Added offline unit test asserting POI <code class="docutils literal notranslate"><span class="pre">poi_count</span></code> + tag breakout feature columns from local GeoJSON; ran <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">ruff</span> <span class="pre">check</span> <span class="pre">.</span></code> + <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">pytest</span></code> (76 passed); pushed <code class="docutils literal notranslate"><span class="pre">df8d469</span></code>.</p></li>
+<li><p>2026-02-12: Added user tutorial for POI feature names/config (<code class="docutils literal notranslate"><span class="pre">docs/tutorials/02_poi_features.md</span></code>) and wired into docs index; ran <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">ruff</span> <span class="pre">check</span> <span class="pre">.</span></code> + <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">pytest</span></code> (76 passed); pushed <code class="docutils literal notranslate"><span class="pre">af76896</span></code>.</p></li>
+<li><p>2026-02-12: Added tiny end-to-end M3 parameter recovery unit test for road-constrained Hawkes Poisson fitter; ran <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">ruff</span> <span class="pre">check</span> <span class="pre">.</span></code> + <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">pytest</span></code> (76 passed); pushed <code class="docutils literal notranslate"><span class="pre">56996a0</span></code>.</p></li>
+<li><p>2026-02-12: Reviewed M3 DoD coverage (Poisson+NegBin likelihoods + recovery tests) and marked M3 complete in <code class="docutils literal notranslate"><span class="pre">docs/STATUS.md</span></code>.</p></li>
+<li><p>2026-02-12: Advanced roadmap to M13 (marked Hawkes scaffolding) and added <code class="docutils literal notranslate"><span class="pre">motac.model.marked_hawkes</span></code> scaffold + import-path unit test; set STATUS to M13 running.</p></li>
+<li><p>2026-02-12: Defined v1 categorical mark contract via <code class="docutils literal notranslate"><span class="pre">validate_categorical_marks_matrix</span></code> + added CI-safe unit test for shape/dtype/range validation; ran <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">ruff</span> <span class="pre">check</span> <span class="pre">.</span></code> + <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">pytest</span></code>; CI green on <code class="docutils literal notranslate"><span class="pre">7ea8fcb</span></code> (run https://github.com/OJWatson/motac/actions/runs/21959996053).</p></li>
+<li><p>2026-02-12: Added <code class="docutils literal notranslate"><span class="pre">encode_categorical_marks_onehot</span></code> helper + tiny unit tests for shape/dtype/values; ran <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">ruff</span> <span class="pre">check</span> <span class="pre">.</span></code> + <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">pytest</span></code> (80 passed); CI green on <code class="docutils literal notranslate"><span class="pre">2dd1ec3</span></code> (run https://github.com/OJWatson/motac/actions/runs/21960678695).</p></li>
+<li><p>2026-02-12: Added Sphinx API page <code class="docutils literal notranslate"><span class="pre">docs/api/model.md</span></code> documenting the v1 categorical mark contract + one-hot helper; linked from docs index; ran <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">ruff</span> <span class="pre">check</span> <span class="pre">.</span></code> + <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">pytest</span></code> (80 passed); CI green on <code class="docutils literal notranslate"><span class="pre">7568439</span></code> (run https://github.com/OJWatson/motac/actions/runs/21961371948).</p></li>
+<li><p>2026-02-12: CI green for STATUS/WORKLOG update commit <code class="docutils literal notranslate"><span class="pre">43c17fb</span></code>; updated STATUS header to point at the last code-gated SHA (run https://github.com/OJWatson/motac/actions/runs/21961447269).</p></li>
+<li><p>2026-02-12: Reviewed M13 DoD coverage (marked Hawkes scaffolding module/helpers/tests/docs); marked M13 complete; added M14 (neural kernel scaffolding) milestone stub to roadmap and updated STATUS next step.</p></li>
+<li><p>2026-02-12: Started M14 by adding <code class="docutils literal notranslate"><span class="pre">motac.model.neural_kernels</span></code> scaffold (<code class="docutils literal notranslate"><span class="pre">ExpDecayKernel</span></code>) + CI-safe unit tests; ran <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">ruff</span> <span class="pre">check</span> <span class="pre">.</span></code> + <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">pytest</span></code> (82 passed); pushed <code class="docutils literal notranslate"><span class="pre">768b23c</span></code>.</p></li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, OJ Watson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
