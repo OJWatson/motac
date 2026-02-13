@@ -3,6 +3,8 @@ from __future__ import annotations
 import numpy as np
 import scipy.sparse as sp
 
+from .neural_kernels import KernelFn, validate_kernel_fn
+
 
 def exp_travel_time_kernel(*, travel_time_s: sp.csr_matrix, beta: float) -> sp.csr_matrix:
     """Compute a sparse exponential kernel W(d) = exp(-beta * d) on travel times.
@@ -30,6 +32,65 @@ def exp_travel_time_kernel(*, travel_time_s: sp.csr_matrix, beta: float) -> sp.c
     w_data = np.exp(-float(beta) * data)
     W = sp.csr_matrix(
         (w_data, travel_time_s.indices, travel_time_s.indptr),
+        shape=travel_time_s.shape,
+    )
+
+    # Ensure the diagonal is present (self influence). Some sparse constructors
+    # drop explicit zeros, so we enforce W[i,i]=1.
+    W = W.tolil(copy=False)
+    W.setdiag(1.0)
+    return W.tocsr()
+
+
+def travel_time_kernel_from_fn(
+    *,
+    travel_time_s: sp.csr_matrix,
+    kernel_fn: KernelFn,
+    validate: bool = True,
+) -> sp.csr_matrix:
+    """Build sparse travel-time weights W(d) from a validated kernel function.
+
+    This is a minimal adapter used by M16 to wire the `motac.model.neural_kernels`
+    contract into the existing road-constrained Hawkes plumbing.
+
+    Parameters
+    ----------
+    travel_time_s:
+        CSR matrix of travel times in seconds.
+    kernel_fn:
+        Callable mapping a nonnegative distance/time tensor to same-shaped,
+        nonnegative weights.
+    validate:
+        If True (default), validate the kernel contract via `validate_kernel_fn`.
+
+    Returns
+    -------
+    W:
+        CSR matrix with the same sparsity pattern as travel_time_s.
+    """
+
+    if validate:
+        validate_kernel_fn(kernel_fn, name="kernel_fn")
+
+    if not sp.isspmatrix_csr(travel_time_s):
+        travel_time_s = travel_time_s.tocsr()
+
+    data = np.asarray(travel_time_s.data, dtype=np.float64)
+    if np.any(data < 0):
+        raise ValueError("travel_time_s must be nonnegative")
+
+    w_data = kernel_fn(data)
+    if not isinstance(w_data, np.ndarray):
+        raise TypeError("kernel_fn must return a numpy.ndarray")
+    if w_data.shape != data.shape:
+        raise ValueError("kernel_fn must return same shape as travel_time_s.data")
+    if np.any(~np.isfinite(w_data)):
+        raise ValueError("kernel_fn produced non-finite weights")
+    if np.any(w_data < 0):
+        raise ValueError("kernel_fn produced negative weights")
+
+    W = sp.csr_matrix(
+        (np.asarray(w_data, dtype=np.float64), travel_time_s.indices, travel_time_s.indptr),
         shape=travel_time_s.shape,
     )
 
