@@ -1,9 +1,9 @@
 ```pm-status
 milestone: M15
 state: running
-headSha: 898683831dd6bceea7ae5db8c9f4d3d7bd8f82b2
+headSha: 4d5eeb4f9ee6fbd9b3fdf345445b13b39d822b6e
 ciRunUrl: (pending)
-updatedAtUtc: 2026-02-13T03:45:30Z
+updatedAtUtc: 2026-02-13T04:04:13Z
 ```
 
 ## Status
@@ -73,7 +73,7 @@ updatedAtUtc: 2026-02-13T03:45:30Z
   - Add a tiny validation helper (`validate_kernel_fn`) to assert the v1 kernel contract.
 
 ## Next step
-- If CI is green on the new M15 edge-case tests, mark M15 complete and pick the next
+- Check CI for the current head SHA; if green, mark M15 complete and pick the next
   milestone (e.g. downstream integration or the next PDF-aligned scaffold).
 
 ## Notes

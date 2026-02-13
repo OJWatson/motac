@@ -52,3 +52,4 @@ Guidelines:
 - 2026-02-13: Advanced roadmap/status to M15 (running); added `validate_kernel_fn` helper for neural-kernel contract hardening + CI-safe unit tests; ran `uv run ruff check .` + `uv run pytest` (85 passed).
 - 2026-02-13: Documented `validate_kernel_fn` usage/contract in `docs/api/neural_kernels.md`; ran `uv run ruff check .` + `uv run pytest` (85 passed); pushed `3a63aca`.
 - 2026-02-13: Added M15 edge-case tests ensuring `validate_kernel_fn` rejects non-`ndarray` returns and non-finite weights; ran `uv run ruff check .` + `uv run pytest` (87 passed); pushed `8986838`.
+- 2026-02-13: Hardened `scripts/check_github_ci.py` API headers + error reporting (more robust check-runs query); ran `uv run ruff check .` + `uv run pytest` (87 passed); pushed `4d5eeb4`.
