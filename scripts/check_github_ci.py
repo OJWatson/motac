@@ -25,12 +25,32 @@ def _get_json(url: str) -> dict:
     req = urllib.request.Request(
         url,
         headers={
-            "Accept": "application/vnd.github+json",
+            # The check-runs API historically required a preview media type; include it
+            # to be robust across GitHub deployments.
+            "Accept": ", ".join(
+                [
+                    "application/vnd.github+json",
+                    "application/vnd.github.antiope-preview+json",
+                ]
+            ),
+            "X-GitHub-Api-Version": "2022-11-28",
             "User-Agent": "motac-ci-check/1.0",
         },
     )
-    with urllib.request.urlopen(req, timeout=20) as resp:  # noqa: S310
-        data = resp.read().decode("utf-8")
+    try:
+        with urllib.request.urlopen(req, timeout=20) as resp:  # noqa: S310
+            data = resp.read().decode("utf-8")
+    except urllib.error.HTTPError as e:
+        # Surface the error body when available to aid debugging.
+        body = ""
+        try:
+            body = e.read().decode("utf-8")
+        except Exception:  # noqa: BLE001
+            body = ""
+        msg = f"HTTP {e.code} {e.reason}"
+        if body:
+            msg = f"{msg}: {body.strip()}"
+        raise urllib.error.URLError(msg) from e
     return json.loads(data)
 
 
