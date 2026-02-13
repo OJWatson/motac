@@ -2,5 +2,5 @@
 
 - state: running
 - milestone: M0
-- next: M0.2 — chore: standardise tooling (ruff, mypy, pytest) + pre-commit
+- next: M0.3 — ci: add github actions for lint+tests
 - blockers: none

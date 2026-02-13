@@ -4,7 +4,7 @@ This is a **gap analysis** of the current `OJWatson/motac` repository against th
 
 ## Executive summary
 
-The repo currently provides a **discrete-time, network-coupled Hawkes-like simulator + basic MLE fitting + predictive sampling** and a minimal synthetic evaluation helper.  
+The repo currently provides a **discrete-time, network-coupled Hawkes-like simulator + basic MLE fitting + predictive sampling** and a minimal synthetic evaluation helper.
 However, relative to the PDF’s stated MVP (“road‑constrained substrate + parametric Hawkes + forecasting + rolling backtests + benchmarks on synthetic, Chicago, ACLED”), the implementation is **materially incomplete**:
 
 - **Road constraint** is only partially represented (there is an OSMnx-based `substrate` builder, but it is not integrated end-to-end into simulation/inference/evaluation in a config-driven benchmark pipeline).
@@ -105,4 +105,3 @@ Gaps:
 ## Risks / drift drivers
 - Early work focused on a minimal parametric discrete-time kernel without the full substrate/dataset/eval stack.
 - Placeholder dataset loaders have created the *appearance* of coverage but do not satisfy the benchmark requirements.
-

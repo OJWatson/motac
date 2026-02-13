@@ -62,3 +62,4 @@ Guidelines:
 - 2026-02-13: Updated STATUS header to latest commit and re-ran local checks; `uv run ruff check .` + `uv run pytest` (91 passed); pushed `eaa3505`.
 - 2026-02-13: Reverted STATUS `headSha` to last code-gated commit (`4468154`) (docs-only follow-ups); pushed `5ea236f`.
 - 2026-02-13T07:12:02+00:00 M0.1 complete (job 6a4ca1af-ccf7-4ed4-99af-c74d6f36eb09): moved legacy docs; added ROADMAP_REBUILD.md
+- 2026-02-13T07:23:30+00:00 M0.2 complete (job e3a174e4-2da9-489e-8f38-6e3f3835e9b4): standardised tooling + pre-commit

@@ -27,7 +27,7 @@ def _assert_forecast_observed_payload(payload: dict, *, n_locations: int, horizo
     fit = payload["fit"]
     assert "mu" in fit and "alpha" in fit
     assert len(fit["mu"]) == n_locations
-    assert isinstance(fit["alpha"], (int, float))
+    assert isinstance(fit["alpha"], int | float)
 
     pred = payload["predict"]
     assert "q" in pred and "mean" in pred and "quantiles" in pred

@@ -97,9 +97,7 @@ def evaluate_synthetic(config: EvalConfig) -> dict[str, object]:
     if config.horizon <= 0:
         raise ValueError("horizon must be positive")
 
-    world = generate_random_world(
-        n_locations=config.n_locations, seed=config.seed, lengthscale=0.5
-    )
+    world = generate_random_world(n_locations=config.n_locations, seed=config.seed, lengthscale=0.5)
     kernel_true = discrete_exponential_kernel(n_lags=config.n_lags, beta=config.beta)
 
     params_true = HawkesDiscreteParams(

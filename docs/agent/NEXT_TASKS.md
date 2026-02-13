@@ -1,6 +1,6 @@
 # Next tasks
 
 ## Now
-- [ ] M0.2 — chore: standardise tooling (ruff, mypy, pytest) + pre-commit
+- [ ] M0.3 — ci: add github actions for lint+tests
 ## Next
 - [ ]

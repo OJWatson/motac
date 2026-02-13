@@ -1,9 +1,9 @@
 # MOTAC Rebuild: Road-Constrained Hawkes (JAX) — Task Graph & Commit-Level Plan
-**Date:** 2026-02-13  
-**Audience:** agentic coding systems (OpenClaw), maintainers  
+**Date:** 2026-02-13
+**Audience:** agentic coding systems (OpenClaw), maintainers
 **Tone:** directive. This is a reset plan.
 
-This document is a **foolproof, commit-by-commit task graph** to realign `motac` to the road-constrained Hawkes package described in the Hawkes-only plan. fileciteturn3file0  
+This document is a **foolproof, commit-by-commit task graph** to realign `motac` to the road-constrained Hawkes package described in the Hawkes-only plan. fileciteturn3file0
 It is intended to be dropped into the repo as `ROADMAP_REBUILD.md` or `MOTAC_REBUILD_TASKGRAPH.md`.
 
 ---
@@ -558,4 +558,3 @@ python -m motac.cli.run backtest --config configs/chicago.yaml --model parametri
 python -m motac.cli.run simulate --config configs/sim_default.yaml
 python -m motac.cli.run fit --config configs/sim_default.yaml --model parametric
 ```
-

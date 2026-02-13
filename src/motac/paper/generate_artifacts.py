@@ -55,8 +55,7 @@ def generate_synthetic_eval_artifact(*, out_dir: Path, seed: int = 0) -> Path:
         "q": list(map(float, forecasts["q"])),
         "y_true_mean": [[float(x) for x in row] for row in forecasts["y_true_mean"]],
         "y_true_quantiles": [
-            [[float(x) for x in row] for row in qmat]
-            for qmat in forecasts["y_true_quantiles"]
+            [[float(x) for x in row] for row in qmat] for qmat in forecasts["y_true_quantiles"]
         ],
     }
 
@@ -77,9 +76,7 @@ def generate_synthetic_eval_artifact(*, out_dir: Path, seed: int = 0) -> Path:
         "configSummary": payload["config"],
         "generatedAtUtc": datetime.now(UTC).isoformat(),
     }
-    (out_dir / f"synthetic_eval_seed{seed}.manifest.json").write_text(
-        json.dumps(manifest)
-    )
+    (out_dir / f"synthetic_eval_seed{seed}.manifest.json").write_text(json.dumps(manifest))
 
     return path
 

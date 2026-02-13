@@ -319,7 +319,7 @@ class SubstrateBuilder:
             for k, v in tags.items():
                 if v is True:
                     feature_cols.append((str(k), None))
-                elif isinstance(v, (list, tuple, set)):
+                elif isinstance(v, list | tuple | set):
                     for vv in v:
                         feature_cols.append((str(k), str(vv)))
 

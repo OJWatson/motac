@@ -132,19 +132,19 @@ def fit_hawkes_mle_alpha_mu(
 
     # Unconstrained parameterisation:
     #   mu = softplus(theta_mu) + eps, alpha = softplus(theta_alpha)
-    theta0 = np.concatenate([
-        np.log(np.expm1(mu0) + 1e-6),
-        np.array([np.log(np.expm1(alpha0) + 1e-6)]),
-    ])
+    theta0 = np.concatenate(
+        [
+            np.log(np.expm1(mu0) + 1e-6),
+            np.array([np.log(np.expm1(alpha0) + 1e-6)]),
+        ]
+    )
 
     def objective(theta: np.ndarray) -> float:
         theta_mu = theta[:n_locations]
         theta_alpha = theta[n_locations]
         mu = _softplus(theta_mu) + 1e-12
         alpha = float(_softplus(np.array([theta_alpha]))[0])
-        return -hawkes_loglik_poisson(
-            world=world, kernel=kernel, mu=mu, alpha=alpha, y=y
-        )
+        return -hawkes_loglik_poisson(world=world, kernel=kernel, mu=mu, alpha=alpha, y=y)
 
     res = minimize(
         objective,
@@ -156,9 +156,7 @@ def fit_hawkes_mle_alpha_mu(
     theta_hat = np.asarray(res.x, dtype=float)
     mu_hat = _softplus(theta_hat[:n_locations]) + 1e-12
     alpha_hat = float(_softplus(np.array([theta_hat[n_locations]]))[0])
-    ll = hawkes_loglik_poisson(
-        world=world, kernel=kernel, mu=mu_hat, alpha=alpha_hat, y=y
-    )
+    ll = hawkes_loglik_poisson(world=world, kernel=kernel, mu=mu_hat, alpha=alpha_hat, y=y)
 
     return {
         "mu": mu_hat,

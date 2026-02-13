@@ -25,9 +25,7 @@ def test_paper_generate_artifacts_writes_json_and_manifest(tmp_path) -> None:
     payload = json.loads((out_dir / "synthetic_eval_seed7.json").read_text())
     assert set(payload.keys()) == {"config", "fit", "forecasts", "metrics"}
 
-    manifest = json.loads(
-        (out_dir / "synthetic_eval_seed7.manifest.json").read_text()
-    )
+    manifest = json.loads((out_dir / "synthetic_eval_seed7.manifest.json").read_text())
     assert set(manifest.keys()) == {
         "artifact",
         "gitSha",
