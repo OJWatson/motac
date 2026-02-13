@@ -500,3 +500,15 @@ class SubstrateBuilder:
             poi=poi,
             graphml_path=graphml_path,
         )
+
+
+# --- spatial grid integration (M1.2)
+from motac.spatial.grid_builder import LonLatBounds, build_regular_grid
+
+def build_grid_from_lonlat_bounds(*, lon_min: float, lon_max: float, lat_min: float, lat_max: float, cell_size_m: float):
+    """Build a Grid from lon/lat bounds using the spatial grid builder (M1.2).
+
+    Returns motac.substrate.types.Grid.
+    """
+    b = LonLatBounds(lon_min=lon_min, lon_max=lon_max, lat_min=lat_min, lat_max=lat_max)
+    return build_regular_grid(b, cell_size_m=cell_size_m)

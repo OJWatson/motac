@@ -62,3 +62,4 @@ Guidelines:
 - 2026-02-13: Updated STATUS header to latest commit and re-ran local checks; `uv run ruff check .` + `uv run pytest` (91 passed); pushed `eaa3505`.
 - 2026-02-13: Reverted STATUS `headSha` to last code-gated commit (`4468154`) (docs-only follow-ups); pushed `5ea236f`.
 - 2026-02-13T11:52:09+00:00 M1.1 complete (job 2070fdf7-5774-4256-b668-36b4560d5600): spatial grid builder + CRS transforms
+- 2026-02-13T13:18:52+00:00 M1.2 complete (job e496d86c-6b3b-442c-a651-280b1f5ac7dc): integrated grid builder into substrate builder
