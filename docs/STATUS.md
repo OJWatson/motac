@@ -1,9 +1,9 @@
 ```pm-status
 milestone: M15
-state: running
-headSha: 4d5eeb4f9ee6fbd9b3fdf345445b13b39d822b6e
-ciRunUrl: (pending)
-updatedAtUtc: 2026-02-13T04:04:13Z
+state: complete
+headSha: 4d5eeb401c662996d95e2fcc2ca4a6d8836b1d92
+ciRunUrl: https://github.com/OJWatson/motac/actions/runs/21974199542
+updatedAtUtc: 2026-02-13T04:23:00Z
 ```
 
 ## Status
@@ -69,12 +69,12 @@ updatedAtUtc: 2026-02-13T04:04:13Z
   - Sphinx API docs page exists and is wired into the docs index.
 
 ## M15 — Neural kernel contract hardening v1
-- **Running**:
-  - Add a tiny validation helper (`validate_kernel_fn`) to assert the v1 kernel contract.
+- **Complete**:
+  - `validate_kernel_fn` asserts the v1 kernel contract (shape/value checks) and fails fast.
+  - CI-safe unit tests cover happy path and key rejection cases (negative outputs, wrong shapes, non-array returns, non-finite weights).
 
 ## Next step
-- Check CI for the current head SHA; if green, mark M15 complete and pick the next
-  milestone (e.g. downstream integration or the next PDF-aligned scaffold).
+- Define/pick the next milestone beyond M15 (e.g. begin downstream integration of neural kernels into a minimal model path, or add the next PDF-aligned scaffold).
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.
