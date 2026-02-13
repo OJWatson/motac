@@ -1,9 +1,9 @@
 ```pm-status
 milestone: M15
 state: running
-headSha: TBD
+headSha: 39a55b35572b1f191c8d75ed2793eaadcd72e320
 ciRunUrl: (pending)
-updatedAtUtc: 2026-02-13T02:59:00Z
+updatedAtUtc: 2026-02-13T03:02:20Z
 ```
 
 ## Status
