@@ -1,9 +1,9 @@
 ```pm-status
 milestone: M15
 state: running
-headSha: 39a55b35572b1f191c8d75ed2793eaadcd72e320
+headSha: 3a63acac1e1b8a54025e3641c318ed5f8a7fc8c6
 ciRunUrl: (pending)
-updatedAtUtc: 2026-02-13T03:02:20Z
+updatedAtUtc: 2026-02-13T03:21:21Z
 ```
 
 ## Status
@@ -73,8 +73,8 @@ updatedAtUtc: 2026-02-13T03:02:20Z
   - Add a tiny validation helper (`validate_kernel_fn`) to assert the v1 kernel contract.
 
 ## Next step
-- Finish M15 by ensuring the kernel contract hardening helper is documented (if needed) and/or
-  extending coverage to any additional edge cases discovered by downstream usage.
+- Finish M15 by extending kernel contract hardening coverage to any additional edge cases
+  discovered by downstream usage (e.g. non-finite outputs, non-`ndarray` returns).
 
 ## Notes
 - Documentation builds are tracked in CI; the status header points at the last meaningful code gate.
