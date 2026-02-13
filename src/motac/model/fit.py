@@ -5,6 +5,7 @@ import scipy.sparse as sp
 from scipy.optimize import minimize
 
 from .likelihood import road_loglik
+from .neural_kernels import KernelFn
 
 
 def _softplus(x: np.ndarray) -> np.ndarray:
@@ -21,6 +22,8 @@ def fit_road_hawkes_mle(
     init_alpha: float = 0.1,
     init_beta: float = 1e-3,
     init_dispersion: float = 10.0,
+    kernel_fn: KernelFn | None = None,
+    validate_kernel: bool = True,
     maxiter: int = 600,
 ) -> dict[str, object]:
     """Fit (mu, alpha, beta) (and optionally dispersion) for road-constrained model.
@@ -37,6 +40,9 @@ def fit_road_hawkes_mle(
         Count matrix (n_cells, n_steps).
     family:
         "poisson" or "negbin".
+    kernel_fn:
+        Optional travel-time kernel function W(d_travel) overriding exp(-beta*d).
+        If provided, it is validated via `validate_kernel_fn` by default.
 
     Returns
     -------
@@ -90,6 +96,8 @@ def fit_road_hawkes_mle(
         y=y,
         family=family,
         dispersion=disp_init,
+        kernel_fn=kernel_fn,
+        validate_kernel=validate_kernel,
     )
 
     def objective(theta: np.ndarray) -> float:
@@ -103,6 +111,8 @@ def fit_road_hawkes_mle(
             y=y,
             family=family,
             dispersion=disp,
+            kernel_fn=kernel_fn,
+            validate_kernel=validate_kernel,
         )
 
     res = minimize(
@@ -122,6 +132,8 @@ def fit_road_hawkes_mle(
         y=y,
         family=family,
         dispersion=disp_hat,
+        kernel_fn=kernel_fn,
+        validate_kernel=validate_kernel,
     )
 
     out: dict[str, object] = {
