@@ -1,0 +1,31 @@
+version: 1
+project_id: motac
+
+# TaskGraph v1 (strict pilot)
+# - Immutable plan: do not reorder/rename task IDs once created.
+# - Keep initial scope small.
+
+tasks:
+  - id: M0.3
+    title: Canonical event schema + validation scaffold + tests
+    depends_on: []
+
+  - id: M0.4
+    title: Docs tighten spec alignment + scope notes for M0/M1
+    depends_on: [M0.3]
+
+  - id: M0.5
+    title: Docs consolidate M0/M1 DoD pointers (single canonical place)
+    depends_on: [M0.4]
+
+  - id: M1.0
+    title: Substrate cache bundle v1: specify format + add CLI smoke test
+    depends_on: [M0.5]
+
+  - id: M1.1
+    title: Make cache bundle v1 deterministic + add provenance-hash regression test
+    depends_on: [M1.0]
+
+  - id: M1.2
+    title: Docs add minimal “load bundle + validate version” example snippet (and link from README)
+    depends_on: [M1.1]

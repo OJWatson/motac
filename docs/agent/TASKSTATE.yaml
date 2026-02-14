@@ -1,0 +1,65 @@
+version: 1
+project_id: motac
+repo_status: RUNNING  # RUNNING|AWAITING_CI|BLOCKED
+
+# State must enumerate every TASKGRAPH task.
+tasks:
+  M0.3:
+    status: done
+    updated_at_utc: ""
+    last:
+      outcome: success
+      reason: "completed_before_taskgraph"
+      commit: "e4d2b5a25aea779a812a5e38a0888546aeef270f"
+      pushed: true
+      log_path: ""
+      tick_ts: ""
+
+  M0.4:
+    status: done
+    updated_at_utc: ""
+    last:
+      outcome: success
+      reason: "completed_before_taskgraph"
+      commit: "bafe65d95a51bc679b0644e1871bf558ff758ee0"
+      pushed: true
+      log_path: ""
+      tick_ts: ""
+
+  M0.5:
+    status: done
+    updated_at_utc: ""
+    last:
+      outcome: success
+      reason: "completed_before_taskgraph"
+      commit: "4257224a78ad096d9e3b1f33365113c39667d17a"
+      pushed: true
+      log_path: ""
+      tick_ts: ""
+
+  M1.0:
+    status: done
+    updated_at_utc: ""
+    last:
+      outcome: success
+      reason: "completed_before_taskgraph"
+      commit: "9e5ddfa9f2eb73f53d613064ff1999a5a4c86d06"
+      pushed: true
+      log_path: ""
+      tick_ts: ""
+
+  M1.1:
+    status: done
+    updated_at_utc: ""
+    last:
+      outcome: success
+      reason: "completed_before_taskgraph"
+      commit: "51cb705d6df8c699035f0e9b1ff463d44260f7d2"
+      pushed: true
+      log_path: ""
+      tick_ts: ""
+
+  M1.2:
+    status: todo
+    updated_at_utc: ""
+    last: { outcome: "", reason: "", commit: "", pushed: null, log_path: "", tick_ts: "" }
