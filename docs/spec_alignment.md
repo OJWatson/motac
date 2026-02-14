@@ -5,41 +5,18 @@ It is intentionally concise and actionable.
 
 ## Scope notes (M0/M1)
 
-These notes pin down what “done” means for the early reset milestones.
-They exist to prevent M0/M1 from expanding into later-milestone feature work.
+Canonical DoD for M0/M1 lives in:
 
-### M0 (reset + schema): definition of done
+- `docs/agent/MILESTONES_M0_M1.md`
 
-M0 is **in-scope** when all of the following are true:
+This document only keeps a *brief* reminder so the spec alignment checklist stays
+compact.
 
-- **Canonical event schema exists** (single source of truth in code).
-- **Schema validation is tested** (unit tests that fail on invalid events).
-- **Repo layout is stable** (pyproject + src/ layout; `uv run pytest -q` passes in CI).
-- **Docs point to the canonical schema** (so later chapters don’t invent new formats).
+Quick reminder:
 
-Practical verification:
-
-- Canonical schema location is documented and discoverable.
-- Tests cover at least: required fields, types, and one representative invalid payload.
-
-### M1 (substrate cache artefacts v1): definition of done
-
-M1 is **in-scope** when all of the following are true:
-
-- **Cache bundle format is defined and versioned** (a reader can reject unknown versions).
-- **Writes are deterministic** (same inputs → identical bundle bytes / file tree).
-- **Provenance hash is stable** (and guarded by a regression test).
-- **Docs describe the artefact contract**:
-  - what the bundle contains (high level)
-  - how to load it (one minimal code snippet or API pointer)
-
-### Explicit out-of-scope for M0/M1
-
-The following are **not** M0/M1 work (track them under later milestones instead):
-
-- End-to-end forecasting / backtesting workflows.
-- Full observed-data ingestion pipelines (ACLED/Chicago loaders, ETL, cleaning).
-- “Production” CLI polish (flags, UX, error handling) beyond minimal entrypoints.
+- M0: schema exists + validation tests + stable repo layout + docs pointer.
+- M1: versioned deterministic cache bundle + provenance hash test + docs contract.
+- Out-of-scope: loaders/ETL, full workflows (forecast/backtest), significant CLI UX.
 
 ## Checklist of required components
 

@@ -1,5 +1,5 @@
 # NEXT_TASKS
 
-Now: M0.5 — docs: consolidate M0/M1 DoD pointers (one canonical place)
+Now: M1.0 — Substrate cache bundle v1: document format + add one end-to-end smoke test
 
 Next:
