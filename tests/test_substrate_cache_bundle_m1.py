@@ -73,10 +73,18 @@ def test_substrate_cache_bundle_and_meta_hash(tmp_path: Path) -> None:
     expected = hashlib.sha256(cfg_json).hexdigest()
     assert meta["config_sha256"] == expected
 
+    # Regression: provenance/config hash should remain stable for this tiny config.
+    # If this changes, it likely means the config canonicalisation changed.
+    assert meta["config_sha256"] == "6f427afebc17dd0370ffe25771123af230eed9eb6b0deae65ddf2814ba057f4a"
+    assert cfg_dict["graphml_sha256"] == "fd4aecd6a77516dd41352b6a99aea6a9faa9a4f08c2ea73b33abece3f7a1e414"
+
     # Bundle hash should match a recomputation over the referenced files.
     files = list(meta["bundle_files"])
     assert files == sorted(files)  # stable ordering
     assert meta["bundle_sha256"] == _bundle_sha256(cache_dir, files)
+
+    # Regression: bundle hash should remain stable for this tiny graph.
+    assert meta["bundle_sha256"] == "7d0ace1bc663a8509680db3a947c4fa31fac6c6a6a65345a4acc2d36d83a01d9"
 
     # Regression: bundle writes are deterministic byte-for-byte.
     cache_dir2 = tmp_path / "cache2"

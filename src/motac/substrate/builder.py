@@ -532,13 +532,18 @@ class SubstrateBuilder:
         )
 
         # Provenance
+        # Provenance config: keep it stable across runs.
+        # In particular, an absolute graphml_path (often a temp path) would make
+        # config_sha256 and meta.json non-deterministic.
+        graphml_sha256 = _sha256_file(cache_dir / "graph.graphml")
         cfg_dict = {
             "north": self.config.north,
             "south": self.config.south,
             "east": self.config.east,
             "west": self.config.west,
             "place": self.config.place,
-            "graphml_path": self.config.graphml_path,
+            "graphml_path": "graph.graphml" if self.config.graphml_path else None,
+            "graphml_sha256": graphml_sha256,
             "cell_size_m": self.config.cell_size_m,
             "max_travel_time_s": self.config.max_travel_time_s,
             "disable_pois": self.config.disable_pois,
@@ -571,13 +576,18 @@ class SubstrateBuilder:
             artefacts.append("poi.npz")
         bundle_sha256 = _bundle_sha256(cache_dir, artefacts)
 
+        # Store graphml_path as a stable, cache-relative path.
+        # The returned Substrate.graphml_path may be an absolute path to the cache
+        # directory, which would make meta.json non-deterministic across runs.
+        graphml_meta_path = "graph.graphml"
+
         meta = {
             "cache_format_version": self.CACHE_FORMAT_VERSION,
             "built_at_utc": _source_date_epoch_utc(),
             "motac_version": __version__,
             "config": cfg_dict,
             "config_sha256": cfg_hash,
-            "graphml_path": substrate.graphml_path,
+            "graphml_path": graphml_meta_path,
             "has_poi": substrate.poi is not None,
             "bundle_sha256": bundle_sha256,
             "bundle_files": artefacts,
