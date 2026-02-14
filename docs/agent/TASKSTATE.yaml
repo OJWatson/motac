@@ -60,6 +60,12 @@ tasks:
       tick_ts: ""
 
   M1.2:
-    status: todo
-    updated_at_utc: ""
-    last: { outcome: "", reason: "", commit: "", pushed: null, log_path: "", tick_ts: "" }
+    status: done
+    updated_at_utc: "2026-02-14T21:46:40Z"
+    last:
+      outcome: success
+      reason: "docs: add minimal load bundle + validate version snippet; README link"
+      commit: "a4fe6be83552ce9913aa35b9ec7bd51b34016ce0"
+      pushed: false
+      log_path: "/home/kana/.openclaw/workspace/portfolio/reports/runs/20260214T214300Z/logs/motac.log"
+      tick_ts: "20260214T214300Z"
