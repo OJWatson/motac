@@ -21,55 +21,10 @@ and optionally cache artefacts.
 
 ## Cache artefacts
 
-If `cache_dir` is set, the builder writes a self-contained bundle:
+If `cache_dir` is set, the builder writes a versioned, self-contained cache bundle.
 
-- `graph.graphml`
-- `grid.npz`
-- `neighbours.npz`
-- `meta.json`
-- `poi.npz` (optional)
-
-### Bundle contents (v1)
-
-`graph.graphml`
-: Road network saved via `osmnx.save_graphml`.
-
-`grid.npz`
-: A compressed NumPy archive with:
-
-- `lat`: `float64`, shape `(n_cells,)` — grid cell centroid latitudes (EPSG:4326)
-- `lon`: `float64`, shape `(n_cells,)` — grid cell centroid longitudes (EPSG:4326)
-- `cell_size_m`: `float64`, shape `(1,)` — grid spacing in metres
-
-`neighbours.npz`
-: A SciPy sparse matrix saved via `scipy.sparse.save_npz`.
-
-- matrix type: CSR (`.tocsr()` on load)
-- shape: `(n_cells, n_cells)`
-- entries: `travel_time_s[i, j]` = shortest-path travel time (seconds) from cell `i` to `j`,
-  for all `j` reachable within `max_travel_time_s` (plus the diagonal)
-
-`poi.npz` (optional)
-: Present when POIs are enabled.
-
-- `x`: `float64`, shape `(n_cells, n_features)` — POI feature matrix aligned to the grid
-- `feature_names`: `object` array of strings, length `n_features`
-
-`meta.json`
-: Human-readable provenance and validation metadata. Keys:
-
-- `cache_format_version` (int)
-- `built_at_utc` (UTC timestamp, `YYYY-MM-DDTHH:MM:SSZ`)
-- `motac_version` (string)
-- `config` (dict) — the normalized subset of `SubstrateConfig` fields that affect the bundle
-- `config_sha256` (hex string) — SHA-256 over JSON(`config`) with sorted keys and compact separators
-- `graphml_path` (string) — path of the GraphML used by the bundle (when cached, this points at `cache_dir/graph.graphml`)
-- `has_poi` (bool)
-
-### Cache format versioning
-
-The cache includes `meta.json["cache_format_version"]`. The loader validates this
-against the library’s expected version and raises if they mismatch.
+See: [`docs/api/substrate_cache_bundle.md`](substrate_cache_bundle)
+for the **v1 on-disk format** (file list, array shapes/dtypes, and versioning).
 
 ## POI features (M2)
 

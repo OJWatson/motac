@@ -25,6 +25,7 @@ tutorials/02_poi_features
 
 api/schema
 api/substrate
+api/substrate_cache_bundle
 api/sim
 api/model
 api/neural_kernels
