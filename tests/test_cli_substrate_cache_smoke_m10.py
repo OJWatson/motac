@@ -3,9 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-import networkx as nx
 import numpy as np
-import osmnx as ox
 from click.testing import CliRunner
 from typer.main import get_command
 
@@ -20,13 +18,25 @@ def test_substrate_build_cache_bundle_smoke_roundtrip(tmp_path: Path) -> None:
     """
 
     graphml = tmp_path / "tiny.graphml"
-    G = nx.MultiDiGraph()
-    G.graph["crs"] = "EPSG:4326"
-    G.add_node(0, x=-0.1, y=51.5)
-    G.add_node(1, x=-0.099, y=51.5)
-    G.add_edge(0, 1, key=0, travel_time=60.0, length=100.0)
-    G.add_edge(1, 0, key=0, travel_time=60.0, length=100.0)
-    ox.save_graphml(G, filepath=graphml)
+    graphml.write_text(
+        """<?xml version=\"1.0\" encoding=\"utf-8\"?>
+<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">
+  <key id=\"crs\" for=\"graph\" attr.name=\"crs\" attr.type=\"string\"/>
+  <key id=\"x\" for=\"node\" attr.name=\"x\" attr.type=\"double\"/>
+  <key id=\"y\" for=\"node\" attr.name=\"y\" attr.type=\"double\"/>
+  <key id=\"length\" for=\"edge\" attr.name=\"length\" attr.type=\"double\"/>
+  <key id=\"travel_time\" for=\"edge\" attr.name=\"travel_time\" attr.type=\"double\"/>
+  <graph edgedefault=\"directed\">
+    <data key=\"crs\">EPSG:4326</data>
+    <node id=\"0\"><data key=\"x\">-0.1</data><data key=\"y\">51.5</data></node>
+    <node id=\"1\"><data key=\"x\">-0.099</data><data key=\"y\">51.5</data></node>
+    <edge id=\"0\" source=\"0\" target=\"1\"><data key=\"length\">100.0</data><data key=\"travel_time\">60.0</data></edge>
+    <edge id=\"1\" source=\"1\" target=\"0\"><data key=\"length\">100.0</data><data key=\"travel_time\">60.0</data></edge>
+  </graph>
+</graphml>
+""",
+        encoding="utf-8",
+    )
 
     cache_dir = tmp_path / "cache"
     cfg_path = tmp_path / "cfg.json"

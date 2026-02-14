@@ -60,6 +60,32 @@ def _zip_write_bytes(zf: zipfile.ZipFile, *, name: str, payload: bytes) -> None:
     zf.writestr(info, payload)
 
 
+def _save_graphml_deterministic(G: nx.MultiDiGraph, path: Path) -> None:
+    """Save GraphML with stable node/edge/attribute ordering.
+
+    We rely on NetworkX's GraphML writer but pre-canonicalise ordering.
+    This avoids subtle non-determinism from dict/hash iteration order that can
+    show up in graph.graphml bytes (and thus bundle_sha256).
+    """
+
+    def _sorted_attrs(d: dict[str, Any]) -> dict[str, Any]:
+        return {k: d[k] for k in sorted(d.keys())}
+
+    # Rebuild graph with stable insertion order for graph attrs, nodes and edges.
+    H = nx.MultiDiGraph()
+    H.graph.update(_sorted_attrs(dict(G.graph)))
+
+    for n, data in sorted(G.nodes(data=True), key=lambda t: str(t[0])):
+        H.add_node(n, **_sorted_attrs(dict(data)))
+
+    for u, v, k, data in sorted(
+        G.edges(keys=True, data=True), key=lambda e: (str(e[0]), str(e[1]), str(e[2]))
+    ):
+        H.add_edge(u, v, key=k, **_sorted_attrs(dict(data)))
+
+    nx.write_graphml(H, path)
+
+
 def _npy_bytes(a: np.ndarray) -> bytes:
     buf = io.BytesIO()
     # Use allow_pickle=False to avoid non-deterministic pickling for object arrays.
@@ -227,7 +253,7 @@ class SubstrateBuilder:
             if self.config.graphml_path and graphml_path:
                 shutil.copyfile(graphml_path, graphml_out)
             else:
-                ox.save_graphml(G, filepath=graphml_out)
+                _save_graphml_deterministic(G, graphml_out)
             graphml_path = str(graphml_out)
 
         substrate = Substrate(grid=grid, neighbours=neighbours, poi=poi, graphml_path=graphml_path)
