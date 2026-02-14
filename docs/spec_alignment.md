@@ -5,19 +5,41 @@ It is intentionally concise and actionable.
 
 ## Scope notes (M0/M1)
 
-These notes clarify what “done” means for the early reset milestones, so later
-milestones don’t keep re-litigating basics.
+These notes pin down what “done” means for the early reset milestones.
+They exist to prevent M0/M1 from expanding into later-milestone feature work.
 
-- **M0 (reset + schema) is in-scope** when:
-  - a canonical event schema exists and is validated by tests
-  - repo layout is sane (pyproject, src/ layout, tests running in CI)
-  - documentation points to the canonical schema location
-- **M1 (substrate cache artefacts v1) is in-scope** when:
-  - cache bundle format is defined (versioned) and written deterministically
-  - provenance hash is stable and tested
-  - cache artefacts are documented with a short “what you get” + how to load
-- **Explicitly out-of-scope for M0/M1:** end-to-end forecasting, full dataset
-  loaders, and any “production” CLI UX polish beyond minimal entrypoints.
+### M0 (reset + schema): definition of done
+
+M0 is **in-scope** when all of the following are true:
+
+- **Canonical event schema exists** (single source of truth in code).
+- **Schema validation is tested** (unit tests that fail on invalid events).
+- **Repo layout is stable** (pyproject + src/ layout; `uv run pytest -q` passes in CI).
+- **Docs point to the canonical schema** (so later chapters don’t invent new formats).
+
+Practical verification:
+
+- Canonical schema location is documented and discoverable.
+- Tests cover at least: required fields, types, and one representative invalid payload.
+
+### M1 (substrate cache artefacts v1): definition of done
+
+M1 is **in-scope** when all of the following are true:
+
+- **Cache bundle format is defined and versioned** (a reader can reject unknown versions).
+- **Writes are deterministic** (same inputs → identical bundle bytes / file tree).
+- **Provenance hash is stable** (and guarded by a regression test).
+- **Docs describe the artefact contract**:
+  - what the bundle contains (high level)
+  - how to load it (one minimal code snippet or API pointer)
+
+### Explicit out-of-scope for M0/M1
+
+The following are **not** M0/M1 work (track them under later milestones instead):
+
+- End-to-end forecasting / backtesting workflows.
+- Full observed-data ingestion pipelines (ACLED/Chicago loaders, ETL, cleaning).
+- “Production” CLI polish (flags, UX, error handling) beyond minimal entrypoints.
 
 ## Checklist of required components
 

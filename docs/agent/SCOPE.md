@@ -10,9 +10,21 @@ This repository is managed under OpenClaw Portfolio OS.
 
 ## Milestone scope notes (M0/M1)
 
-- **M0 (reset + schema):** canonical event schema + validation tests + a stable repo layout.
-- **M1 (substrate cache artefacts v1):** deterministic cache bundle format + provenance + documentation.
+These are the **guard rails** for early milestones.
+If a task starts drifting beyond these, move it to a later milestone instead of
+forcing it into M0/M1.
 
-If a task starts drifting into “new feature work” (loaders, full workflows,
-forecasting), it should be tracked as a later milestone and not forced into
-M0/M1 clean-up work.
+- **M0 (reset + schema):**
+  - canonical event schema (single source of truth)
+  - schema validation tests
+  - stable repo layout (pyproject + src/; CI runs)
+  - docs that point to the canonical schema
+
+- **M1 (substrate cache artefacts v1):**
+  - versioned cache bundle format
+  - deterministic writes
+  - stable provenance hash (tested)
+  - short docs: what’s inside + how to load
+
+Explicitly out-of-scope for M0/M1: loaders/ETL, full workflows (forecast/backtest),
+and any significant CLI UX work.
