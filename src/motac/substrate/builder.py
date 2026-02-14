@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 import hashlib
+import io
 import json
 import math
+import os
+import zipfile
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterable
 
 import networkx as nx
 import numpy as np
@@ -22,6 +25,105 @@ def _utm_crs_from_latlon(lat: float, lon: float) -> str:
     zone = int(math.floor((lon + 180.0) / 6.0) + 1)
     epsg = 32600 + zone if lat >= 0 else 32700 + zone
     return f"EPSG:{epsg}"
+
+
+# ------------------------- deterministic IO -------------------------
+
+_ZIP_EPOCH = (1980, 1, 1, 0, 0, 0)  # earliest ZIP timestamp, for deterministic archives
+
+
+def _source_date_epoch_utc() -> str:
+    """Return a deterministic UTC timestamp string.
+
+    We deliberately avoid wall-clock time so cache bundles are byte-for-byte
+    reproducible. If SOURCE_DATE_EPOCH is set (common in reproducible builds),
+    we use it; otherwise we fall back to a fixed epoch string.
+    """
+
+    s = os.environ.get("SOURCE_DATE_EPOCH")
+    if not s:
+        return "1970-01-01T00:00:00Z"
+    try:
+        ts = int(s)
+    except ValueError:
+        return "1970-01-01T00:00:00Z"
+    return datetime.fromtimestamp(ts, tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _zip_write_bytes(zf: zipfile.ZipFile, *, name: str, payload: bytes) -> None:
+    info = zipfile.ZipInfo(filename=name)
+    info.date_time = _ZIP_EPOCH
+    info.compress_type = zipfile.ZIP_DEFLATED
+    # Keep permissions stable: -rw-r--r--
+    info.external_attr = (0o100644 & 0xFFFF) << 16
+    zf.writestr(info, payload)
+
+
+def _npy_bytes(a: np.ndarray) -> bytes:
+    buf = io.BytesIO()
+    # Use allow_pickle=False to avoid non-deterministic pickling for object arrays.
+    np.save(buf, a, allow_pickle=False)
+    return buf.getvalue()
+
+
+def _save_npz_deterministic(path: Path, *, arrays: dict[str, np.ndarray]) -> None:
+    """Write a deterministic .npz (zip) file.
+
+    np.savez_compressed uses zip timestamps, making output non-deterministic.
+    This helper fixes timestamps + entry ordering.
+    """
+
+    path = Path(path)
+    with zipfile.ZipFile(path, mode="w", compression=zipfile.ZIP_DEFLATED) as zf:
+        for k in sorted(arrays.keys()):
+            _zip_write_bytes(zf, name=f"{k}.npy", payload=_npy_bytes(arrays[k]))
+
+
+def _save_sparse_npz_deterministic(path: Path, mat: sp.spmatrix) -> None:
+    """Write a deterministic SciPy sparse .npz.
+
+    Mirrors scipy.sparse.save_npz, but with fixed zip timestamps.
+    """
+
+    mat = mat.tocsr()
+    arrays: dict[str, np.ndarray] = {
+        "data": np.asarray(mat.data),
+        "indices": np.asarray(mat.indices),
+        "indptr": np.asarray(mat.indptr),
+        "shape": np.asarray(mat.shape),
+        "format": np.asarray("csr"),
+    }
+
+    # 'format' is stored as a 0-d unicode array.
+    with zipfile.ZipFile(Path(path), mode="w", compression=zipfile.ZIP_DEFLATED) as zf:
+        for k in sorted(arrays.keys()):
+            _zip_write_bytes(zf, name=f"{k}.npy", payload=_npy_bytes(arrays[k]))
+
+
+def _sha256_file(path: Path) -> str:
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(1024 * 1024), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _bundle_sha256(cache_dir: Path, artefacts: Iterable[str]) -> str:
+    """Compute a stable bundle hash over a subset of files.
+
+    We hash file names + file bytes in a fixed order.
+    """
+
+    h = hashlib.sha256()
+    for name in artefacts:
+        p = cache_dir / name
+        h.update(name.encode("utf-8"))
+        h.update(b"\x00")
+        with open(p, "rb") as f:
+            for chunk in iter(lambda: f.read(1024 * 1024), b""):
+                h.update(chunk)
+        h.update(b"\x00")
+    return h.hexdigest()
 
 
 @dataclass(frozen=True, slots=True)
@@ -416,14 +518,18 @@ class SubstrateBuilder:
 
         assert isinstance(substrate, Substrate)
 
-        # Core arrays
-        np.savez_compressed(
+        # Core arrays (deterministic .npz writes)
+        _save_npz_deterministic(
             cache_dir / "grid.npz",
-            lat=substrate.grid.lat,
-            lon=substrate.grid.lon,
-            cell_size_m=np.array([substrate.grid.cell_size_m], dtype=float),
+            arrays={
+                "lat": substrate.grid.lat,
+                "lon": substrate.grid.lon,
+                "cell_size_m": np.array([substrate.grid.cell_size_m], dtype=float),
+            },
         )
-        sp.save_npz(cache_dir / "neighbours.npz", substrate.neighbours.travel_time_s)
+        _save_sparse_npz_deterministic(
+            cache_dir / "neighbours.npz", substrate.neighbours.travel_time_s
+        )
 
         # Provenance
         cfg_dict = {
@@ -448,23 +554,35 @@ class SubstrateBuilder:
         except Exception:  # pragma: no cover
             __version__ = "unknown"
 
+        # Optional POI features.
+        if substrate.poi is not None:
+            _save_npz_deterministic(
+                cache_dir / "poi.npz",
+                arrays={
+                    "x": substrate.poi.x,
+                    # Store as unicode array to avoid pickle.
+                    "feature_names": np.array(substrate.poi.feature_names, dtype=str),
+                },
+            )
+
+        # Bundle hash over the artefact files (excluding meta.json itself).
+        artefacts = ["graph.graphml", "grid.npz", "neighbours.npz"]
+        if (cache_dir / "poi.npz").exists():
+            artefacts.append("poi.npz")
+        bundle_sha256 = _bundle_sha256(cache_dir, artefacts)
+
         meta = {
             "cache_format_version": self.CACHE_FORMAT_VERSION,
-            "built_at_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),  # noqa: UP017
+            "built_at_utc": _source_date_epoch_utc(),
             "motac_version": __version__,
             "config": cfg_dict,
             "config_sha256": cfg_hash,
             "graphml_path": substrate.graphml_path,
             "has_poi": substrate.poi is not None,
+            "bundle_sha256": bundle_sha256,
+            "bundle_files": artefacts,
         }
-        (cache_dir / "meta.json").write_text(json.dumps(meta, indent=2, sort_keys=True))
-
-        if substrate.poi is not None:
-            np.savez_compressed(
-                cache_dir / "poi.npz",
-                x=substrate.poi.x,
-                feature_names=np.array(substrate.poi.feature_names, dtype=object),
-            )
+        (cache_dir / "meta.json").write_text(json.dumps(meta, indent=2, sort_keys=True) + "\n")
 
     def _load_cache(self, cache_dir: Path):
         from .types import Grid, NeighbourSets, POIFeatures, Substrate
