@@ -1,3 +1,7 @@
+defaults:
+  acceptance:
+  - uv run ruff check .
+  - uv run pytest -q
 project_id: motac
 tasks:
 - depends_on: []
