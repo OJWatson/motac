@@ -5,6 +5,7 @@ import io
 import json
 import math
 import os
+import shutil
 import zipfile
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -215,10 +216,18 @@ class SubstrateBuilder:
             poi = self._build_pois(grid, neighbours)
 
         # If caching, always persist a GraphML copy so the cache is self-contained.
+        #
+        # Determinism note: when building from an offline GraphML file, prefer copying
+        # the original bytes rather than re-serialising with OSMnx/NetworkX. This
+        # avoids subtle non-determinism from XML writer attribute ordering or float
+        # formatting differences.
         if cache_dir:
             cache_dir.mkdir(parents=True, exist_ok=True)
             graphml_out = cache_dir / "graph.graphml"
-            ox.save_graphml(G, filepath=graphml_out)
+            if self.config.graphml_path and graphml_path:
+                shutil.copyfile(graphml_path, graphml_out)
+            else:
+                ox.save_graphml(G, filepath=graphml_out)
             graphml_path = str(graphml_out)
 
         substrate = Substrate(grid=grid, neighbours=neighbours, poi=poi, graphml_path=graphml_path)
@@ -574,6 +583,8 @@ class SubstrateBuilder:
         artefacts = ["graph.graphml", "grid.npz", "neighbours.npz"]
         if (cache_dir / "poi.npz").exists():
             artefacts.append("poi.npz")
+        # Keep deterministic ordering even if this list changes in future.
+        artefacts = sorted(artefacts)
         bundle_sha256 = _bundle_sha256(cache_dir, artefacts)
 
         # Store graphml_path as a stable, cache-relative path.

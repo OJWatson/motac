@@ -21,7 +21,9 @@ def _bundle_sha256(cache_dir: Path, files: list[str]) -> str:
     return h.hexdigest()
 
 
-def test_substrate_cache_bundle_and_meta_hash(tmp_path: Path) -> None:
+def test_substrate_cache_bundle_and_meta_hash(tmp_path: Path, monkeypatch) -> None:
+    # Ensure stable timestamping for meta.json regardless of the surrounding environment.
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "0")
     # Build a tiny offline graph.
     graphml = tmp_path / "tiny.graphml"
     G = nx.MultiDiGraph()
@@ -66,6 +68,7 @@ def test_substrate_cache_bundle_and_meta_hash(tmp_path: Path) -> None:
         assert k in meta
 
     assert meta["has_poi"] is False
+    assert meta["built_at_utc"] == "1970-01-01T00:00:00Z"
 
     # Hash should match a recomputation of the stored config.
     cfg_dict = meta["config"]
