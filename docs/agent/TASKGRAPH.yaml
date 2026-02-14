@@ -29,3 +29,7 @@ tasks:
   - id: M1.2
     title: Docs add minimal “load bundle + validate version” example snippet (and link from README)
     depends_on: [M1.1]
+
+  - id: M1.3
+    title: Spatial: add lon/lat → cell_id lookup helper
+    depends_on: [M1.2]
