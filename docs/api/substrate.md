@@ -73,6 +73,35 @@ against the library’s expected version and raises if they mismatch.
 
 ### Loading a cached bundle (with version validation)
 
+#### Minimal example: load bundle + validate version {#bundle-load-validate-version}
+
+`SubstrateBuilder.build()` validates the cache format version automatically, but
+if you want an explicit, human-readable guard before doing any work you can read
+`meta.json` yourself:
+
+```python
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+from motac.substrate import SubstrateBuilder, SubstrateConfig
+
+cache_dir = Path("./cache/camden")
+meta = json.loads((cache_dir / "meta.json").read_text())
+
+# Fast fail if the on-disk bundle is from an unsupported format.
+if meta.get("cache_format_version") != SubstrateBuilder.CACHE_FORMAT_VERSION:
+    raise ValueError(
+        "Unsupported substrate cache format version: "
+        f"{meta.get('cache_format_version')} (expected {SubstrateBuilder.CACHE_FORMAT_VERSION})"
+    )
+
+# Loads graph.graphml, grid.npz, neighbours.npz (and optionally poi.npz).
+substrate = SubstrateBuilder(SubstrateConfig(cache_dir=str(cache_dir))).build()
+print(substrate.grid.lat.shape, substrate.neighbours.travel_time_s.shape)
+```
+
 If `cache_dir` already contains a bundle, `SubstrateBuilder.build()` loads it and
 validates `cache_format_version` automatically:
 
