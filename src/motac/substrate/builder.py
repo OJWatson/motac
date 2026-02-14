@@ -635,7 +635,7 @@ class SubstrateBuilder:
         # directory, which would make meta.json non-deterministic across runs.
         graphml_meta_path = "graph.graphml"
 
-        meta = {
+        meta: dict[str, Any] = {
             "cache_format_version": self.CACHE_FORMAT_VERSION,
             "built_at_utc": _source_date_epoch_utc(),
             "motac_version": __version__,
@@ -646,6 +646,12 @@ class SubstrateBuilder:
             "bundle_sha256": bundle_sha256,
             "bundle_files": artefacts,
         }
+
+        # Stable provenance hash for regression tests and external validation.
+        # Note: computed over all meta fields except itself.
+        provenance_json = json.dumps(meta, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        meta["provenance_sha256"] = hashlib.sha256(provenance_json).hexdigest()
+
         (cache_dir / "meta.json").write_text(json.dumps(meta, indent=2, sort_keys=True) + "\n")
 
     def _load_cache(self, cache_dir: Path):

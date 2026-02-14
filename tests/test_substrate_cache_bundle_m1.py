@@ -78,6 +78,7 @@ def test_substrate_cache_bundle_and_meta_hash(tmp_path: Path, monkeypatch) -> No
         "has_poi",
         "bundle_sha256",
         "bundle_files",
+        "provenance_sha256",
     ]:
         assert k in meta
 
@@ -105,10 +106,22 @@ def test_substrate_cache_bundle_and_meta_hash(tmp_path: Path, monkeypatch) -> No
     assert files == sorted(files)  # stable ordering
     assert meta["bundle_sha256"] == _bundle_sha256(cache_dir, files)
 
+    # Provenance hash should match a recomputation over meta.json (excluding itself).
+    meta_for_hash = dict(meta)
+    meta_for_hash.pop("provenance_sha256")
+    prov_json = json.dumps(meta_for_hash, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    assert meta["provenance_sha256"] == hashlib.sha256(prov_json).hexdigest()
+
     # Regression: bundle hash must be present and deterministic for a fixed input.
     assert meta["bundle_sha256"]
     assert meta["bundle_sha256"] == (
         "8b0a063d6cac364e89396dbd0b7fb48bf7b16df42a7fdc989e9eea3313d9521e"
+    )
+
+    # Regression: provenance hash must be present and deterministic for a fixed input.
+    assert meta["provenance_sha256"]
+    assert meta["provenance_sha256"] == (
+        "7dfe62c6062f4d1416765976ac7d7e4fbf196101ec71f22bff2e150c50f0ab33"
     )
 
     # Regression: bundle writes are deterministic byte-for-byte.
@@ -124,6 +137,7 @@ def test_substrate_cache_bundle_and_meta_hash(tmp_path: Path, monkeypatch) -> No
 
     meta2 = json.loads((cache_dir2 / "meta.json").read_text())
     assert meta2["bundle_sha256"] == meta["bundle_sha256"]
+    assert meta2["provenance_sha256"] == meta["provenance_sha256"]
     for name in files + ["meta.json"]:
         assert (cache_dir2 / name).read_bytes() == (cache_dir / name).read_bytes()
 
