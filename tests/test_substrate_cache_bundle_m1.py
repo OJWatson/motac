@@ -105,8 +105,11 @@ def test_substrate_cache_bundle_and_meta_hash(tmp_path: Path, monkeypatch) -> No
     assert files == sorted(files)  # stable ordering
     assert meta["bundle_sha256"] == _bundle_sha256(cache_dir, files)
 
-    # Regression: bundle hash must be present and deterministic across repeated builds.
+    # Regression: bundle hash must be present and deterministic for a fixed input.
     assert meta["bundle_sha256"]
+    assert meta["bundle_sha256"] == (
+        "8b0a063d6cac364e89396dbd0b7fb48bf7b16df42a7fdc989e9eea3313d9521e"
+    )
 
     # Regression: bundle writes are deterministic byte-for-byte.
     cache_dir2 = tmp_path / "cache2"

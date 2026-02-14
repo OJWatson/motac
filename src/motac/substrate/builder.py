@@ -273,7 +273,16 @@ class SubstrateBuilder:
     def _load_graph(self):
         if self.config.graphml_path:
             path = Path(self.config.graphml_path)
-            G = ox.load_graphml(path)
+            # OSMnx's GraphML loader has had some brittle type conversion logic
+            # across versions (e.g. assuming all attribute values are strings).
+            # For offline/test fixtures we fall back to NetworkX's reader to keep
+            # cache bundles buildable and deterministic.
+            try:
+                G = ox.load_graphml(path)
+            except AttributeError:
+                G = nx.read_graphml(path)
+                if not isinstance(G, nx.MultiDiGraph):
+                    G = nx.MultiDiGraph(G)
             return G, str(path)
 
         if self.config.place:
