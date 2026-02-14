@@ -91,9 +91,14 @@ def test_substrate_cache_bundle_and_meta_hash(tmp_path: Path, monkeypatch) -> No
     assert meta["config_sha256"] == expected
 
     # Regression: config hashing must be deterministic for a fixed input.
-    # (We don't pin to an absolute string to avoid version-specific GraphML serialisation.)
-    assert meta["config_sha256"]
-    assert cfg_dict["graphml_sha256"]
+    # We *can* pin these because the GraphML fixture is hand-written and copied
+    # byte-for-byte into the cache.
+    assert cfg_dict["graphml_sha256"] == (
+        "3313e03844dc7bbeec32c0e34d0bedb981e3dfbf8f288f052859f0fb07db5abe"
+    )
+    assert meta["config_sha256"] == (
+        "6dcd54b6c472f0d361f945a7072bb5f8a788ab6fab9dccc88e7bd18531332404"
+    )
 
     # Bundle hash should match a recomputation over the referenced files.
     files = list(meta["bundle_files"])

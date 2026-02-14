@@ -110,15 +110,23 @@ def _save_sparse_npz_deterministic(path: Path, mat: sp.spmatrix) -> None:
     """Write a deterministic SciPy sparse .npz.
 
     Mirrors scipy.sparse.save_npz, but with fixed zip timestamps.
+
+    Determinism notes:
+    - CSR index ordering can vary depending on how the matrix was constructed;
+      we sort indices explicitly.
+    - NumPy dtypes for indices/shape can vary across platforms (e.g. int32 vs
+      int64); we normalise to fixed dtypes so the on-disk bytes are stable.
     """
 
     mat = mat.tocsr()
+    mat.sort_indices()
+
     arrays: dict[str, np.ndarray] = {
-        "data": np.asarray(mat.data),
-        "indices": np.asarray(mat.indices),
-        "indptr": np.asarray(mat.indptr),
-        "shape": np.asarray(mat.shape),
-        "format": np.asarray("csr"),
+        "data": np.asarray(mat.data, dtype=np.float64),
+        "indices": np.asarray(mat.indices, dtype=np.int64),
+        "indptr": np.asarray(mat.indptr, dtype=np.int64),
+        "shape": np.asarray(mat.shape, dtype=np.int64),
+        "format": np.asarray("csr", dtype=str),
     }
 
     # 'format' is stored as a 0-d unicode array.
