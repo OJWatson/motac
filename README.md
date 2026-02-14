@@ -72,6 +72,10 @@ assert lam.shape == (world.n_locations, 7)
 
 ## Docs
 
+- Full documentation: https://ojwatson.github.io/motac
+- Substrate cache bundles (build/load/versioning):
+  https://ojwatson.github.io/motac/api/substrate.html#loading-a-cached-bundle-with-version-validation
+
 Build the docs locally:
 
 ```bash

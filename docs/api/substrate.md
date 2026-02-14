@@ -71,6 +71,28 @@ If `cache_dir` is set, the builder writes a self-contained bundle:
 The cache includes `meta.json["cache_format_version"]`. The loader validates this
 against the library’s expected version and raises if they mismatch.
 
+### Loading a cached bundle (with version validation)
+
+If `cache_dir` already contains a bundle, `SubstrateBuilder.build()` loads it and
+validates `cache_format_version` automatically:
+
+```python
+from motac.substrate import SubstrateBuilder, SubstrateConfig
+
+# Point at a previously built cache directory containing:
+# graph.graphml, grid.npz, neighbours.npz, meta.json (and optionally poi.npz)
+cache_dir = "./cache/camden"
+
+try:
+    substrate = SubstrateBuilder(SubstrateConfig(cache_dir=cache_dir)).build()
+except ValueError as e:
+    # Raised e.g. when meta.json["cache_format_version"] is unsupported.
+    raise
+
+# Use the loaded substrate.
+print(substrate.grid.lat.shape, substrate.neighbours.travel_time_s.shape)
+```
+
 ## POI features (M2)
 
 If POIs are enabled, `Substrate.poi` is a `POIFeatures` object with:
