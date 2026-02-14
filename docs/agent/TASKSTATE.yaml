@@ -65,7 +65,7 @@ tasks:
     last:
       outcome: success
       reason: "docs: add minimal load bundle + validate version snippet; README link"
-      commit: "a4fe6be83552ce9913aa35b9ec7bd51b34016ce0"
-      pushed: false
+      commit: ""
+      pushed: true
       log_path: "/home/kana/.openclaw/workspace/portfolio/reports/runs/20260214T214300Z/logs/motac.log"
       tick_ts: "20260214T214300Z"
