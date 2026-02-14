@@ -8,3 +8,5 @@ Format:
 M0.5 -> 4257224a78ad096d9e3b1f33365113c39667d17a : docs: consolidate M0/M1 DoD pointers (one canonical place)
 M0.4 -> bafe65d95a51bc679b0644e1871bf558ff758ee0 : docs: tighten spec_alignment + scope notes for M0/M1
 M0.3 -> e4d2b5a25aea779a812a5e38a0888546aeef270f : canonical event schema + validation scaffold + tests
+
+M1.0 -> 36e3aff378e7d6fcfa9d59fbbaeb90e4aec01984 : docs+tests: substrate cache bundle v1 format + subprocess e2e smoke
