@@ -10,4 +10,4 @@ M0.4 -> bafe65d95a51bc679b0644e1871bf558ff758ee0 : docs: tighten spec_alignment 
 M0.3 -> e4d2b5a25aea779a812a5e38a0888546aeef270f : canonical event schema + validation scaffold + tests
 M1.2 -> a4fe6be83552ce9913aa35b9ec7bd51b34016ce0 : docs: add minimal bundle load + version validation snippet (and link from README)
 
-M1.3 -> 89d4c1e66d425435c16498f769cf5e6f54c809c4 : spatial: add lon/lat -> cell_id lookup helper (lookup + tests) [tick_ts=20260214T220122Z]
+M1.3 -> 89d4c1e66d425435c16498f769cf5e6f54c809c4 : spatial: add lon/lat -> cell_id lookup helper
