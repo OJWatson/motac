@@ -3,23 +3,39 @@
 This document is a structure-first alignment checklist against the PDF spec.
 It is intentionally concise and actionable.
 
+## Scope notes (M0/M1)
+
+These notes clarify what “done” means for the early reset milestones, so later
+milestones don’t keep re-litigating basics.
+
+- **M0 (reset + schema) is in-scope** when:
+  - a canonical event schema exists and is validated by tests
+  - repo layout is sane (pyproject, src/ layout, tests running in CI)
+  - documentation points to the canonical schema location
+- **M1 (substrate cache artefacts v1) is in-scope** when:
+  - cache bundle format is defined (versioned) and written deterministically
+  - provenance hash is stable and tested
+  - cache artefacts are documented with a short “what you get” + how to load
+- **Explicitly out-of-scope for M0/M1:** end-to-end forecasting, full dataset
+  loaders, and any “production” CLI UX polish beyond minimal entrypoints.
+
 ## Checklist of required components
 
 ### Data + schema
-- [ ] Canonical event schema + validation
+- [x] Canonical event schema + validation
 - [ ] Dataset loaders (Chicago, ACLED)
 - [ ] Time binning and observation matrix construction
 
 ### Substrate / spatial
-- [ ] Road graph build/load (offline GraphML supported)
-- [ ] Grid definition + cell centroids
-- [ ] Travel-time neighbourhoods (sparse)
-- [ ] POIs + baseline features (count + travel-time-to-nearest)
-- [ ] Cache bundle + provenance
+- [x] Road graph build/load (offline GraphML supported)
+- [x] Grid definition + cell centroids
+- [x] Travel-time neighbourhoods (sparse)
+- [x] POIs + baseline features (count + travel-time-to-nearest)
+- [x] Cache bundle + provenance
 
 ### Models
-- [ ] Parametric road-constrained Hawkes (Poisson)
-- [ ] Parametric road-constrained Hawkes (NegBin)
+- [x] Parametric road-constrained Hawkes (Poisson)
+- [x] Parametric road-constrained Hawkes (NegBin)
 - [ ] Marked Hawkes variants (later)
 - [ ] Neural / learned kernels (later)
 
