@@ -10,6 +10,7 @@ from .marked_hawkes import MarkedRoadHawkesDataset
 from .metrics import mean_negative_log_likelihood
 from .predict import predict_intensity_in_sample, predict_intensity_next_step
 from .road_hawkes import predict_intensity_one_step_road
+from .simulate import simulate_road_hawkes_counts
 
 __all__ = [
     "RoadHawkesDataset",
@@ -21,4 +22,5 @@ __all__ = [
     "mean_negative_log_likelihood",
     "road_loglik",
     "fit_road_hawkes_mle",
+    "simulate_road_hawkes_counts",
 ]
