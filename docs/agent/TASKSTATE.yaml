@@ -83,14 +83,14 @@ tasks:
     updated_at_utc: '2026-02-15T11:39:21Z'
   M1.5:
     last:
-      commit: ''
-      log_path: ''
-      outcome: ''
-      pushed: null
-      reason: ''
-      tick_ts: ''
-    status: todo
-    updated_at_utc: ''
+      commit: 85d26178f9090a77a3bbf8613ef123efea349790
+      log_path: /home/kana/.openclaw/workspace/portfolio/reports/runs/20260215T120006Z/logs/motac.log
+      outcome: success
+      pushed: true
+      reason: 'cli: add `motac spatial cell-id` command + smoke test'
+      tick_ts: 20260215T120006Z
+    status: done
+    updated_at_utc: '2026-02-15T12:05:30Z'
   M2.0:
     last:
       commit: ''
