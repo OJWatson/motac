@@ -65,8 +65,8 @@ def csr_from_scipy(csr_matrix) -> CSR:
     )
 
 
-def convolved_history_last(*, y: np.ndarray, kernel: np.ndarray) -> np.ndarray:
-    """Temporal convolution for the last time step.
+def convolved_history_last_numpy(*, y: np.ndarray, kernel: np.ndarray) -> np.ndarray:
+    """Temporal convolution for the last time step (NumPy).
 
     For a history ``y[:, :T]``, returns
 
@@ -86,16 +86,51 @@ def convolved_history_last(*, y: np.ndarray, kernel: np.ndarray) -> np.ndarray:
         raise ValueError("kernel must be 1D and non-empty")
 
     n_cells, t = y.shape
-    lags = int(kernel.size)
-    start = max(0, t - lags)
-
-    window = np.asarray(y[:, start:t], dtype=float)
-    if window.size == 0:
+    effective = min(int(kernel.size), int(t))
+    if effective == 0:
         return np.zeros((n_cells,), dtype=float)
 
-    effective = t - start
+    window = np.asarray(y[:, t - effective : t], dtype=float)
     k = np.asarray(kernel[:effective], dtype=float)
     return window[:, ::-1] @ k
+
+
+def convolved_history_last_jax(*, y, kernel):
+    """Temporal convolution for the last time step (JAX)."""
+
+    if not _HAS_JAX:  # pragma: no cover
+        raise RuntimeError("JAX is not available")
+
+    if y.ndim != 2:
+        raise ValueError("y must be 2D (n_cells, T)")
+    if kernel.ndim != 1 or kernel.size == 0:
+        raise ValueError("kernel must be 1D and non-empty")
+
+    n_cells, t = y.shape
+    effective = min(int(kernel.size), int(t))
+    if effective == 0:
+        return jnp.zeros((n_cells,), dtype=jnp.result_type(y, kernel, jnp.float32))
+
+    window = y[:, t - effective : t]
+    k = kernel[:effective]
+    return jnp.flip(window, axis=1) @ k
+
+
+def convolved_history_last(*, y: Any, kernel: Any) -> Any:
+    """Dispatching temporal convolution.
+
+    - If inputs are JAX arrays and JAX is available: use JAX.
+    - Otherwise: use NumPy.
+    """
+
+    if _HAS_JAX:
+        try:
+            if isinstance(y, jnp.ndarray) or isinstance(kernel, jnp.ndarray):
+                return convolved_history_last_jax(y=y, kernel=kernel)
+        except Exception:  # pragma: no cover
+            pass
+
+    return convolved_history_last_numpy(y=np.asarray(y), kernel=np.asarray(kernel))
 
 
 def csr_matvec_numpy(*, csr: CSR, x: np.ndarray) -> np.ndarray:

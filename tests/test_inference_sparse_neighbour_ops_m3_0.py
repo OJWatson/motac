@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import numpy as np
+import pytest
 import scipy.sparse as sp
 
 from motac.inference.sparse_neighbour_ops import convolved_history_last, csr_from_scipy, csr_matvec
@@ -59,3 +60,35 @@ def test_csr_matvec_shape_errors():
         assert "shape" in str(e)
     else:  # pragma: no cover
         raise AssertionError("expected ValueError")
+
+
+def test_jax_ops_are_jittable_and_match_numpy():
+    jax = pytest.importorskip("jax")
+    jnp = pytest.importorskip("jax.numpy")
+
+    rng = np.random.default_rng(2)
+    n = 8
+    t = 6
+
+    A = sp.random(n, n, density=0.25, format="csr", random_state=0)
+    A = (A + sp.eye(n, format="csr")).tocsr()
+    csr = csr_from_scipy(A)
+
+    x_np = rng.normal(size=(n,)).astype(np.float32)
+    x_j = jnp.asarray(x_np)
+
+    f = jax.jit(lambda x: csr_matvec(csr=csr, x=x))
+    got = np.asarray(f(x_j))
+    want = np.asarray(A @ x_np)
+    assert np.allclose(got, want, rtol=1e-5, atol=1e-6)
+
+    y_np = rng.poisson(2.0, size=(n, t)).astype(np.float32)
+    kernel_np = np.array([0.6, 0.2, 0.1, 0.05], dtype=np.float32)
+
+    y_j = jnp.asarray(y_np)
+    kernel_j = jnp.asarray(kernel_np)
+
+    g = jax.jit(lambda y, k: convolved_history_last(y=y, kernel=k))
+    got2 = np.asarray(g(y_j, kernel_j))
+    want2 = convolved_history_last(y=y_np, kernel=kernel_np)
+    assert np.allclose(got2, want2, rtol=1e-5, atol=1e-6)
