@@ -174,7 +174,8 @@ def validate_canonical_events_table(table: pa.Table) -> None:
         if name not in table.column_names:
             raise ValueError(f"missing required column: {name}")
         if table.schema.field(name).type != typ:
-            raise ValueError(f"column {name} must have type {typ}, got {table.schema.field(name).type}")
+            got = table.schema.field(name).type
+            raise ValueError(f"column {name} must have type {typ}, got {got}")
 
     allowed = {name for name, _ in required} | set(optional)
     extra = [c for c in table.column_names if c not in allowed]
@@ -183,10 +184,14 @@ def validate_canonical_events_table(table: pa.Table) -> None:
 
     for name, typ in optional.items():
         if name in table.column_names and table.schema.field(name).type != typ:
-            raise ValueError(f"column {name} must have type {typ}, got {table.schema.field(name).type}")
+            got = table.schema.field(name).type
+            raise ValueError(f"column {name} must have type {typ}, got {got}")
 
     # Require stable ordering: required first, then optional in a fixed order.
-    expected = [name for name, _ in required] + [n for n in ("event_id", "cell_id", "mark", "meta_json") if n in table.column_names]
+    optional_order = ("event_id", "cell_id", "mark", "meta_json")
+    expected = [name for name, _ in required] + [
+        n for n in optional_order if n in table.column_names
+    ]
     if table.column_names != expected:
         raise ValueError(f"unexpected column order: {table.column_names} (expected {expected})")
 
