@@ -121,4 +121,128 @@ tasks:
       tick_ts: 20260215T153007Z
     status: done
     updated_at_utc: '2026-02-15T15:33:00Z'
+  M2.3:
+    status: todo
+    updated_at_utc: ''
+  M2.4:
+    status: todo
+    updated_at_utc: ''
+  M2.END:
+    status: todo
+    updated_at_utc: ''
+  CI.FIX.M2:
+    status: todo
+    updated_at_utc: ''
+  M3.0:
+    status: todo
+    updated_at_utc: ''
+  M3.1:
+    status: todo
+    updated_at_utc: ''
+  M3.2:
+    status: todo
+    updated_at_utc: ''
+  M3.3:
+    status: todo
+    updated_at_utc: ''
+  M3.END:
+    status: todo
+    updated_at_utc: ''
+  CI.FIX.M3:
+    status: todo
+    updated_at_utc: ''
+  M4.0:
+    status: todo
+    updated_at_utc: ''
+  M4.1:
+    status: todo
+    updated_at_utc: ''
+  M4.2:
+    status: todo
+    updated_at_utc: ''
+  M4.END:
+    status: todo
+    updated_at_utc: ''
+  CI.FIX.M4:
+    status: todo
+    updated_at_utc: ''
+  M5.0:
+    status: todo
+    updated_at_utc: ''
+  M5.1:
+    status: todo
+    updated_at_utc: ''
+  M5.2:
+    status: todo
+    updated_at_utc: ''
+  M5.3:
+    status: todo
+    updated_at_utc: ''
+  M5.END:
+    status: todo
+    updated_at_utc: ''
+  CI.FIX.M5:
+    status: todo
+    updated_at_utc: ''
+  M6.0:
+    status: todo
+    updated_at_utc: ''
+  M6.1:
+    status: todo
+    updated_at_utc: ''
+  M6.END:
+    status: todo
+    updated_at_utc: ''
+  CI.FIX.M6:
+    status: todo
+    updated_at_utc: ''
+  M7.0:
+    status: todo
+    updated_at_utc: ''
+  M7.1:
+    status: todo
+    updated_at_utc: ''
+  M7.2:
+    status: todo
+    updated_at_utc: ''
+  M7.END:
+    status: todo
+    updated_at_utc: ''
+  CI.FIX.M7:
+    status: todo
+    updated_at_utc: ''
+  M8.0:
+    status: todo
+    updated_at_utc: ''
+  M8.1:
+    status: todo
+    updated_at_utc: ''
+  M8.END:
+    status: todo
+    updated_at_utc: ''
+  CI.FIX.M8:
+    status: todo
+    updated_at_utc: ''
+  M9.0:
+    status: todo
+    updated_at_utc: ''
+  M9.END:
+    status: todo
+    updated_at_utc: ''
+  CI.FIX.M9:
+    status: todo
+    updated_at_utc: ''
+  M10.0:
+    status: todo
+    updated_at_utc: ''
+  M10.1:
+    status: todo
+    updated_at_utc: ''
+  M10.END:
+    status: todo
+    updated_at_utc: ''
+  CI.FIX.M10:
+    status: todo
+    updated_at_utc: ''
 version: 1
+ci: {}

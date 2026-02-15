@@ -1,55 +1,189 @@
+version: 1
+project_id: motac
+
 defaults:
   acceptance:
-  - uv run ruff check .
-  - uv run pytest -q
-project_id: motac
+    - uv run ruff check .
+    - uv run pytest -q
+
 tasks:
-- depends_on: []
-  id: M0.3
-  title: Canonical event schema + validation scaffold + tests
-- depends_on:
-  - M0.3
-  id: M0.4
-  title: Docs tighten spec alignment + scope notes for M0/M1
-- depends_on:
-  - M0.4
-  id: M0.5
-  title: Docs consolidate M0/M1 DoD pointers (single canonical place)
-- depends_on:
-  - M0.5
-  id: M1.0
-  title: 'Substrate cache bundle v1: specify format + add CLI smoke test'
-- depends_on:
-  - M1.0
-  id: M1.1
-  title: Make cache bundle v1 deterministic + add provenance-hash regression test
-- depends_on:
-  - M1.1
-  id: M1.2
-  title: Docs add minimal “load bundle + validate version” example snippet (and link from
-    README)
-- depends_on:
-  - M1.2
-  id: M1.3
-  title: 'Spatial: add lon/lat → cell_id lookup helper'
-- depends_on:
-  - M1.3
-  id: M1.4
-  title: 'Spatial: validate cell_id lookup boundaries + add property-based tests'
-- depends_on:
-  - M1.4
-  id: M1.5
-  title: 'CLI: add `motac spatial cell-id` command + smoke test'
-- depends_on:
-  - M1.5
-  id: M2.0
-  title: 'Ingestion: add minimal pipeline to load raw events into canonical table'
-- depends_on:
-  - M2.0
-  id: M2.1
-  title: 'Ingestion tests: fixture roundtrip + schema validation'
-- depends_on:
-  - M2.1
-  id: M2.2
-  title: 'Docs: add end-to-end example (ingest -> spatial join -> query)'
-version: 1
+  # M0 — reset + schema scaffold
+  - id: M0.3
+    title: Canonical event schema + validation scaffold + tests
+    depends_on: []
+  - id: M0.4
+    title: Docs tighten spec alignment + scope notes for M0/M1
+    depends_on: [M0.3]
+  - id: M0.5
+    title: Docs consolidate M0/M1 DoD pointers (single canonical place)
+    depends_on: [M0.4]
+
+  # M1 — substrate cache bundle v1
+  - id: M1.0
+    title: "Substrate cache bundle v1: specify format + add CLI smoke test"
+    depends_on: [M0.5]
+  - id: M1.1
+    title: Make cache bundle v1 deterministic + add provenance-hash regression test
+    depends_on: [M1.0]
+  - id: M1.2
+    title: Docs add minimal “load bundle + validate version” example snippet (and link from README)
+    depends_on: [M1.1]
+  - id: M1.3
+    title: "Spatial: add lon/lat → cell_id lookup helper"
+    depends_on: [M1.2]
+  - id: M1.4
+    title: "Spatial: validate cell_id lookup boundaries + add property-based tests"
+    depends_on: [M1.3]
+  - id: M1.5
+    title: "CLI: add `motac spatial cell-id` command + smoke test"
+    depends_on: [M1.4]
+
+  # M2 — POIs + baseline features v1 (+ ingestion closure)
+  - id: M2.0
+    title: "Ingestion: add minimal pipeline to load raw events into canonical table"
+    depends_on: [M1.5]
+  - id: M2.1
+    title: "Ingestion tests: fixture roundtrip + schema validation"
+    depends_on: [M2.0]
+  - id: M2.2
+    title: "Docs: add end-to-end example (ingest -> spatial join -> query)"
+    depends_on: [M2.1]
+  - id: M2.3
+    title: "Spatial: implement OSM POI extraction + per-cell baseline feature matrix"
+    depends_on: [M2.2]
+  - id: M2.4
+    title: "Substrate: include POI baseline features in cache bundle v1 + deterministic tests"
+    depends_on: [M2.3]
+  - id: M2.END
+    title: "Milestone end: M2 complete (gate on CI)"
+    depends_on: [M2.4]
+  - id: CI.FIX.M2
+    title: "CI fix: make GitHub Actions green for M2 boundary"
+    depends_on: [M2.END]
+
+  # M3 — Parametric road-constrained Hawkes (counts) v1
+  - id: M3.0
+    title: "Inference: JAX sparse neighbour convolution ops (jit-ready) + tests"
+    depends_on: [M2.END]
+  - id: M3.1
+    title: "Inference: Poisson/NegBin likelihoods + gradient checks on tiny fixtures"
+    depends_on: [M3.0]
+  - id: M3.2
+    title: "Model: parametric road-kernel Hawkes fit/predict API + end-to-end sim smoke"
+    depends_on: [M3.1]
+  - id: M3.3
+    title: "Validation: parameter recovery harness (multi-seed) + tolerances + docs"
+    depends_on: [M3.2]
+  - id: M3.END
+    title: "Milestone end: M3 complete (gate on CI)"
+    depends_on: [M3.3]
+  - id: CI.FIX.M3
+    title: "CI fix: make GitHub Actions green for M3 boundary"
+    depends_on: [M3.END]
+
+  # M4 — Simulator v2 (shared schema + observation model)
+  - id: M4.0
+    title: "Sim: discrete-time Hawkes generator wired to substrate neighbours + deterministic fixture"
+    depends_on: [M3.END]
+  - id: M4.1
+    title: "Sim: observation noise model (thinning/jitter/missingness) + golden regression tests"
+    depends_on: [M4.0]
+  - id: M4.2
+    title: "Sim: scenario knobs incl. road-closure travel-time perturbations + docs"
+    depends_on: [M4.1]
+  - id: M4.END
+    title: "Milestone end: M4 complete (gate on CI)"
+    depends_on: [M4.2]
+  - id: CI.FIX.M4
+    title: "CI fix: make GitHub Actions green for M4 boundary"
+    depends_on: [M4.END]
+
+  # M5 — Evaluation harness (rolling backtests + diagnostics)
+  - id: M5.0
+    title: "Eval: rolling-origin backtest splits + leakage tests"
+    depends_on: [M4.END]
+  - id: M5.1
+    title: "Eval: proper scoring rules + calibration diagnostics (coverage/PIT) + tests"
+    depends_on: [M5.0]
+  - id: M5.2
+    title: "Eval: baselines (Poisson regression, Euclidean Hawkes) + comparison harness"
+    depends_on: [M5.1]
+  - id: M5.3
+    title: "Eval: generate report bundle (HTML/JSON/figures) + smoke test"
+    depends_on: [M5.2]
+  - id: M5.END
+    title: "Milestone end: M5 complete (gate on CI)"
+    depends_on: [M5.3]
+  - id: CI.FIX.M5
+    title: "CI fix: make GitHub Actions green for M5 boundary"
+    depends_on: [M5.END]
+
+  # M6 — Chicago crime benchmark
+  - id: M6.0
+    title: "Data: Chicago fetch + cache + canonical mapping + fixture-based tests"
+    depends_on: [M5.END]
+  - id: M6.1
+    title: "Repro: chicago end-to-end benchmark script/notebook + deterministic run bundle"
+    depends_on: [M6.0]
+  - id: M6.END
+    title: "Milestone end: M6 complete (gate on CI)"
+    depends_on: [M6.1]
+  - id: CI.FIX.M6
+    title: "CI fix: make GitHub Actions green for M6 boundary"
+    depends_on: [M6.END]
+
+  # M7 — ACLED Gaza benchmark
+  - id: M7.0
+    title: "Data: ACLED CSV loader + canonical mapping + tests (no credentials)"
+    depends_on: [M6.END]
+  - id: M7.1
+    title: "Data: optional ACLED API loader behind env vars + safe caching + mock tests"
+    depends_on: [M7.0]
+  - id: M7.2
+    title: "Repro: gaza benchmark script/notebook + deterministic run bundle"
+    depends_on: [M7.1]
+  - id: M7.END
+    title: "Milestone end: M7 complete (gate on CI)"
+    depends_on: [M7.2]
+  - id: CI.FIX.M7
+    title: "CI fix: make GitHub Actions green for M7 boundary"
+    depends_on: [M7.END]
+
+  # M8 — Neural kernel (optional; gated behind stable baseline)
+  - id: M8.0
+    title: "Model: neural mobility kernel behind same likelihood interface + shape tests"
+    depends_on: [M7.END]
+  - id: M8.1
+    title: "Eval: neural vs parametric ablations + compute profiling + report"
+    depends_on: [M8.0]
+  - id: M8.END
+    title: "Milestone end: M8 complete (gate on CI)"
+    depends_on: [M8.1]
+  - id: CI.FIX.M8
+    title: "CI fix: make GitHub Actions green for M8 boundary"
+    depends_on: [M8.END]
+
+  # M9 — Paper-grade artefact
+  - id: M9.0
+    title: "Paper: reproduce script + figure/table generation wiring"
+    depends_on: [M8.END]
+  - id: M9.END
+    title: "Milestone end: M9 complete (gate on CI)"
+    depends_on: [M9.0]
+  - id: CI.FIX.M9
+    title: "CI fix: make GitHub Actions green for M9 boundary"
+    depends_on: [M9.END]
+
+  # M10 — Documentation site
+  - id: M10.0
+    title: "Docs: build docs site in CI + publish configuration"
+    depends_on: [M9.END]
+  - id: M10.1
+    title: "Docs: add executed tutorial notebooks (synthetic/chicago/acled) + API ref pages"
+    depends_on: [M10.0]
+  - id: M10.END
+    title: "Milestone end: M10 complete (gate on CI)"
+    depends_on: [M10.1]
+  - id: CI.FIX.M10
+    title: "CI fix: make GitHub Actions green for M10 boundary"
+    depends_on: [M10.END]
