@@ -77,7 +77,8 @@ tasks:
       log_path: /home/kana/.openclaw/workspace/portfolio/reports/runs/20260215T113008Z/logs
       outcome: success
       pushed: true
-      reason: 'spatial: enforce boundary convention in lookup + add Hypothesis property tests'
+      reason: 'spatial: enforce boundary convention in lookup + add Hypothesis property
+        tests'
       tick_ts: 20260215T113008Z
     status: done
     updated_at_utc: '2026-02-15T11:39:21Z'
@@ -127,7 +128,8 @@ tasks:
       log_path: /home/kana/.openclaw/workspace/portfolio/reports/runs/20260215T173004Z/logs/motac.log
       outcome: success
       pushed: true
-      reason: '[M2.3] Spatial: implement OSM POI extraction + per-cell baseline feature matrix'
+      reason: '[M2.3] Spatial: implement OSM POI extraction + per-cell baseline feature
+        matrix'
       tick_ts: 20260215T173004Z
     status: done
     updated_at_utc: '2026-02-15T17:35:03Z'
@@ -137,7 +139,8 @@ tasks:
       log_path: /home/kana/.openclaw/workspace/portfolio/reports/runs/20260215T180005Z/logs/motac.log
       outcome: success
       pushed: true
-      reason: "M2.4: include POI features in substrate cache bundle + deterministic ordering/tests"
+      reason: 'M2.4: include POI features in substrate cache bundle + deterministic
+        ordering/tests'
       tick_ts: 20260215T180005Z
     status: done
     updated_at_utc: '2026-02-15T18:06:55Z'
@@ -152,8 +155,15 @@ tasks:
     status: done
     updated_at_utc: '2026-02-15T18:33:55Z'
   CI.FIX.M2:
-    status: todo
-    updated_at_utc: ''
+    status: done
+    updated_at_utc: '2026-02-15T22:03:28Z'
+    last:
+      commit: 2a6fc84
+      log_path: /home/kana/.openclaw/workspace/portfolio/reports/runs/20260215T220004Z/logs/motac.log
+      outcome: success
+      pushed: true
+      reason: 'CI.FIX.M2: record CI fix verification (ruff/pytest/docs build)'
+      tick_ts: 20260215T220004Z
   M3.0:
     status: todo
     updated_at_utc: ''
