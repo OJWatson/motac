@@ -51,6 +51,9 @@ jobs:
       contents: write
 
     steps:
+      # actions-gh-pages expects a git repository in the workspace.
+      - uses: actions/checkout@v4
+
       - name: Download docs artifact
         uses: actions/download-artifact@v4
         with:
@@ -61,4 +64,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
           publish_dir: ./docs-html
+          force_orphan: true
