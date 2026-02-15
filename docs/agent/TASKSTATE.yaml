@@ -113,7 +113,7 @@ tasks:
     updated_at_utc: '2026-02-15T14:34:58Z'
   M2.2:
     last:
-      commit: dcf2be74f7ce4ff32f82747544b20e50f21ff42e
+      commit: 81f2860d694dbe2cf0291d675737b17c402196ce
       log_path: /home/kana/.openclaw/workspace/portfolio/reports/runs/20260215T153007Z/logs/motac.log
       outcome: success
       pushed: true
