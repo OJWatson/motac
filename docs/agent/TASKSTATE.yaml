@@ -103,14 +103,14 @@ tasks:
     updated_at_utc: '2026-02-15T13:33:22Z'
   M2.1:
     last:
-      commit: ''
-      log_path: ''
-      outcome: ''
-      pushed: null
-      reason: ''
-      tick_ts: ''
-    status: todo
-    updated_at_utc: ''
+      commit: 660327dc7651164f2efe8fb5843d7de9015925f5
+      log_path: /home/kana/.openclaw/workspace/portfolio/reports/runs/20260215T143004Z/logs/motac.log
+      outcome: success
+      pushed: true
+      reason: 'M2.1: ingestion fixture roundtrip + canonical schema validation'
+      tick_ts: 20260215T143004Z
+    status: done
+    updated_at_utc: '2026-02-15T14:34:58Z'
   M2.2:
     last:
       commit: ''
