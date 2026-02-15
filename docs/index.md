@@ -17,6 +17,7 @@ loaders/index
 
 tutorials/01_synthetic_quickstart
 tutorials/02_poi_features
+tutorials/03_ingest_spatial_query
 ```
 
 ```{toctree}
