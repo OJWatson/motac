@@ -32,4 +32,24 @@ tasks:
   - M1.2
   id: M1.3
   title: 'Spatial: add lon/lat → cell_id lookup helper'
+- depends_on:
+  - M1.3
+  id: M1.4
+  title: 'Spatial: validate cell_id lookup boundaries + add property-based tests'
+- depends_on:
+  - M1.4
+  id: M1.5
+  title: 'CLI: add `motac spatial cell-id` command + smoke test'
+- depends_on:
+  - M1.5
+  id: M2.0
+  title: 'Ingestion: add minimal pipeline to load raw events into canonical table'
+- depends_on:
+  - M2.0
+  id: M2.1
+  title: 'Ingestion tests: fixture roundtrip + schema validation'
+- depends_on:
+  - M2.1
+  id: M2.2
+  title: 'Docs: add end-to-end example (ingest -> spatial join -> query)'
 version: 1
