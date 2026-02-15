@@ -4,9 +4,10 @@ Now:
 - (none)
 
 Next:
-- (add next task)
+- M2.4 — Substrate: include POI baseline features in cache bundle v1 + deterministic tests
 
 Done:
+- M2.3 — Spatial: implement OSM POI extraction + per-cell baseline feature matrix
 - M2.2 — Docs: add end-to-end example (ingest -> spatial join -> query)
 - M1.0 — Substrate cache bundle v1: document format + add one end-to-end smoke test
 - M1.1 — Make cache bundle v1 fully deterministic + add provenance-hash regression test
