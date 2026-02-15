@@ -130,10 +130,73 @@ def event_table_to_arrow(tbl: EventTable) -> pa.Table:
     return pa.table(cols)
 
 
+def validate_canonical_events_table(table: pa.Table) -> None:
+    """Validate a canonical events Arrow table.
+
+    The canonical schema is:
+
+    Required columns
+    ----------------
+    - t: date32
+    - lat: float64
+    - lon: float64
+    - value: int64
+
+    Optional columns
+    ----------------
+    - event_id: string
+    - cell_id: int32
+    - mark: string
+    - meta_json: large_string (JSON-encoded mapping)
+
+    Notes
+    -----
+    This validator is intentionally strict to keep downstream code predictable.
+    """
+
+    if not isinstance(table, pa.Table):
+        raise ValueError("table must be a pyarrow.Table")
+
+    required: list[tuple[str, pa.DataType]] = [
+        ("t", pa.date32()),
+        ("lat", pa.float64()),
+        ("lon", pa.float64()),
+        ("value", pa.int64()),
+    ]
+    optional: dict[str, pa.DataType] = {
+        "event_id": pa.string(),
+        "cell_id": pa.int32(),
+        "mark": pa.string(),
+        "meta_json": pa.large_string(),
+    }
+
+    for name, typ in required:
+        if name not in table.column_names:
+            raise ValueError(f"missing required column: {name}")
+        if table.schema.field(name).type != typ:
+            raise ValueError(f"column {name} must have type {typ}, got {table.schema.field(name).type}")
+
+    allowed = {name for name, _ in required} | set(optional)
+    extra = [c for c in table.column_names if c not in allowed]
+    if extra:
+        raise ValueError(f"unexpected columns in canonical events table: {extra}")
+
+    for name, typ in optional.items():
+        if name in table.column_names and table.schema.field(name).type != typ:
+            raise ValueError(f"column {name} must have type {typ}, got {table.schema.field(name).type}")
+
+    # Require stable ordering: required first, then optional in a fixed order.
+    expected = [name for name, _ in required] + [n for n in ("event_id", "cell_id", "mark", "meta_json") if n in table.column_names]
+    if table.column_names != expected:
+        raise ValueError(f"unexpected column order: {table.column_names} (expected {expected})")
+
+
 def ingest_jsonl_to_canonical_table(path: str | Path) -> pa.Table:
     """Ingest a raw JSONL event stream into the canonical Arrow table."""
 
-    return event_table_to_arrow(ingest_records(read_raw_events_jsonl(path)))
+    out = event_table_to_arrow(ingest_records(read_raw_events_jsonl(path)))
+    validate_canonical_events_table(out)
+    return out
 
 
 def write_canonical_events_parquet(table: pa.Table, out_path: str | Path) -> None:

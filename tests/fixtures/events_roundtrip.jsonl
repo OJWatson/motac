@@ -1,0 +1,2 @@
+{"t": "2020-01-02", "lat": 51.5, "lon": -0.1, "value": 2, "event_id": "a", "cell_id": 123, "mark": "type1", "meta": {"k": 1, "nested": {"x": true}}}
+{"t": "2020-01-03", "lat": 52.0, "lon": 0.1, "value": 1, "event_id": "b", "cell_id": null, "mark": "type2", "meta": {"k": 2, "list": [1, 2, 3]}}
