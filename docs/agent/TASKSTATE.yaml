@@ -146,7 +146,7 @@ tasks:
       commit: 4954088ae38e6139a36f211a4b98f0449e66d0bd
       log_path: /home/kana/.openclaw/workspace/portfolio/reports/runs/20260215T183005Z/logs/motac.log
       outcome: success
-      pushed: false
+      pushed: true
       reason: 'M2.END: CI gate passed (ruff/pytest); milestone closed'
       tick_ts: 20260215T183005Z
     status: done
