@@ -473,11 +473,13 @@ class SubstrateBuilder:
         feature_cols: list[tuple[str, str | None]] = []
         tags = self.config.poi_tags
         if isinstance(tags, dict):
-            for k, v in tags.items():
+            # Ensure stable ordering irrespective of dict insertion order.
+            for k in sorted(tags.keys(), key=lambda s: str(s)):
+                v = tags[k]
                 if v is True:
                     feature_cols.append((str(k), None))
                 elif isinstance(v, (list, tuple, set)):
-                    for vv in v:
+                    for vv in sorted(v, key=lambda s: str(s)):
                         feature_cols.append((str(k), str(vv)))
 
         # Always include total count.
