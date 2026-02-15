@@ -165,8 +165,15 @@ tasks:
       reason: 'CI.FIX.M2: record CI fix verification (ruff/pytest/docs build)'
       tick_ts: 20260215T220004Z
   M3.0:
-    status: todo
-    updated_at_utc: ''
+    last:
+      commit: 2866d691d59f37903c656961cd29f00d79555e52
+      log_path: /home/kana/.openclaw/workspace/portfolio/reports/runs/20260215T233006Z/logs/motac.log
+      outcome: success
+      pushed: true
+      reason: 'M3.0: JAX-jittable sparse neighbour ops + JIT tests'
+      tick_ts: 20260215T233006Z
+    status: done
+    updated_at_utc: '2026-02-15T23:34:12Z'
   M3.1:
     status: todo
     updated_at_utc: ''
