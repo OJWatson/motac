@@ -6,4 +6,8 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 ignore = []
 
 [lint.isort]
-known-first-party = ["road_hawkes"]
+known-first-party = ["motac"]
+
+[lint.per-file-ignores]
+"tests/test_cli_substrate_cache_smoke_m10.py" = ["E501"]
+"tests/test_substrate_cache_bundle_m1.py" = ["E501"]

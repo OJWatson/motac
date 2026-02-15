@@ -7,10 +7,11 @@ import math
 import os
 import shutil
 import zipfile
+from collections.abc import Iterable
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 import networkx as nx
 import numpy as np
@@ -48,7 +49,7 @@ def _source_date_epoch_utc() -> str:
         ts = int(s)
     except ValueError:
         return "1970-01-01T00:00:00Z"
-    return datetime.fromtimestamp(ts, tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return datetime.fromtimestamp(ts, tz=UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def _zip_write_bytes(zf: zipfile.ZipFile, *, name: str, payload: bytes) -> None:
