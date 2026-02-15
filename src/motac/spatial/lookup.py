@@ -114,10 +114,29 @@ class GridCellLookup:
         x = np.asarray(x, dtype=float)
         y = np.asarray(y, dtype=float)
 
+        if x.shape != y.shape:
+            raise ValueError("lon and lat must have the same shape")
+
+        # Boundary convention:
+        # - left/bottom edges inclusive
+        # - right/top edges exclusive
+        # We compute `inside` in the continuous projected space to avoid
+        # misclassifying points infinitesimally outside the max edges due to
+        # floating point effects in the floor/index computation.
+        x1_edge = self.x0_edge + self.nx * self.cell_size_m
+        y1_edge = self.y0_edge + self.ny * self.cell_size_m
+        inside = (
+            np.isfinite(x)
+            & np.isfinite(y)
+            & (x >= self.x0_edge)
+            & (x < x1_edge)
+            & (y >= self.y0_edge)
+            & (y < y1_edge)
+        )
+
         ix = np.floor((x - self.x0_edge) / self.cell_size_m).astype(int)
         iy = np.floor((y - self.y0_edge) / self.cell_size_m).astype(int)
 
-        inside = (ix >= 0) & (ix < self.nx) & (iy >= 0) & (iy < self.ny)
         cid = iy * self.nx + ix
 
         if cid.ndim == 0:

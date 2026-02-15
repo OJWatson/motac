@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import numpy as np
+from hypothesis import given, settings
+from hypothesis import strategies as st
 
 from motac.spatial.lookup import GridCellLookup
 from motac.substrate.builder import build_grid_from_lonlat_bounds
@@ -53,8 +55,23 @@ def test_lonlat_to_cell_id_boundary_convention_edges_inclusive_exclusive():
     assert lu.lonlat_to_cell_id(lon=lon_t, lat=lat_t) == -1
 
 
-def test_lonlat_to_cell_id_matches_naive_indexing_for_random_points():
-    """Property-style test: lookup matches naive floor indexing in projected space."""
+@given(
+    u=st.floats(
+        min_value=1e-6,
+        max_value=1.0 - 1e-6,
+        allow_nan=False,
+        allow_infinity=False,
+    ),
+    v=st.floats(
+        min_value=1e-6,
+        max_value=1.0 - 1e-6,
+        allow_nan=False,
+        allow_infinity=False,
+    ),
+)
+@settings(max_examples=200)
+def test_lonlat_to_cell_id_matches_naive_indexing_for_random_points(u: float, v: float):
+    """Property-based test: lookup matches naive floor indexing in projected space."""
 
     grid = build_grid_from_lonlat_bounds(
         lon_min=-0.15,
@@ -70,28 +87,31 @@ def test_lonlat_to_cell_id_matches_naive_indexing_for_random_points():
     x1 = x0 + lu.nx * lu.cell_size_m
     y1 = y0 + lu.ny * lu.cell_size_m
 
-    rng = np.random.default_rng(0)
+    # Pick a random point inside the rectangle with right/top edges exclusive.
+    x = x0 + u * (np.nextafter(x1, x0) - x0)
+    y = y0 + v * (np.nextafter(y1, y0) - y0)
 
-    # Draw random points inside the grid bounds (exclusive of right/top edges).
-    n = 2_000
-    x = rng.uniform(low=x0, high=np.nextafter(x1, x0), size=n)
-    y = rng.uniform(low=y0, high=np.nextafter(y1, y0), size=n)
     lon, lat = lu.tf.to_ll.transform(x, y)
+    out = lu.lonlat_to_cell_id(lon=float(lon), lat=float(lat))
 
-    out = lu.lonlat_to_cell_id(lon=lon, lat=lat)
-    assert out.shape == (n,)
-    assert np.all(out >= 0)
-    assert np.all(out < lu.nx * lu.ny)
-
-    ix = np.floor((x - x0) / lu.cell_size_m).astype(int)
-    iy = np.floor((y - y0) / lu.cell_size_m).astype(int)
+    # Compute the expected index using the *same* forward projection as the lookup.
+    # (The inverse + forward projection is not guaranteed to be exactly identity.)
+    x2, y2 = lu.tf.to_xy.transform(lon, lat)
+    ix = int(np.floor((float(x2) - x0) / lu.cell_size_m))
+    iy = int(np.floor((float(y2) - y0) / lu.cell_size_m))
     expected = iy * lu.nx + ix
 
-    assert np.array_equal(out, expected)
+    assert out == expected
 
 
-def test_lonlat_to_cell_id_returns_minus_one_for_outside_random_points():
-    """Property-style test: outside points return -1 (vectorised)."""
+@given(
+    # How far outside the right edge, in cell sizes.
+    t=st.floats(min_value=0.0, max_value=10.0, allow_nan=False, allow_infinity=False),
+    v=st.floats(min_value=0.0, max_value=1.0, allow_nan=False, allow_infinity=False),
+)
+@settings(max_examples=200)
+def test_lonlat_to_cell_id_returns_minus_one_for_outside_right_edge(t: float, v: float):
+    """Property-based test: points outside the right edge return -1."""
 
     grid = build_grid_from_lonlat_bounds(
         lon_min=-0.1,
@@ -107,13 +127,9 @@ def test_lonlat_to_cell_id_returns_minus_one_for_outside_random_points():
     x1 = x0 + lu.nx * lu.cell_size_m
     y1 = y0 + lu.ny * lu.cell_size_m
 
-    rng = np.random.default_rng(1)
+    x = x1 + (1.0 + t) * lu.cell_size_m
+    y = y0 + v * (np.nextafter(y1, y0) - y0)
 
-    n = 500
-    # Points far to the right of the grid.
-    x = rng.uniform(low=x1 + lu.cell_size_m, high=x1 + 10 * lu.cell_size_m, size=n)
-    y = rng.uniform(low=y0, high=np.nextafter(y1, y0), size=n)
     lon, lat = lu.tf.to_ll.transform(x, y)
-
-    out = lu.lonlat_to_cell_id(lon=lon, lat=lat)
-    assert np.array_equal(out, -np.ones((n,), dtype=int))
+    out = lu.lonlat_to_cell_id(lon=float(lon), lat=float(lat))
+    assert out == -1

@@ -19,6 +19,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "pytest>=8",
+    "hypothesis>=6.0",
     "ruff>=0.6",
 ]
 docs = [
@@ -46,6 +47,7 @@ build-backend = "uv_build"
 [dependency-groups]
 dev = [
     "pytest>=9.0.2",
+    "hypothesis>=6.0",
     "ruff>=0.15.0",
 ]
 docs = [
