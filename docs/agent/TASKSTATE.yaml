@@ -93,14 +93,14 @@ tasks:
     updated_at_utc: '2026-02-15T12:05:30Z'
   M2.0:
     last:
-      commit: ''
-      log_path: ''
-      outcome: ''
-      pushed: null
-      reason: ''
-      tick_ts: ''
-    status: todo
-    updated_at_utc: ''
+      commit: f41f3c2425503623cd24afa5a0721512b4f63927
+      log_path: /home/kana/.openclaw/workspace/portfolio/reports/runs/20260215T133004Z/logs/motac.log
+      outcome: success
+      pushed: true
+      reason: '[M2.0] Add minimal JSONL->canonical events ingestion pipeline'
+      tick_ts: 20260215T133004Z
+    status: done
+    updated_at_utc: '2026-02-15T13:33:22Z'
   M2.1:
     last:
       commit: ''
