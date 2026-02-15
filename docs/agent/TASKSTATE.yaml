@@ -126,7 +126,7 @@ tasks:
       commit: d25441b526d53ce89208abaf6aca06dc1cfdb2cf
       log_path: /home/kana/.openclaw/workspace/portfolio/reports/runs/20260215T173004Z/logs/motac.log
       outcome: success
-      pushed: false
+      pushed: true
       reason: '[M2.3] Spatial: implement OSM POI extraction + per-cell baseline feature matrix'
       tick_ts: 20260215T173004Z
     status: done
