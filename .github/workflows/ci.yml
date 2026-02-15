@@ -20,7 +20,7 @@ jobs:
           enable-cache: true
 
       - name: Sync
-        run: uv sync --group dev
+        run: uv sync --group dev --frozen
 
       - name: Ruff
         run: uv run ruff check .
