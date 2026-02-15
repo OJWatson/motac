@@ -113,12 +113,12 @@ tasks:
     updated_at_utc: '2026-02-15T14:34:58Z'
   M2.2:
     last:
-      commit: ''
-      log_path: ''
-      outcome: ''
-      pushed: null
-      reason: ''
-      tick_ts: ''
-    status: todo
-    updated_at_utc: ''
+      commit: dcf2be74f7ce4ff32f82747544b20e50f21ff42e
+      log_path: /home/kana/.openclaw/workspace/portfolio/reports/runs/20260215T153007Z/logs/motac.log
+      outcome: success
+      pushed: true
+      reason: 'M2.2: docs end-to-end ingest -> spatial join -> query tutorial'
+      tick_ts: 20260215T153007Z
+    status: done
+    updated_at_utc: '2026-02-15T15:33:00Z'
 version: 1

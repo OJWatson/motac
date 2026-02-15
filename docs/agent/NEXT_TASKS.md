@@ -1,12 +1,13 @@
 # NEXT_TASKS
 
 Now:
-- M2.2 — Docs: add end-to-end example (ingest -> spatial join -> query)
+- (none)
 
 Next:
-- (next after M2.2)
+- (add next task)
 
 Done:
+- M2.2 — Docs: add end-to-end example (ingest -> spatial join -> query)
 - M1.0 — Substrate cache bundle v1: document format + add one end-to-end smoke test
 - M1.1 — Make cache bundle v1 fully deterministic + add provenance-hash regression test
 - M1.2 — Docs: add minimal “load bundle + validate version” example snippet (and link from README)
