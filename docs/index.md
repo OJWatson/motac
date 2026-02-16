@@ -8,6 +8,7 @@ Road-constrained spatio-temporal Hawkes processes for event forecasting on road 
 
 installation
 model/00_overview
+model/01_parameter_recovery
 loaders/index
 ```
 

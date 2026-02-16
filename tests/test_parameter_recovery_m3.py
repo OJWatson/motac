@@ -1,36 +1,15 @@
 import numpy as np
 import scipy.sparse as sp
 
-from motac.model.fit import fit_road_hawkes_mle
-from motac.model.road_hawkes import convolved_history_last, exp_travel_time_kernel
+from motac.model.validation import run_parameter_recovery_road_hawkes_poisson
 
 
-def _simulate_road_counts_poisson(
-    *,
-    travel_time_s: sp.csr_matrix,
-    mu: np.ndarray,
-    alpha: float,
-    beta: float,
-    kernel: np.ndarray,
-    n_steps: int,
-    seed: int,
-) -> np.ndarray:
-    rng = np.random.default_rng(seed)
-    n_cells = int(mu.shape[0])
-    y = np.zeros((n_cells, n_steps), dtype=int)
+def test_m3_parameter_recovery_tiny_substrate_poisson_multiseed() -> None:
+    """Multi-seed parameter recovery harness for the M3 road Hawkes Poisson fitter.
 
-    W = exp_travel_time_kernel(travel_time_s=travel_time_s, beta=beta)
-    for t in range(n_steps):
-        h = convolved_history_last(y=y[:, :t], kernel=kernel)
-        lam = mu + float(alpha) * (W @ h)
-        lam = np.clip(lam, 0.0, None)
-        y[:, t] = rng.poisson(lam=lam)
-
-    return y
-
-
-def test_m3_parameter_recovery_tiny_substrate_poisson():
-    """End-to-end sanity check: fit roughly recovers parameters on tiny synthetic road substrate."""
+    We use tolerant, distributional checks (median + a minimum success count)
+    to keep CI stable while still catching regressions.
+    """
 
     # Tiny 3-cell substrate with travel times (seconds).
     tt = np.array(
@@ -49,37 +28,35 @@ def test_m3_parameter_recovery_tiny_substrate_poisson():
     alpha_true = 0.35
     beta_true = 1.2e-3
 
-    y = _simulate_road_counts_poisson(
-        travel_time_s=travel_time_s,
-        mu=mu_true,
-        alpha=alpha_true,
-        beta=beta_true,
-        kernel=kernel,
-        n_steps=160,
-        seed=7,
-    )
-
-    fit = fit_road_hawkes_mle(
+    summary = run_parameter_recovery_road_hawkes_poisson(
         travel_time_s=travel_time_s,
         kernel=kernel,
-        y=y,
-        family="poisson",
-        maxiter=400,
+        mu_true=mu_true,
+        alpha_true=alpha_true,
+        beta_true=beta_true,
+        n_steps=180,
+        seeds=[3, 5, 7, 11, 13],
+        maxiter=450,
     )
 
-    mu_hat = np.asarray(fit["mu"], dtype=float)
-    alpha_hat = float(fit["alpha"])
-    beta_hat = float(fit["beta"])
+    assert summary.mu_hat.shape == (5, 3)
+    assert np.isfinite(summary.mu_hat).all()
+    assert np.isfinite(summary.alpha_hat).all()
+    assert np.isfinite(summary.beta_hat).all()
 
-    assert np.isfinite(mu_hat).all()
-    assert np.isfinite(alpha_hat)
-    assert np.isfinite(beta_hat)
+    # Optimisation should improve (or at least not worsen) the objective.
+    assert (summary.loglik >= summary.loglik_init - 1e-6).all()
 
-    # Optimisation should improve the objective from default init.
-    assert float(fit["loglik"]) >= float(fit["loglik_init"]) - 1e-6
+    mu_mae = summary.mu_mae_per_seed()
+    alpha_err = summary.alpha_abs_err()
+    beta_err = summary.beta_abs_err()
 
-    # Recovery is approximate (small sample) but should be in the right ballpark.
-    # We use tolerant checks to avoid flaky CI failures.
-    assert np.allclose(mu_hat, mu_true, rtol=0.65, atol=0.25)
-    assert np.isclose(alpha_hat, alpha_true, rtol=0.8, atol=0.15)
-    assert np.isclose(beta_hat, beta_true, rtol=1.0, atol=5e-4)
+    # Median errors should be small on this toy problem.
+    assert float(np.median(mu_mae)) <= 0.25
+    assert float(np.median(alpha_err)) <= 0.15
+    assert float(np.median(beta_err)) <= 6e-4
+
+    # And most seeds should land in a reasonable ballpark.
+    assert int(np.sum(mu_mae <= 0.35)) >= 4
+    assert int(np.sum(alpha_err <= 0.22)) >= 4
+    assert int(np.sum(beta_err <= 9e-4)) >= 4
