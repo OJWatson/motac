@@ -10,9 +10,7 @@ from .._app import spatial_app
 _GRID_OPT = typer.Option(
     ...,
     "--grid",
-    help=(
-        "Path to a grid.npz file, or a substrate cache directory containing grid.npz."
-    ),
+    help=("Path to a grid.npz file, or a substrate cache directory containing grid.npz."),
 )
 _LON_OPT = typer.Option(..., "--lon", help="Longitude (WGS84).")
 _LAT_OPT = typer.Option(..., "--lat", help="Latitude (WGS84).")
@@ -33,9 +31,7 @@ def _load_grid(path: str | Path):
 
     missing = [k for k in ("lat", "lon", "cell_size_m") if k not in npz]
     if missing:
-        raise typer.BadParameter(
-            f"invalid grid.npz (missing keys: {missing}): {grid_path}"
-        )
+        raise typer.BadParameter(f"invalid grid.npz (missing keys: {missing}): {grid_path}")
 
     return Grid(
         lat=np.asarray(npz["lat"], dtype=float),

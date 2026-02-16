@@ -18,7 +18,7 @@ class LonLatBounds:
 
 def build_regular_grid(bounds: LonLatBounds, cell_size_m: float) -> Grid:
     if cell_size_m <= 0:
-        raise ValueError('cell_size_m must be > 0')
+        raise ValueError("cell_size_m must be > 0")
     lon0 = 0.5 * (bounds.lon_min + bounds.lon_max)
     lat0 = 0.5 * (bounds.lat_min + bounds.lat_max)
     tf = LonLatToXY.for_lonlat(lon0, lat0)
@@ -29,7 +29,7 @@ def build_regular_grid(bounds: LonLatBounds, cell_size_m: float) -> Grid:
     xs = np.arange(xmin + 0.5 * cell_size_m, xmax, cell_size_m)
     ys = np.arange(ymin + 0.5 * cell_size_m, ymax, cell_size_m)
     if xs.size == 0 or ys.size == 0:
-        raise ValueError('bounds too small for given cell_size_m')
+        raise ValueError("bounds too small for given cell_size_m")
     xx, yy = np.meshgrid(xs, ys)
     lon, lat = tf.to_ll.transform(xx.ravel(), yy.ravel())
     return Grid(

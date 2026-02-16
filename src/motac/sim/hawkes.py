@@ -278,11 +278,7 @@ def simulate_hawkes_counts(
         y_true[:, t] = rng.poisson(lam=lam)
 
     # Observation noise.
-    y_det = (
-        rng.binomial(n=y_true, p=params.p_detect)
-        if params.p_detect < 1.0
-        else y_true.copy()
-    )
+    y_det = rng.binomial(n=y_true, p=params.p_detect) if params.p_detect < 1.0 else y_true.copy()
 
     y_fp = (
         rng.poisson(lam=params.false_rate, size=y_true.shape)
@@ -369,11 +365,7 @@ def sample_hawkes_predictive_paths(
             y_true_paths[p, :, k] = y_next
 
             # Observation model.
-            y_det = (
-                rng.binomial(n=y_next, p=params.p_detect)
-                if params.p_detect < 1.0
-                else y_next
-            )
+            y_det = rng.binomial(n=y_next, p=params.p_detect) if params.p_detect < 1.0 else y_next
 
             if params.false_rate > 0.0:
                 y_fp = rng.poisson(lam=params.false_rate, size=y_next.shape)

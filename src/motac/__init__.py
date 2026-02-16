@@ -16,6 +16,7 @@ from .ingestion import (
 from .loaders import AcledData, ChicagoData, load_acled_events_csv, load_y_obs_matrix
 from .model import (
     RoadHawkesDataset,
+    fit_forecast_road_hawkes_mle,
     fit_road_hawkes_mle,
     forecast_intensity_horizon,
     mean_negative_log_likelihood,
@@ -42,6 +43,7 @@ __all__ = [
     "predict_intensity_in_sample",
     "predict_intensity_next_step",
     "forecast_intensity_horizon",
+    "fit_forecast_road_hawkes_mle",
     "mean_negative_log_likelihood",
     "road_loglik",
     "fit_road_hawkes_mle",

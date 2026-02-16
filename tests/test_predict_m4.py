@@ -29,9 +29,7 @@ def test_predict_one_step_matches_simulator_intensity() -> None:
 
     # For each t, the simulator's intensity[:, t] is computed from history y[:, :t].
     for t in range(y.shape[1]):
-        lam_hat = predict_hawkes_intensity_one_step(
-            world=world, params=params, y_history=y[:, :t]
-        )
+        lam_hat = predict_hawkes_intensity_one_step(world=world, params=params, y_history=y[:, :t])
         assert lam_hat.shape == (world.n_locations,)
         assert np.allclose(lam_hat, intensity[:, t])
 

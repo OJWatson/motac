@@ -697,6 +697,7 @@ class SubstrateBuilder:
 
 # --- spatial grid integration (M1.2)
 
+
 def build_grid_from_lonlat_bounds(
     *,
     lon_min: float,

@@ -237,11 +237,7 @@ def hawkes_loglik_observed_exact(
 
         # log Binom(k | yt, p) = log C(yt,k) + k log p + (yt-k) log(1-p)
         # log C(yt,k) = gammaln(yt+1) - gammaln(k+1) - gammaln(yt-k+1)
-        log_choose = (
-            gammaln(yt + 1.0)
-            - gammaln(ks + 1.0)
-            - gammaln(yt - ks + 1.0)
-        )
+        log_choose = gammaln(yt + 1.0) - gammaln(ks + 1.0) - gammaln(yt - ks + 1.0)
 
         if p_detect == 1.0:
             log_binom = np.where(ks == yt, 0.0, -np.inf)

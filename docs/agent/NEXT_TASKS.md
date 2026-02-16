@@ -4,9 +4,11 @@ Now:
 - (none)
 
 Next:
-- M3.2 — Model: parametric road-kernel Hawkes fit/predict API + end-to-end sim smoke
+- (none)
 
 Done:
+- M3.2 — Model: parametric road-kernel Hawkes fit/predict API + end-to-end sim smoke
+
 - M3.1 — Inference: Poisson/NegBin likelihoods + gradient checks on tiny fixtures
 - M3.0 — Inference: JAX sparse neighbour convolution ops (jit-ready) + tests
 - M2.END — Milestone end: M2 complete (gate on CI)

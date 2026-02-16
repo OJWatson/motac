@@ -15,11 +15,7 @@ def test_convolved_history_last_matches_manual():
     got = convolved_history_last(y=y, kernel=kernel)
 
     # Manual: last step uses lags 1..L.
-    manual = (
-        kernel[0] * y[:, -1]
-        + kernel[1] * y[:, -2]
-        + kernel[2] * y[:, -3]
-    )
+    manual = kernel[0] * y[:, -1] + kernel[1] * y[:, -2] + kernel[2] * y[:, -3]
     assert got.shape == (5,)
     assert np.allclose(got, manual)
 

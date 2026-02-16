@@ -94,9 +94,7 @@ def test_hawkes_intensity_matches_simulator_output_when_using_true_history() -> 
     y = out["y_true"]
     lam_expected = out["intensity"]
 
-    lam = hawkes_intensity(
-        world=world, kernel=kernel, mu=params.mu, alpha=params.alpha, y=y
-    )
+    lam = hawkes_intensity(world=world, kernel=kernel, mu=params.mu, alpha=params.alpha, y=y)
 
     assert lam.shape == lam_expected.shape
     assert np.allclose(lam, lam_expected)

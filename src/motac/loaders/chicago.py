@@ -96,9 +96,7 @@ def load_y_obs_matrix(*, path: str | Path, mobility_path: str | Path | None = No
         mobility = np.load(mp)
         mobility = np.asarray(mobility, dtype=float)
         if mobility.shape != (n_locations, n_locations):
-            raise ValueError(
-                "mobility must have shape (n_locations, n_locations) matching y_obs"
-            )
+            raise ValueError("mobility must have shape (n_locations, n_locations) matching y_obs")
         if not np.all(np.isfinite(mobility)):
             raise ValueError("mobility must be finite")
         mobility_source = str(mp)
