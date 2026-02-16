@@ -11,4 +11,4 @@ M0.3 -> e4d2b5a25aea779a812a5e38a0888546aeef270f : canonical event schema + vali
 M1.2 -> a4fe6be83552ce9913aa35b9ec7bd51b34016ce0 : docs: add minimal bundle load + version validation snippet (and link from README)
 
 M1.3 -> 89d4c1e66d425435c16498f769cf5e6f54c809c4 : spatial: add lon/lat -> cell_id lookup helper
-M3.3 -> 912fadba932f45ac02d779d0f1640623e67c31a4 : validation: multi-seed parameter recovery harness + tolerances + docs
+M3.3 -> 13e727f4247f515dc3e165c0d63f6fcfc1a5d93f : validation: multi-seed parameter recovery harness + tolerances + docs
