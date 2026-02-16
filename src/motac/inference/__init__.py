@@ -9,6 +9,7 @@ when JAX is installed, while keeping a lightweight NumPy fallback.
 
 from __future__ import annotations
 
+from .likelihoods import negbin_loglik, negbin_logpmf, poisson_loglik, poisson_logpmf
 from .sparse_neighbour_ops import CSR, convolved_history_last, csr_from_scipy, csr_matvec
 
 __all__ = [
@@ -16,4 +17,8 @@ __all__ = [
     "convolved_history_last",
     "csr_from_scipy",
     "csr_matvec",
+    "negbin_loglik",
+    "negbin_logpmf",
+    "poisson_loglik",
+    "poisson_logpmf",
 ]
