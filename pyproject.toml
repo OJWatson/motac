@@ -18,9 +18,9 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "pytest>=8",
+    "pytest>=9.0.2",
     "hypothesis>=6.0",
-    "ruff>=0.6",
+    "ruff>=0.15.0",
 ]
 docs = [
     "sphinx>=7.0",
