@@ -175,8 +175,15 @@ tasks:
     status: done
     updated_at_utc: '2026-02-15T23:34:12Z'
   M3.1:
-    status: todo
-    updated_at_utc: ''
+    last:
+      commit: 7de60bd41c3a0e5d57ace057f625a87d157b7a77
+      log_path: /home/kana/.openclaw/workspace/portfolio/reports/runs/20260216T003005Z/logs/motac.log
+      outcome: success
+      pushed: true
+      reason: 'M3.1: add inference Poisson/NegBin likelihoods + gradient checks'
+      tick_ts: 20260216T003005Z
+    status: done
+    updated_at_utc: '2026-02-16T00:34:12Z'
   M3.2:
     status: todo
     updated_at_utc: ''
