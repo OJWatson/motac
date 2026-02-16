@@ -1,0 +1,1510 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulation and Hawkes utilities &mdash; motac 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Model API" href="model.html" />
+    <link rel="prev" title="Substrate" href="substrate.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            motac
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../model/00_overview.html">Model overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../model/01_parameter_recovery.html">Parameter recovery (road Hawkes, M3)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../loaders/index.html">Loaders</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/01_synthetic_quickstart.html">Tutorial: Synthetic quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/02_poi_features.html">Tutorial: POI features (baseline)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/03_ingest_spatial_query.html">End-to-end: ingest → spatial join → query</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="schema.html">Schema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="substrate.html">Substrate</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Simulation and Hawkes utilities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#observed-data-likelihoods-exact-vs-poisson-approximation">Observed-data likelihoods: exact vs Poisson approximation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.World"><code class="docutils literal notranslate"><span class="pre">World</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.World.xy"><code class="docutils literal notranslate"><span class="pre">World.xy</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.World.mobility"><code class="docutils literal notranslate"><span class="pre">World.mobility</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">World.xy</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">World.mobility</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.World.n_locations"><code class="docutils literal notranslate"><span class="pre">World.n_locations</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.World.to_json"><code class="docutils literal notranslate"><span class="pre">World.to_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.World.from_json"><code class="docutils literal notranslate"><span class="pre">World.from_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.World.__init__"><code class="docutils literal notranslate"><span class="pre">World.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.generate_random_world"><code class="docutils literal notranslate"><span class="pre">generate_random_world()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.ObservedLoglikComparison"><code class="docutils literal notranslate"><span class="pre">ObservedLoglikComparison</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.ObservedLoglikComparison.ll_exact"><code class="docutils literal notranslate"><span class="pre">ObservedLoglikComparison.ll_exact</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.ObservedLoglikComparison.ll_poisson_approx"><code class="docutils literal notranslate"><span class="pre">ObservedLoglikComparison.ll_poisson_approx</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.ObservedLoglikComparison.delta_exact_minus_approx"><code class="docutils literal notranslate"><span class="pre">ObservedLoglikComparison.delta_exact_minus_approx</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.ObservedLoglikComparison.__init__"><code class="docutils literal notranslate"><span class="pre">ObservedLoglikComparison.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.compare_observed_loglik_exact_vs_poisson_approx"><code class="docutils literal notranslate"><span class="pre">compare_observed_loglik_exact_vs_poisson_approx()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.HawkesDiscreteParams"><code class="docutils literal notranslate"><span class="pre">HawkesDiscreteParams</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.HawkesDiscreteParams.mu"><code class="docutils literal notranslate"><span class="pre">HawkesDiscreteParams.mu</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.HawkesDiscreteParams.alpha"><code class="docutils literal notranslate"><span class="pre">HawkesDiscreteParams.alpha</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.HawkesDiscreteParams.kernel"><code class="docutils literal notranslate"><span class="pre">HawkesDiscreteParams.kernel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.HawkesDiscreteParams.p_detect"><code class="docutils literal notranslate"><span class="pre">HawkesDiscreteParams.p_detect</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.HawkesDiscreteParams.false_rate"><code class="docutils literal notranslate"><span class="pre">HawkesDiscreteParams.false_rate</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.HawkesDiscreteParams.n_lags"><code class="docutils literal notranslate"><span class="pre">HawkesDiscreteParams.n_lags</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.HawkesDiscreteParams.to_json"><code class="docutils literal notranslate"><span class="pre">HawkesDiscreteParams.to_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.HawkesDiscreteParams.from_json"><code class="docutils literal notranslate"><span class="pre">HawkesDiscreteParams.from_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.HawkesDiscreteParams.__init__"><code class="docutils literal notranslate"><span class="pre">HawkesDiscreteParams.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.discrete_exponential_kernel"><code class="docutils literal notranslate"><span class="pre">discrete_exponential_kernel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.simulate_hawkes_counts"><code class="docutils literal notranslate"><span class="pre">simulate_hawkes_counts()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.predict_hawkes_intensity_one_step"><code class="docutils literal notranslate"><span class="pre">predict_hawkes_intensity_one_step()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.predict_hawkes_intensity_multi_step"><code class="docutils literal notranslate"><span class="pre">predict_hawkes_intensity_multi_step()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.sample_hawkes_predictive_paths"><code class="docutils literal notranslate"><span class="pre">sample_hawkes_predictive_paths()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.sample_hawkes_observed_predictive_paths_poisson_approx"><code class="docutils literal notranslate"><span class="pre">sample_hawkes_observed_predictive_paths_poisson_approx()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.hawkes_intensity"><code class="docutils literal notranslate"><span class="pre">hawkes_intensity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.hawkes_loglik_poisson"><code class="docutils literal notranslate"><span class="pre">hawkes_loglik_poisson()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.hawkes_loglik_poisson_observed"><code class="docutils literal notranslate"><span class="pre">hawkes_loglik_poisson_observed()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.hawkes_loglik_observed_exact"><code class="docutils literal notranslate"><span class="pre">hawkes_loglik_observed_exact()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.summarize_predictive_paths"><code class="docutils literal notranslate"><span class="pre">summarize_predictive_paths()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.simulate_substrate_hawkes_counts"><code class="docutils literal notranslate"><span class="pre">simulate_substrate_hawkes_counts()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.SubstrateHawkesParams"><code class="docutils literal notranslate"><span class="pre">SubstrateHawkesParams</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.SubstrateHawkesParams.mu"><code class="docutils literal notranslate"><span class="pre">SubstrateHawkesParams.mu</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.SubstrateHawkesParams.alpha"><code class="docutils literal notranslate"><span class="pre">SubstrateHawkesParams.alpha</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.SubstrateHawkesParams.beta"><code class="docutils literal notranslate"><span class="pre">SubstrateHawkesParams.beta</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.SubstrateHawkesParams.kernel"><code class="docutils literal notranslate"><span class="pre">SubstrateHawkesParams.kernel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.SubstrateHawkesParams.__init__"><code class="docutils literal notranslate"><span class="pre">SubstrateHawkesParams.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.observed_fit_sample_summarize_poisson_approx"><code class="docutils literal notranslate"><span class="pre">observed_fit_sample_summarize_poisson_approx()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.fit_hawkes_alpha_mu"><code class="docutils literal notranslate"><span class="pre">fit_hawkes_alpha_mu()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.fit_hawkes_mle_alpha_mu"><code class="docutils literal notranslate"><span class="pre">fit_hawkes_mle_alpha_mu()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.fit_hawkes_mle_alpha_mu_beta"><code class="docutils literal notranslate"><span class="pre">fit_hawkes_mle_alpha_mu_beta()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.fit_hawkes_mle_alpha_mu_complete_data_with_exact_obs"><code class="docutils literal notranslate"><span class="pre">fit_hawkes_mle_alpha_mu_complete_data_with_exact_obs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.fit_hawkes_mle_alpha_mu_observed_poisson_approx"><code class="docutils literal notranslate"><span class="pre">fit_hawkes_mle_alpha_mu_observed_poisson_approx()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.fit_observation_params_exact"><code class="docutils literal notranslate"><span class="pre">fit_observation_params_exact()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.save_simulation_parquet"><code class="docutils literal notranslate"><span class="pre">save_simulation_parquet()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.load_simulation_parquet"><code class="docutils literal notranslate"><span class="pre">load_simulation_parquet()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.hawkes.discrete_exponential_kernel"><code class="docutils literal notranslate"><span class="pre">discrete_exponential_kernel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.hawkes.HawkesDiscreteParams"><code class="docutils literal notranslate"><span class="pre">HawkesDiscreteParams</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.hawkes.HawkesDiscreteParams.mu"><code class="docutils literal notranslate"><span class="pre">HawkesDiscreteParams.mu</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.hawkes.HawkesDiscreteParams.alpha"><code class="docutils literal notranslate"><span class="pre">HawkesDiscreteParams.alpha</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.hawkes.HawkesDiscreteParams.kernel"><code class="docutils literal notranslate"><span class="pre">HawkesDiscreteParams.kernel</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.hawkes.HawkesDiscreteParams.p_detect"><code class="docutils literal notranslate"><span class="pre">HawkesDiscreteParams.p_detect</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.hawkes.HawkesDiscreteParams.false_rate"><code class="docutils literal notranslate"><span class="pre">HawkesDiscreteParams.false_rate</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.hawkes.HawkesDiscreteParams.n_lags"><code class="docutils literal notranslate"><span class="pre">HawkesDiscreteParams.n_lags</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.hawkes.HawkesDiscreteParams.to_json"><code class="docutils literal notranslate"><span class="pre">HawkesDiscreteParams.to_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.hawkes.HawkesDiscreteParams.from_json"><code class="docutils literal notranslate"><span class="pre">HawkesDiscreteParams.from_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.sim.hawkes.HawkesDiscreteParams.__init__"><code class="docutils literal notranslate"><span class="pre">HawkesDiscreteParams.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.hawkes.predict_hawkes_intensity_one_step"><code class="docutils literal notranslate"><span class="pre">predict_hawkes_intensity_one_step()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.hawkes.predict_hawkes_intensity_multi_step"><code class="docutils literal notranslate"><span class="pre">predict_hawkes_intensity_multi_step()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.hawkes.simulate_hawkes_counts"><code class="docutils literal notranslate"><span class="pre">simulate_hawkes_counts()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.hawkes.sample_hawkes_predictive_paths"><code class="docutils literal notranslate"><span class="pre">sample_hawkes_predictive_paths()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.hawkes.sample_hawkes_observed_predictive_paths_poisson_approx"><code class="docutils literal notranslate"><span class="pre">sample_hawkes_observed_predictive_paths_poisson_approx()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.fit.fit_hawkes_alpha_mu"><code class="docutils literal notranslate"><span class="pre">fit_hawkes_alpha_mu()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.fit.fit_hawkes_mle_alpha_mu"><code class="docutils literal notranslate"><span class="pre">fit_hawkes_mle_alpha_mu()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.fit.fit_hawkes_mle_alpha_mu_beta"><code class="docutils literal notranslate"><span class="pre">fit_hawkes_mle_alpha_mu_beta()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.fit.fit_hawkes_mle_alpha_mu_observed_poisson_approx"><code class="docutils literal notranslate"><span class="pre">fit_hawkes_mle_alpha_mu_observed_poisson_approx()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.fit.fit_observation_params_exact"><code class="docutils literal notranslate"><span class="pre">fit_observation_params_exact()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.fit.fit_hawkes_mle_alpha_mu_complete_data_with_exact_obs"><code class="docutils literal notranslate"><span class="pre">fit_hawkes_mle_alpha_mu_complete_data_with_exact_obs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.sim.predictive.summarize_predictive_paths"><code class="docutils literal notranslate"><span class="pre">summarize_predictive_paths()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">Model API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="neural_kernels.html">Neural kernels API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eval.html">Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Command line interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paper_artefacts.html">Paper artefacts pipeline (M11)</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">motac</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Simulation and Hawkes utilities</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/sim.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="simulation-and-hawkes-utilities">
+<h1>Simulation and Hawkes utilities<a class="headerlink" href="#simulation-and-hawkes-utilities" title="Link to this heading"></a></h1>
+<section id="observed-data-likelihoods-exact-vs-poisson-approximation">
+<h2>Observed-data likelihoods: exact vs Poisson approximation<a class="headerlink" href="#observed-data-likelihoods-exact-vs-poisson-approximation" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">motac</span></code> includes two likelihoods for <em>observed</em> counts under the simulator’s
+thinning+clutter observation model:</p>
+<ul class="simple">
+<li><p><strong>Exact conditional likelihood</strong>: <code class="docutils literal notranslate"><span class="pre">motac.sim.hawkes_loglik_observed_exact</span></code>
+computes <strong>p(y_obs | y_true)</strong> exactly (by summing out the unobserved detected
+count <code class="docutils literal notranslate"><span class="pre">y_det</span></code>). This is <em>conditional on knowing the latent true counts</em>
+<code class="docutils literal notranslate"><span class="pre">y_true</span></code> (and therefore does <strong>not</strong> directly depend on the Hawkes intensity).</p></li>
+<li><p><strong>Poisson-approx likelihood</strong>: <code class="docutils literal notranslate"><span class="pre">motac.sim.hawkes_loglik_poisson_observed</span></code>
+uses the approximation <strong>y_obs(t) ~ Poisson(p_detect * λ(t) + false_rate)</strong>,
+where <code class="docutils literal notranslate"><span class="pre">λ(t)</span></code> is the latent Hawkes intensity. This is cheap and convenient, but
+it is <em>not</em> the exact marginal likelihood for real observed-only data because
+<code class="docutils literal notranslate"><span class="pre">λ(t)</span></code> depends on the unobserved latent history.</p></li>
+</ul>
+<p>Interpretation / expected gaps</p>
+<ul class="simple">
+<li><p>The “exact” function is exact for the <strong>observation model given <code class="docutils literal notranslate"><span class="pre">y_true</span></code></strong>.
+In real data you typically do not have <code class="docutils literal notranslate"><span class="pre">y_true</span></code>, so this exact score is mainly
+useful for simulator QA / controlled experiments.</p></li>
+<li><p>The Poisson approximation can be motivated by the standard thinning identity:
+if <code class="docutils literal notranslate"><span class="pre">y_true(t)</span> <span class="pre">|</span> <span class="pre">λ(t)</span> <span class="pre">~</span> <span class="pre">Poisson(λ(t))</span></code> and <code class="docutils literal notranslate"><span class="pre">y_det(t)</span> <span class="pre">|</span> <span class="pre">y_true(t)</span> <span class="pre">~</span> <span class="pre">Binomial(y_true(t),</span> <span class="pre">p_detect)</span></code>,
+then marginally <code class="docutils literal notranslate"><span class="pre">y_det(t)</span> <span class="pre">|</span> <span class="pre">λ(t)</span> <span class="pre">~</span> <span class="pre">Poisson(p_detect</span> <span class="pre">*</span> <span class="pre">λ(t))</span></code>. However, in a
+Hawkes model <code class="docutils literal notranslate"><span class="pre">λ(t)</span></code> depends on the (latent) past, so using <code class="docutils literal notranslate"><span class="pre">y_obs</span></code> (or expected
+observed counts) as a proxy history is misspecified.</p></li>
+<li><p>See <code class="docutils literal notranslate"><span class="pre">motac.sim.compare_observed_loglik_exact_vs_poisson_approx</span></code> for a small
+comparison harness used in tests.</p></li>
+</ul>
+<p id="module-motac.sim">Simulation utilities.</p>
+<p>Discrete-time Hawkes-like simulation, fitting, and forecasting helpers.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="motac.sim.World">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motac.sim.</span></span><span class="sig-name descname"><span class="pre">World</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mobility</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/world.html#World"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.World" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>A simple world definition for the M2 simulator.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.sim.World.xy">
+<span class="sig-name descname"><span class="pre">xy</span></span><a class="headerlink" href="#motac.sim.World.xy" title="Link to this definition"></a></dt>
+<dd><p>Array of shape (n_locations, 2) giving planar coordinates.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.sim.World.mobility">
+<span class="sig-name descname"><span class="pre">mobility</span></span><a class="headerlink" href="#motac.sim.World.mobility" title="Link to this definition"></a></dt>
+<dd><p>Influence / mobility kernel of shape (n_locations, n_locations).
+Entry mobility[i, j] controls how much activity at j contributes to i.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">xy</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a></span><a class="headerlink" href="#id0" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">mobility</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a></span><a class="headerlink" href="#id1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="motac.sim.World.n_locations">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">n_locations</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><a class="headerlink" href="#motac.sim.World.n_locations" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.sim.World.to_json">
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/world.html#World.to_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.World.to_json" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.sim.World.from_json">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/world.html#World.from_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.World.from_json" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#motac.sim.World" title="motac.sim.world.World"><code class="xref py py-class docutils literal notranslate"><span class="pre">World</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.sim.World.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mobility</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#motac.sim.World.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.generate_random_world">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.</span></span><span class="sig-name descname"><span class="pre">generate_random_world</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_locations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lengthscale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">self_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row_normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/world.html#generate_random_world"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.generate_random_world" title="Link to this definition"></a></dt>
+<dd><p>Generate a random world with an RBF mobility kernel.</p>
+<p>This is intentionally minimal and dependency-free; it is used primarily
+for tests and examples.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#motac.sim.World" title="motac.sim.world.World"><code class="xref py py-class docutils literal notranslate"><span class="pre">World</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motac.sim.ObservedLoglikComparison">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motac.sim.</span></span><span class="sig-name descname"><span class="pre">ObservedLoglikComparison</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ll_exact</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ll_poisson_approx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/compare.html#ObservedLoglikComparison"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.ObservedLoglikComparison" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Container for exact vs approximate observed log-likelihood values.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.sim.ObservedLoglikComparison.ll_exact">
+<span class="sig-name descname"><span class="pre">ll_exact</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#motac.sim.ObservedLoglikComparison.ll_exact" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.sim.ObservedLoglikComparison.ll_poisson_approx">
+<span class="sig-name descname"><span class="pre">ll_poisson_approx</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#motac.sim.ObservedLoglikComparison.ll_poisson_approx" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="motac.sim.ObservedLoglikComparison.delta_exact_minus_approx">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">delta_exact_minus_approx</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#motac.sim.ObservedLoglikComparison.delta_exact_minus_approx" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.sim.ObservedLoglikComparison.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ll_exact</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ll_poisson_approx</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#motac.sim.ObservedLoglikComparison.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.compare_observed_loglik_exact_vs_poisson_approx">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.</span></span><span class="sig-name descname"><span class="pre">compare_observed_loglik_exact_vs_poisson_approx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_true_for_history</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_obs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_detect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">false_rate</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/compare.html#compare_observed_loglik_exact_vs_poisson_approx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.compare_observed_loglik_exact_vs_poisson_approx" title="Link to this definition"></a></dt>
+<dd><p>Compare exact observed log-likelihood to the cheap Poisson approximation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#motac.sim.ObservedLoglikComparison" title="motac.sim.compare.ObservedLoglikComparison"><code class="xref py py-class docutils literal notranslate"><span class="pre">ObservedLoglikComparison</span></code></a></span></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The <em>exact</em> observed likelihood conditions on the latent counts <code class="docutils literal notranslate"><span class="pre">y_true</span></code>
+under the thinning+clutter observation model.</p>
+<p>The Poisson approximation instead treats the observed process as</p>
+<blockquote>
+<div><p>y_obs(t) ~ Poisson(p_detect * lambda(t) + false_rate)</p>
+</div></blockquote>
+<p>where <code class="docutils literal notranslate"><span class="pre">lambda(t)</span></code> is the Hawkes conditional intensity computed from
+<code class="docutils literal notranslate"><span class="pre">y_true_for_history</span></code>. This is cheap and can be useful for QA/optimisation,
+but is not the exact likelihood under Binomial thinning.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motac.sim.HawkesDiscreteParams">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motac.sim.</span></span><span class="sig-name descname"><span class="pre">HawkesDiscreteParams</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_detect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">false_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/hawkes.html#HawkesDiscreteParams"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.HawkesDiscreteParams" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Parameters for the discrete-time Hawkes-like count model.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.sim.HawkesDiscreteParams.mu">
+<span class="sig-name descname"><span class="pre">mu</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a></span><a class="headerlink" href="#motac.sim.HawkesDiscreteParams.mu" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.sim.HawkesDiscreteParams.alpha">
+<span class="sig-name descname"><span class="pre">alpha</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#motac.sim.HawkesDiscreteParams.alpha" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.sim.HawkesDiscreteParams.kernel">
+<span class="sig-name descname"><span class="pre">kernel</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a></span><a class="headerlink" href="#motac.sim.HawkesDiscreteParams.kernel" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.sim.HawkesDiscreteParams.p_detect">
+<span class="sig-name descname"><span class="pre">p_detect</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#motac.sim.HawkesDiscreteParams.p_detect" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.sim.HawkesDiscreteParams.false_rate">
+<span class="sig-name descname"><span class="pre">false_rate</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#motac.sim.HawkesDiscreteParams.false_rate" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="motac.sim.HawkesDiscreteParams.n_lags">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">n_lags</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><a class="headerlink" href="#motac.sim.HawkesDiscreteParams.n_lags" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.sim.HawkesDiscreteParams.to_json">
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/hawkes.html#HawkesDiscreteParams.to_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.HawkesDiscreteParams.to_json" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.sim.HawkesDiscreteParams.from_json">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/hawkes.html#HawkesDiscreteParams.from_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.HawkesDiscreteParams.from_json" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#motac.sim.hawkes.HawkesDiscreteParams" title="motac.sim.hawkes.HawkesDiscreteParams"><code class="xref py py-class docutils literal notranslate"><span class="pre">HawkesDiscreteParams</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.sim.HawkesDiscreteParams.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_detect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">false_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#motac.sim.HawkesDiscreteParams.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.discrete_exponential_kernel">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.</span></span><span class="sig-name descname"><span class="pre">discrete_exponential_kernel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_lags</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/hawkes.html#discrete_exponential_kernel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.discrete_exponential_kernel" title="Link to this definition"></a></dt>
+<dd><p>Create a discrete exponential kernel over lags 1..n_lags.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_lags</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Maximum lag length (number of steps in memory).</p></li>
+<li><p><strong>beta</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>) – Decay rate; larger means faster decay.</p></li>
+<li><p><strong>normalize</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – If True, normalize the kernel weights to sum to 1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.simulate_hawkes_counts">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.</span></span><span class="sig-name descname"><span class="pre">simulate_hawkes_counts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_steps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/hawkes.html#simulate_hawkes_counts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.simulate_hawkes_counts" title="Link to this definition"></a></dt>
+<dd><p>Simulate latent and observed counts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>]</span></p>
+</dd>
+</dl>
+<section id="model">
+<h3>Model<a class="headerlink" href="#model" title="Link to this heading"></a></h3>
+<p>For each location i and discrete time t:</p>
+<blockquote>
+<div><p>lambda_i(t) = mu_i + alpha * ( mobility &#64; h(t) )_i
+y_i(t) ~ Poisson(lambda_i(t))</p>
+</div></blockquote>
+<p>where h_j(t) = sum_{l=1..L} kernel[l-1] * y_j(t-l).</p>
+<dl class="simple">
+<dt>Observation model:</dt><dd><p>y_obs = Binomial(y_true, p_detect) + Poisson(false_rate)</p>
+</dd>
+<dt>Returns a dict with arrays:</dt><dd><ul class="simple">
+<li><p>y_true: (n_locations, n_steps)</p></li>
+<li><p>y_obs:  (n_locations, n_steps)</p></li>
+<li><p>intensity: (n_locations, n_steps)</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.predict_hawkes_intensity_one_step">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.</span></span><span class="sig-name descname"><span class="pre">predict_hawkes_intensity_one_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_history</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/hawkes.html#predict_hawkes_intensity_one_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.predict_hawkes_intensity_one_step" title="Link to this definition"></a></dt>
+<dd><p>One-step-ahead intensity forecast given count history.</p>
+<p>This matches the simulator recursion exactly: the returned intensities are
+the conditional Poisson means for the <em>next</em> time step.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">motac.sim</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_random_world</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">motac.sim.hawkes</span><span class="w"> </span><span class="kn">import</span> <span class="n">HawkesDiscreteParams</span><span class="p">,</span> <span class="n">discrete_exponential_kernel</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">world</span> <span class="o">=</span> <span class="n">generate_random_world</span><span class="p">(</span><span class="n">n_locations</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">lengthscale</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">HawkesDiscreteParams</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">mu</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="mi">3</span><span class="p">,),</span> <span class="mf">0.1</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">kernel</span><span class="o">=</span><span class="n">discrete_exponential_kernel</span><span class="p">(</span><span class="n">n_lags</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y_hist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lam_next</span> <span class="o">=</span> <span class="n">predict_hawkes_intensity_one_step</span><span class="p">(</span><span class="n">world</span><span class="o">=</span><span class="n">world</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">y_history</span><span class="o">=</span><span class="n">y_hist</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lam_next</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">(3,)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>world</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#motac.sim.World" title="motac.sim.world.World"><code class="xref py py-class docutils literal notranslate"><span class="pre">World</span></code></a></span>) – Provides the mobility matrix.</p></li>
+<li><p><strong>params</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#motac.sim.hawkes.HawkesDiscreteParams" title="motac.sim.hawkes.HawkesDiscreteParams"><code class="xref py py-class docutils literal notranslate"><span class="pre">HawkesDiscreteParams</span></code></a></span>) – Hawkes parameters.</p></li>
+<li><p><strong>y_history</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>) – Past counts with shape <code class="docutils literal notranslate"><span class="pre">(n_locations,</span> <span class="pre">n_steps_history)</span></code>.
+The forecast is for time <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">=</span> <span class="pre">n_steps_history</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Non-negative intensity (Poisson mean) for the next step with shape
+<code class="docutils literal notranslate"><span class="pre">(n_locations,)</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>lam_next</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.predict_hawkes_intensity_multi_step">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.</span></span><span class="sig-name descname"><span class="pre">predict_hawkes_intensity_multi_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_history</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizon</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/hawkes.html#predict_hawkes_intensity_multi_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.predict_hawkes_intensity_multi_step" title="Link to this definition"></a></dt>
+<dd><p>Multi-step intensity forecast using expected-count roll-forward.</p>
+<p>The future counts are unknown. This function produces a deterministic
+forecast by iterating the Hawkes recursion and substituting the conditional
+expectations for future counts, i.e. it rolls forward with <code class="docutils literal notranslate"><span class="pre">y(t)</span> <span class="pre">:=</span> <span class="pre">lambda(t)</span></code>.</p>
+<p>This is cheap and stable enough for quick QA, but it is <em>not</em> a sample from
+the full predictive distribution.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">motac.sim</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_random_world</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">motac.sim.hawkes</span><span class="w"> </span><span class="kn">import</span> <span class="n">HawkesDiscreteParams</span><span class="p">,</span> <span class="n">discrete_exponential_kernel</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">world</span> <span class="o">=</span> <span class="n">generate_random_world</span><span class="p">(</span><span class="n">n_locations</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">lengthscale</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">HawkesDiscreteParams</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">mu</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="mi">2</span><span class="p">,),</span> <span class="mf">0.2</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">kernel</span><span class="o">=</span><span class="n">discrete_exponential_kernel</span><span class="p">(</span><span class="n">n_lags</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y_hist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lam</span> <span class="o">=</span> <span class="n">predict_hawkes_intensity_multi_step</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">world</span><span class="o">=</span><span class="n">world</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">y_history</span><span class="o">=</span><span class="n">y_hist</span><span class="p">,</span> <span class="n">horizon</span><span class="o">=</span><span class="mi">4</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lam</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">(2, 4)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_history</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>) – Past counts with shape <code class="docutils literal notranslate"><span class="pre">(n_locations,</span> <span class="pre">n_steps_history)</span></code>.</p></li>
+<li><p><strong>horizon</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Number of steps to forecast ahead.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Forecast intensities with shape <code class="docutils literal notranslate"><span class="pre">(n_locations,</span> <span class="pre">horizon)</span></code> for times
+<code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">=</span> <span class="pre">n_steps_history</span> <span class="pre">..</span> <span class="pre">n_steps_history</span> <span class="pre">+</span> <span class="pre">horizon</span> <span class="pre">-</span> <span class="pre">1</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>intensity</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.sample_hawkes_predictive_paths">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.</span></span><span class="sig-name descname"><span class="pre">sample_hawkes_predictive_paths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_history</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/hawkes.html#sample_hawkes_predictive_paths"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.sample_hawkes_predictive_paths" title="Link to this definition"></a></dt>
+<dd><p>Sample predictive paths forward from a history.</p>
+<p>This provides an uncertainty hook beyond the deterministic
+<a class="reference internal" href="#motac.sim.predict_hawkes_intensity_multi_step" title="motac.sim.predict_hawkes_intensity_multi_step"><code class="xref py py-func docutils literal notranslate"><span class="pre">predict_hawkes_intensity_multi_step()</span></code></a> expected-count roll-forward.</p>
+<p>It simulates the latent counts y_true forward using the Hawkes recursion,
+and then applies the same observation model used in
+<a class="reference internal" href="#motac.sim.simulate_hawkes_counts" title="motac.sim.simulate_hawkes_counts"><code class="xref py py-func docutils literal notranslate"><span class="pre">simulate_hawkes_counts()</span></code></a> to produce y_obs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_history</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>) – Past <em>latent</em> counts of shape (n_locations, n_steps_history) used to
+seed the Hawkes history. (For real data you may substitute y_obs, but
+that is misspecified.)</p></li>
+<li><p><strong>horizon</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Forecast horizon (number of steps ahead).</p></li>
+<li><p><strong>n_paths</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Number of Monte Carlo paths.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>y_true: (n_paths, n_locations, horizon)</p></li>
+<li><p>y_obs:  (n_paths, n_locations, horizon)</p></li>
+<li><p>intensity: (n_paths, n_locations, horizon)</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict with arrays</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.sample_hawkes_observed_predictive_paths_poisson_approx">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.</span></span><span class="sig-name descname"><span class="pre">sample_hawkes_observed_predictive_paths_poisson_approx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_history_for_intensity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_detect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">false_rate</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/hawkes.html#sample_hawkes_observed_predictive_paths_poisson_approx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.sample_hawkes_observed_predictive_paths_poisson_approx" title="Link to this definition"></a></dt>
+<dd><p>Sample predictive <em>observed</em> count paths with Poisson approximation.</p>
+<p>This is aligned with the Poisson-approx likelihood used in
+<a class="reference internal" href="#motac.sim.hawkes_loglik_poisson_observed" title="motac.sim.hawkes_loglik_poisson_observed"><code class="xref py py-func docutils literal notranslate"><span class="pre">motac.sim.hawkes_loglik_poisson_observed()</span></code></a>:</p>
+<blockquote>
+<div><p>y_obs(t) ~ Poisson(p_detect * lambda(t) + false_rate)</p>
+</div></blockquote>
+<p>where lambda(t) is the latent Hawkes intensity.</p>
+<p>The latent counts are <em>not</em> sampled; instead we sample y_obs directly given
+the intensity recursion driven by <cite>y_history_for_intensity</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>y_obs: (n_paths, n_locations, horizon)</p></li>
+<li><p>intensity_obs: (n_paths, n_locations, horizon)</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict with arrays</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.hawkes_intensity">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.</span></span><span class="sig-name descname"><span class="pre">hawkes_intensity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/likelihood.html#hawkes_intensity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.hawkes_intensity" title="Link to this definition"></a></dt>
+<dd><p>Compute conditional intensities for a discrete-time Hawkes-like model.</p>
+<p>Model matches <a class="reference internal" href="#motac.sim.simulate_hawkes_counts" title="motac.sim.simulate_hawkes_counts"><code class="xref py py-func docutils literal notranslate"><span class="pre">motac.sim.simulate_hawkes_counts()</span></code></a> (latent process):</p>
+<blockquote>
+<div><p>lambda(t) = mu + alpha * (mobility &#64; h(t))</p>
+</div></blockquote>
+<p>where h(t) is the kernel-weighted lagged history of y.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>world</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#motac.sim.World" title="motac.sim.world.World"><code class="xref py py-class docutils literal notranslate"><span class="pre">World</span></code></a></span>) – Provides mobility matrix of shape (n_locations, n_locations).</p></li>
+<li><p><strong>kernel</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>) – Discrete kernel over lags 1..L of shape (L,).</p></li>
+<li><p><strong>mu</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>) – Baseline intensities per location, shape (n_locations,).</p></li>
+<li><p><strong>alpha</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>) – Global excitation scale, non-negative.</p></li>
+<li><p><strong>y</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>) – Count series used for history, shape (n_locations, n_steps).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Array of shape (n_locations, n_steps) with lambda(:, t).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>intensity</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.hawkes_loglik_poisson">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.</span></span><span class="sig-name descname"><span class="pre">hawkes_loglik_poisson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/likelihood.html#hawkes_loglik_poisson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.hawkes_loglik_poisson" title="Link to this definition"></a></dt>
+<dd><p>Log-likelihood for Poisson observations under the discrete Hawkes model.</p>
+<p>Conditional Poisson log-likelihood:</p>
+<blockquote>
+<div><p>sum_{i,t} [ y_{i,t} log lambda_{i,t} - lambda_{i,t} - log(y_{i,t}!) ]</p>
+</div></blockquote>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>This treats <cite>y</cite> as the latent (or fully observed) counts.</p></li>
+<li><p>For numerical safety we lower-bound lambda by <cite>eps</cite> inside log.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.hawkes_loglik_poisson_observed">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.</span></span><span class="sig-name descname"><span class="pre">hawkes_loglik_poisson_observed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_true_for_history</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_obs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_detect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">false_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/likelihood.html#hawkes_loglik_poisson_observed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.hawkes_loglik_poisson_observed" title="Link to this definition"></a></dt>
+<dd><p>Approximate log-likelihood for observed counts with detection+clutter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span></p>
+</dd>
+</dl>
+<section id="simulator-observation-model">
+<h3>Simulator observation model<a class="headerlink" href="#simulator-observation-model" title="Link to this heading"></a></h3>
+<p>In <a class="reference internal" href="#motac.sim.simulate_hawkes_counts" title="motac.sim.simulate_hawkes_counts"><code class="xref py py-func docutils literal notranslate"><span class="pre">motac.sim.simulate_hawkes_counts()</span></code></a>, the observed counts are</p>
+<blockquote>
+<div><p>y_obs = Binomial(y_true, p_detect) + Poisson(false_rate)</p>
+</div></blockquote>
+<p>Conditional on the latent intensity lambda(t), if we ignore the discreteness
+of thinning and treat the thinned process as Poisson, we obtain the
+approximation</p>
+<blockquote>
+<div><p>y_obs(t) ~ Poisson(p_detect * lambda(t) + false_rate).</p>
+</div></blockquote>
+<p>This is a cheap likelihood used for parameter recovery/QA.</p>
+<dl class="field-list simple">
+<dt class="field-odd">type y_true_for_history<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span></p>
+</dd>
+<dt class="field-even">param y_true_for_history<span class="colon">:</span></dt>
+<dd class="field-even"><p>Counts used to construct the Hawkes history term. For fully observed
+experiments you can pass y_obs here, but in the simulator setting this
+is typically y_true.</p>
+</dd>
+<dt class="field-odd">type y_obs<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span></p>
+</dd>
+<dt class="field-even">param y_obs<span class="colon">:</span></dt>
+<dd class="field-even"><p>Observed counts.</p>
+</dd>
+<dt class="field-odd">type p_detect<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span></p>
+</dd>
+<dt class="field-even">param p_detect<span class="colon">:</span></dt>
+<dd class="field-even"><p>Detection probability in (0,1].</p>
+</dd>
+<dt class="field-odd">type false_rate<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span></p>
+</dd>
+<dt class="field-even">param false_rate<span class="colon">:</span></dt>
+<dd class="field-even"><p>Additive Poisson clutter rate (&gt;=0).</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>This is not the exact likelihood under Binomial thinning.</p></li>
+<li><p>For numerical safety we lower-bound the observed intensity by <cite>eps</cite>.</p></li>
+</ul>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.hawkes_loglik_observed_exact">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.</span></span><span class="sig-name descname"><span class="pre">hawkes_loglik_observed_exact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_true_for_history</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_obs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_detect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">false_rate</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/likelihood.html#hawkes_loglik_observed_exact"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.hawkes_loglik_observed_exact" title="Link to this definition"></a></dt>
+<dd><p>Exact log-likelihood for observed counts under thinning + clutter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span></p>
+</dd>
+</dl>
+<section id="observation-model-simulator">
+<h3>Observation model (simulator)<a class="headerlink" href="#observation-model-simulator" title="Link to this heading"></a></h3>
+<blockquote>
+<div><p>y_obs = y_det + y_fp
+y_det | y_true ~ Binomial(y_true, p_detect)
+y_fp ~ Poisson(false_rate)</p>
+</div></blockquote>
+<p>This function evaluates p(y_obs | y_true) exactly by summing out y_det:</p>
+<blockquote>
+<div><p>p(y_obs | y_true) = sum_{k=0..y_obs} Binom(k|y_true,p) * Pois(y_obs-k|false_rate)</p>
+</div></blockquote>
+<p>using stable log-space logsumexp.</p>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The Hawkes parameters are accepted for API consistency and to allow
+optional extensions; the exact likelihood here depends on the latent
+counts y_true (and not directly on mu/alpha/kernel), but we validate
+shapes against the provided world.</p></li>
+</ul>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.summarize_predictive_paths">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.</span></span><span class="sig-name descname"><span class="pre">summarize_predictive_paths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.05,</span> <span class="pre">0.5,</span> <span class="pre">0.95)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/predictive.html#summarize_predictive_paths"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.summarize_predictive_paths" title="Link to this definition"></a></dt>
+<dd><p>Summarize Monte Carlo predictive paths.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>paths</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>) – Array of predictive samples with shape (n_paths, …).
+The first axis is interpreted as Monte Carlo replicate index.</p></li>
+<li><p><strong>q</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#Ellipsis" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code></a>]</span>) – Quantiles to compute along the path axis.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>mean: (…,) predictive mean</p></li>
+<li><p>quantiles: (len(q), …)</p></li>
+<li><p>q: (len(q),) the quantile levels</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict with keys</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.simulate_substrate_hawkes_counts">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.</span></span><span class="sig-name descname"><span class="pre">simulate_substrate_hawkes_counts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">substrate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_steps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/road_hawkes.html#simulate_substrate_hawkes_counts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.simulate_substrate_hawkes_counts" title="Link to this definition"></a></dt>
+<dd><p>Simulate latent counts on a substrate using sparse travel-time neighbours.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>]</span></p>
+</dd>
+</dl>
+<section id="id2">
+<h3>Model<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<blockquote>
+<div><p>h(t) = sum_{l=1..L} kernel[l-1] * y(t-l)
+W(d) = exp(-beta * d_travel)
+lambda(t) = mu + alpha * (W &#64; h(t))
+y(t) ~ Poisson(lambda(t))</p>
+</div></blockquote>
+<dl class="simple">
+<dt>Returns a dict with arrays:</dt><dd><ul class="simple">
+<li><p>y_true: (n_cells, n_steps)</p></li>
+<li><p>intensity: (n_cells, n_steps)</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This is the simulator side of the road-constrained parametric Hawkes model
+used in <cite>motac.model</cite>. It is intentionally dependency-light and deterministic
+given a seed.</p>
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motac.sim.SubstrateHawkesParams">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motac.sim.</span></span><span class="sig-name descname"><span class="pre">SubstrateHawkesParams</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/road_hawkes.html#SubstrateHawkesParams"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.SubstrateHawkesParams" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Discrete-time Hawkes-like params on a road-constrained substrate.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.sim.SubstrateHawkesParams.mu">
+<span class="sig-name descname"><span class="pre">mu</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a></span><a class="headerlink" href="#motac.sim.SubstrateHawkesParams.mu" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.sim.SubstrateHawkesParams.alpha">
+<span class="sig-name descname"><span class="pre">alpha</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#motac.sim.SubstrateHawkesParams.alpha" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.sim.SubstrateHawkesParams.beta">
+<span class="sig-name descname"><span class="pre">beta</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#motac.sim.SubstrateHawkesParams.beta" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.sim.SubstrateHawkesParams.kernel">
+<span class="sig-name descname"><span class="pre">kernel</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a></span><a class="headerlink" href="#motac.sim.SubstrateHawkesParams.kernel" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.sim.SubstrateHawkesParams.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#motac.sim.SubstrateHawkesParams.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.observed_fit_sample_summarize_poisson_approx">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.</span></span><span class="sig-name descname"><span class="pre">observed_fit_sample_summarize_poisson_approx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_obs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_detect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">false_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.05,</span> <span class="pre">0.5,</span> <span class="pre">0.95)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_maxiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">600</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/workflows.html#observed_fit_sample_summarize_poisson_approx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.observed_fit_sample_summarize_poisson_approx" title="Link to this definition"></a></dt>
+<dd><p>Observed-only workflow: fit -&gt; sample -&gt; summarize (Poisson approximation).</p>
+<p>This is a convenience wrapper for the default “real-data” path where latent
+counts are unavailable. It:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>fits (mu, alpha) with <a class="reference internal" href="#motac.sim.fit_hawkes_mle_alpha_mu_observed_poisson_approx" title="motac.sim.fit_hawkes_mle_alpha_mu_observed_poisson_approx"><code class="xref py py-func docutils literal notranslate"><span class="pre">fit_hawkes_mle_alpha_mu_observed_poisson_approx()</span></code></a>
+using <cite>y_obs</cite> to drive the history term;</p></li>
+<li><p>samples observed predictive paths with
+<a class="reference internal" href="#motac.sim.sample_hawkes_observed_predictive_paths_poisson_approx" title="motac.sim.sample_hawkes_observed_predictive_paths_poisson_approx"><code class="xref py py-func docutils literal notranslate"><span class="pre">sample_hawkes_observed_predictive_paths_poisson_approx()</span></code></a>;</p></li>
+<li><p>summarizes Monte Carlo paths with <a class="reference internal" href="#motac.sim.summarize_predictive_paths" title="motac.sim.summarize_predictive_paths"><code class="xref py py-func docutils literal notranslate"><span class="pre">summarize_predictive_paths()</span></code></a>.</p></li>
+</ol>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>fit: dict (mu, alpha, loglik, …)</p></li>
+<li><p>paths: dict (y_obs, intensity_obs)</p></li>
+<li><p>summary: dict (mean, quantiles, q)</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict with keys</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.fit_hawkes_alpha_mu">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.</span></span><span class="sig-name descname"><span class="pre">fit_hawkes_alpha_mu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ridge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/fit.html#fit_hawkes_alpha_mu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.fit_hawkes_alpha_mu" title="Link to this definition"></a></dt>
+<dd><p>Fit mu (per-location) and a global alpha using ridge regression.</p>
+<p>This is a deliberately simple parameter-recovery routine used for
+simulator sanity checks. It treats the Poisson observations as roughly
+Gaussian and regresses counts onto the history term.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>world</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#motac.sim.World" title="motac.sim.world.World"><code class="xref py py-class docutils literal notranslate"><span class="pre">World</span></code></a></span>) – Provides the mobility matrix.</p></li>
+<li><p><strong>kernel</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>) – Discrete lag kernel of shape (n_lags,).</p></li>
+<li><p><strong>y</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>) – Observed or latent counts of shape (n_locations, n_steps).</p></li>
+<li><p><strong>ridge</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>) – Ridge penalty added to the normal equations.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict with keys “mu” (<a class="reference internal" href="eval.html#motac.eval.EvalConfig.n_locations" title="motac.eval.EvalConfig.n_locations">n_locations</a>,) and “alpha” (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a>).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.fit_hawkes_mle_alpha_mu">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.</span></span><span class="sig-name descname"><span class="pre">fit_hawkes_mle_alpha_mu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/fit.html#fit_hawkes_mle_alpha_mu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.fit_hawkes_mle_alpha_mu" title="Link to this definition"></a></dt>
+<dd><p>Fit (mu, alpha) by maximum likelihood under the Poisson Hawkes model.</p>
+<p>This is intended as the first “parametric Hawkes” vertical slice (M3):
+likelihood + fit + prediction hooks for simulator recovery.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>world</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#motac.sim.World" title="motac.sim.world.World"><code class="xref py py-class docutils literal notranslate"><span class="pre">World</span></code></a></span>) – See <a class="reference internal" href="#motac.sim.hawkes_loglik_poisson" title="motac.sim.hawkes_loglik_poisson"><code class="xref py py-func docutils literal notranslate"><span class="pre">motac.sim.hawkes_loglik_poisson()</span></code></a>.</p></li>
+<li><p><strong>kernel</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>) – See <a class="reference internal" href="#motac.sim.hawkes_loglik_poisson" title="motac.sim.hawkes_loglik_poisson"><code class="xref py py-func docutils literal notranslate"><span class="pre">motac.sim.hawkes_loglik_poisson()</span></code></a>.</p></li>
+<li><p><strong>y</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>) – See <a class="reference internal" href="#motac.sim.hawkes_loglik_poisson" title="motac.sim.hawkes_loglik_poisson"><code class="xref py py-func docutils literal notranslate"><span class="pre">motac.sim.hawkes_loglik_poisson()</span></code></a>.</p></li>
+<li><p><strong>init_mu</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>) – Optional initial mu guess, shape (n_locations,). If None, uses
+per-location sample mean.</p></li>
+<li><p><strong>init_alpha</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>) – Initial alpha guess.</p></li>
+<li><p><strong>maxiter</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Maximum iterations for the optimiser.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>mu: np.ndarray (n_locations,)</p></li>
+<li><p>alpha: float</p></li>
+<li><p>loglik: float</p></li>
+<li><p>result: scipy optimisation result</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict with keys</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.fit_hawkes_mle_alpha_mu_beta">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.</span></span><span class="sig-name descname"><span class="pre">fit_hawkes_mle_alpha_mu_beta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_lags</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">800</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/fit.html#fit_hawkes_mle_alpha_mu_beta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.fit_hawkes_mle_alpha_mu_beta" title="Link to this definition"></a></dt>
+<dd><p>Fit (mu, alpha, beta) by MLE with a 1-parameter exponential kernel.</p>
+<section id="kernel-parameterisation">
+<h3>Kernel parameterisation<a class="headerlink" href="#kernel-parameterisation" title="Link to this heading"></a></h3>
+<p>We fix the lag length L = n_lags and use a normalized exponential kernel
+over lags 1..L:</p>
+<blockquote>
+<div><p>g_l propto exp(-beta * (l-1))</p>
+</div></blockquote>
+<p>with beta &gt; 0 enforced via a softplus transform.</p>
+<dl class="field-list simple">
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>mu: np.ndarray (n_locations,)</p></li>
+<li><p>alpha: float</p></li>
+<li><p>beta: float</p></li>
+<li><p>kernel: np.ndarray (n_lags,)</p></li>
+<li><p>loglik: float</p></li>
+<li><p>loglik_init: float</p></li>
+<li><p>result: scipy optimisation result</p></li>
+</ul>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict with keys</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.fit_hawkes_mle_alpha_mu_complete_data_with_exact_obs">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.</span></span><span class="sig-name descname"><span class="pre">fit_hawkes_mle_alpha_mu_complete_data_with_exact_obs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_true_for_history</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_obs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_detect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">false_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">600</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/fit.html#fit_hawkes_mle_alpha_mu_complete_data_with_exact_obs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.fit_hawkes_mle_alpha_mu_complete_data_with_exact_obs" title="Link to this definition"></a></dt>
+<dd><p>Fit (mu, alpha) on complete data and report exact observation loglik.</p>
+<p>This wrapper is useful for simulator QA when the latent counts <cite>y_true</cite> are
+available. It fits (mu, alpha) by maximizing the latent Poisson Hawkes
+likelihood (same objective as <a class="reference internal" href="#motac.sim.fit_hawkes_mle_alpha_mu" title="motac.sim.fit_hawkes_mle_alpha_mu"><code class="xref py py-func docutils literal notranslate"><span class="pre">fit_hawkes_mle_alpha_mu()</span></code></a>), and also
+computes the exact observed likelihood term for <cite>y_obs</cite> given <cite>y_true</cite>:</p>
+<blockquote>
+<div><p>log p(y_true | mu, alpha, …) + log p(y_obs | y_true, p_detect, false_rate).</p>
+</div></blockquote>
+<p class="rubric">Notes</p>
+<p>The exact observation term does <em>not</em> depend on (mu, alpha) once y_true is
+fixed; it is included for bookkeeping and to make it explicit what part of
+the joint likelihood is being optimised.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.fit_hawkes_mle_alpha_mu_observed_poisson_approx">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.</span></span><span class="sig-name descname"><span class="pre">fit_hawkes_mle_alpha_mu_observed_poisson_approx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_true_for_history</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_obs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_detect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">false_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">600</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/fit.html#fit_hawkes_mle_alpha_mu_observed_poisson_approx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.fit_hawkes_mle_alpha_mu_observed_poisson_approx" title="Link to this definition"></a></dt>
+<dd><p>Fit (mu, alpha) from observed counts using Poisson-approx likelihood.</p>
+<p>Uses <a class="reference internal" href="#motac.sim.hawkes_loglik_poisson_observed" title="motac.sim.hawkes_loglik_poisson_observed"><code class="xref py py-func docutils literal notranslate"><span class="pre">motac.sim.hawkes_loglik_poisson_observed()</span></code></a> which approximates the
+simulator observation model by</p>
+<blockquote>
+<div><p>y_obs(t) ~ Poisson(p_detect * lambda(t) + false_rate).</p>
+</div></blockquote>
+<p class="rubric">Notes</p>
+<p>The history term for lambda(t) is computed from <cite>y_true_for_history</cite>.
+In real-data settings you may substitute y_obs, but then this is a
+misspecified likelihood.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.fit_observation_params_exact">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.</span></span><span class="sig-name descname"><span class="pre">fit_observation_params_exact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_obs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_p_detect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_false_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">400</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/fit.html#fit_observation_params_exact"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.fit_observation_params_exact" title="Link to this definition"></a></dt>
+<dd><p>Fit (p_detect, false_rate) given (y_true, y_obs) under exact likelihood.</p>
+<p>Uses <a class="reference internal" href="#motac.sim.hawkes_loglik_observed_exact" title="motac.sim.hawkes_loglik_observed_exact"><code class="xref py py-func docutils literal notranslate"><span class="pre">motac.sim.hawkes_loglik_observed_exact()</span></code></a> (thinning + clutter)
+and enforces constraints via transforms:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>p_detect in (0,1) via sigmoid</p></li>
+<li><p>false_rate &gt;= 0 via softplus</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>p_detect: float</p></li>
+<li><p>false_rate: float</p></li>
+<li><p>loglik: float</p></li>
+<li><p>loglik_init: float</p></li>
+<li><p>result: scipy optimisation result</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict with keys</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This ignores the Hawkes intensity model entirely; it is purely an
+observation-model fit conditional on y_true.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.save_simulation_parquet">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.</span></span><span class="sig-name descname"><span class="pre">save_simulation_parquet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_obs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/io.html#save_simulation_parquet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.save_simulation_parquet" title="Link to this definition"></a></dt>
+<dd><p>Save simulation output to a Parquet file.</p>
+<p>This uses PyArrow directly to avoid pulling in pandas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.load_simulation_parquet">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.</span></span><span class="sig-name descname"><span class="pre">load_simulation_parquet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/io.html#load_simulation_parquet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.load_simulation_parquet" title="Link to this definition"></a></dt>
+<dd><p>Load simulation outputs saved with <a class="reference internal" href="#motac.sim.save_simulation_parquet" title="motac.sim.save_simulation_parquet"><code class="xref py py-func docutils literal notranslate"><span class="pre">save_simulation_parquet()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function" id="module-motac.sim.hawkes">
+<dt class="sig sig-object py" id="motac.sim.hawkes.discrete_exponential_kernel">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.hawkes.</span></span><span class="sig-name descname"><span class="pre">discrete_exponential_kernel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_lags</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/hawkes.html#discrete_exponential_kernel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.hawkes.discrete_exponential_kernel" title="Link to this definition"></a></dt>
+<dd><p>Create a discrete exponential kernel over lags 1..n_lags.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_lags</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Maximum lag length (number of steps in memory).</p></li>
+<li><p><strong>beta</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>) – Decay rate; larger means faster decay.</p></li>
+<li><p><strong>normalize</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – If True, normalize the kernel weights to sum to 1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motac.sim.hawkes.HawkesDiscreteParams">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motac.sim.hawkes.</span></span><span class="sig-name descname"><span class="pre">HawkesDiscreteParams</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_detect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">false_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/hawkes.html#HawkesDiscreteParams"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.hawkes.HawkesDiscreteParams" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Parameters for the discrete-time Hawkes-like count model.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.sim.hawkes.HawkesDiscreteParams.mu">
+<span class="sig-name descname"><span class="pre">mu</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a></span><a class="headerlink" href="#motac.sim.hawkes.HawkesDiscreteParams.mu" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.sim.hawkes.HawkesDiscreteParams.alpha">
+<span class="sig-name descname"><span class="pre">alpha</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#motac.sim.hawkes.HawkesDiscreteParams.alpha" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.sim.hawkes.HawkesDiscreteParams.kernel">
+<span class="sig-name descname"><span class="pre">kernel</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a></span><a class="headerlink" href="#motac.sim.hawkes.HawkesDiscreteParams.kernel" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.sim.hawkes.HawkesDiscreteParams.p_detect">
+<span class="sig-name descname"><span class="pre">p_detect</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#motac.sim.hawkes.HawkesDiscreteParams.p_detect" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.sim.hawkes.HawkesDiscreteParams.false_rate">
+<span class="sig-name descname"><span class="pre">false_rate</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#motac.sim.hawkes.HawkesDiscreteParams.false_rate" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="motac.sim.hawkes.HawkesDiscreteParams.n_lags">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">n_lags</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><a class="headerlink" href="#motac.sim.hawkes.HawkesDiscreteParams.n_lags" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.sim.hawkes.HawkesDiscreteParams.to_json">
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/hawkes.html#HawkesDiscreteParams.to_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.hawkes.HawkesDiscreteParams.to_json" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.sim.hawkes.HawkesDiscreteParams.from_json">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/hawkes.html#HawkesDiscreteParams.from_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.hawkes.HawkesDiscreteParams.from_json" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#motac.sim.hawkes.HawkesDiscreteParams" title="motac.sim.hawkes.HawkesDiscreteParams"><code class="xref py py-class docutils literal notranslate"><span class="pre">HawkesDiscreteParams</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.sim.hawkes.HawkesDiscreteParams.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_detect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">false_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#motac.sim.hawkes.HawkesDiscreteParams.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.hawkes.predict_hawkes_intensity_one_step">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.hawkes.</span></span><span class="sig-name descname"><span class="pre">predict_hawkes_intensity_one_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_history</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/hawkes.html#predict_hawkes_intensity_one_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.hawkes.predict_hawkes_intensity_one_step" title="Link to this definition"></a></dt>
+<dd><p>One-step-ahead intensity forecast given count history.</p>
+<p>This matches the simulator recursion exactly: the returned intensities are
+the conditional Poisson means for the <em>next</em> time step.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">motac.sim</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_random_world</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">motac.sim.hawkes</span><span class="w"> </span><span class="kn">import</span> <span class="n">HawkesDiscreteParams</span><span class="p">,</span> <span class="n">discrete_exponential_kernel</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">world</span> <span class="o">=</span> <span class="n">generate_random_world</span><span class="p">(</span><span class="n">n_locations</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">lengthscale</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">HawkesDiscreteParams</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">mu</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="mi">3</span><span class="p">,),</span> <span class="mf">0.1</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">kernel</span><span class="o">=</span><span class="n">discrete_exponential_kernel</span><span class="p">(</span><span class="n">n_lags</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y_hist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lam_next</span> <span class="o">=</span> <span class="n">predict_hawkes_intensity_one_step</span><span class="p">(</span><span class="n">world</span><span class="o">=</span><span class="n">world</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">y_history</span><span class="o">=</span><span class="n">y_hist</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lam_next</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">(3,)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>world</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#motac.sim.World" title="motac.sim.world.World"><code class="xref py py-class docutils literal notranslate"><span class="pre">World</span></code></a></span>) – Provides the mobility matrix.</p></li>
+<li><p><strong>params</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#motac.sim.hawkes.HawkesDiscreteParams" title="motac.sim.hawkes.HawkesDiscreteParams"><code class="xref py py-class docutils literal notranslate"><span class="pre">HawkesDiscreteParams</span></code></a></span>) – Hawkes parameters.</p></li>
+<li><p><strong>y_history</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>) – Past counts with shape <code class="docutils literal notranslate"><span class="pre">(n_locations,</span> <span class="pre">n_steps_history)</span></code>.
+The forecast is for time <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">=</span> <span class="pre">n_steps_history</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Non-negative intensity (Poisson mean) for the next step with shape
+<code class="docutils literal notranslate"><span class="pre">(n_locations,)</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>lam_next</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.hawkes.predict_hawkes_intensity_multi_step">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.hawkes.</span></span><span class="sig-name descname"><span class="pre">predict_hawkes_intensity_multi_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_history</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizon</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/hawkes.html#predict_hawkes_intensity_multi_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.hawkes.predict_hawkes_intensity_multi_step" title="Link to this definition"></a></dt>
+<dd><p>Multi-step intensity forecast using expected-count roll-forward.</p>
+<p>The future counts are unknown. This function produces a deterministic
+forecast by iterating the Hawkes recursion and substituting the conditional
+expectations for future counts, i.e. it rolls forward with <code class="docutils literal notranslate"><span class="pre">y(t)</span> <span class="pre">:=</span> <span class="pre">lambda(t)</span></code>.</p>
+<p>This is cheap and stable enough for quick QA, but it is <em>not</em> a sample from
+the full predictive distribution.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">motac.sim</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_random_world</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">motac.sim.hawkes</span><span class="w"> </span><span class="kn">import</span> <span class="n">HawkesDiscreteParams</span><span class="p">,</span> <span class="n">discrete_exponential_kernel</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">world</span> <span class="o">=</span> <span class="n">generate_random_world</span><span class="p">(</span><span class="n">n_locations</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">lengthscale</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">HawkesDiscreteParams</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">mu</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="mi">2</span><span class="p">,),</span> <span class="mf">0.2</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">kernel</span><span class="o">=</span><span class="n">discrete_exponential_kernel</span><span class="p">(</span><span class="n">n_lags</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y_hist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lam</span> <span class="o">=</span> <span class="n">predict_hawkes_intensity_multi_step</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">world</span><span class="o">=</span><span class="n">world</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">y_history</span><span class="o">=</span><span class="n">y_hist</span><span class="p">,</span> <span class="n">horizon</span><span class="o">=</span><span class="mi">4</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lam</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">(2, 4)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_history</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>) – Past counts with shape <code class="docutils literal notranslate"><span class="pre">(n_locations,</span> <span class="pre">n_steps_history)</span></code>.</p></li>
+<li><p><strong>horizon</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Number of steps to forecast ahead.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Forecast intensities with shape <code class="docutils literal notranslate"><span class="pre">(n_locations,</span> <span class="pre">horizon)</span></code> for times
+<code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">=</span> <span class="pre">n_steps_history</span> <span class="pre">..</span> <span class="pre">n_steps_history</span> <span class="pre">+</span> <span class="pre">horizon</span> <span class="pre">-</span> <span class="pre">1</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>intensity</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.hawkes.simulate_hawkes_counts">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.hawkes.</span></span><span class="sig-name descname"><span class="pre">simulate_hawkes_counts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_steps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/hawkes.html#simulate_hawkes_counts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.hawkes.simulate_hawkes_counts" title="Link to this definition"></a></dt>
+<dd><p>Simulate latent and observed counts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>]</span></p>
+</dd>
+</dl>
+<section id="model">
+<h3>Model<a class="headerlink" href="#model" title="Link to this heading"></a></h3>
+<p>For each location i and discrete time t:</p>
+<blockquote>
+<div><p>lambda_i(t) = mu_i + alpha * ( mobility &#64; h(t) )_i
+y_i(t) ~ Poisson(lambda_i(t))</p>
+</div></blockquote>
+<p>where h_j(t) = sum_{l=1..L} kernel[l-1] * y_j(t-l).</p>
+<dl class="simple">
+<dt>Observation model:</dt><dd><p>y_obs = Binomial(y_true, p_detect) + Poisson(false_rate)</p>
+</dd>
+<dt>Returns a dict with arrays:</dt><dd><ul class="simple">
+<li><p>y_true: (n_locations, n_steps)</p></li>
+<li><p>y_obs:  (n_locations, n_steps)</p></li>
+<li><p>intensity: (n_locations, n_steps)</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.hawkes.sample_hawkes_predictive_paths">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.hawkes.</span></span><span class="sig-name descname"><span class="pre">sample_hawkes_predictive_paths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_history</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/hawkes.html#sample_hawkes_predictive_paths"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.hawkes.sample_hawkes_predictive_paths" title="Link to this definition"></a></dt>
+<dd><p>Sample predictive paths forward from a history.</p>
+<p>This provides an uncertainty hook beyond the deterministic
+<a class="reference internal" href="#motac.sim.hawkes.predict_hawkes_intensity_multi_step" title="motac.sim.hawkes.predict_hawkes_intensity_multi_step"><code class="xref py py-func docutils literal notranslate"><span class="pre">predict_hawkes_intensity_multi_step()</span></code></a> expected-count roll-forward.</p>
+<p>It simulates the latent counts y_true forward using the Hawkes recursion,
+and then applies the same observation model used in
+<a class="reference internal" href="#motac.sim.hawkes.simulate_hawkes_counts" title="motac.sim.hawkes.simulate_hawkes_counts"><code class="xref py py-func docutils literal notranslate"><span class="pre">simulate_hawkes_counts()</span></code></a> to produce y_obs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_history</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>) – Past <em>latent</em> counts of shape (n_locations, n_steps_history) used to
+seed the Hawkes history. (For real data you may substitute y_obs, but
+that is misspecified.)</p></li>
+<li><p><strong>horizon</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Forecast horizon (number of steps ahead).</p></li>
+<li><p><strong>n_paths</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Number of Monte Carlo paths.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>y_true: (n_paths, n_locations, horizon)</p></li>
+<li><p>y_obs:  (n_paths, n_locations, horizon)</p></li>
+<li><p>intensity: (n_paths, n_locations, horizon)</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict with arrays</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.hawkes.sample_hawkes_observed_predictive_paths_poisson_approx">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.hawkes.</span></span><span class="sig-name descname"><span class="pre">sample_hawkes_observed_predictive_paths_poisson_approx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_history_for_intensity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_detect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">false_rate</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/hawkes.html#sample_hawkes_observed_predictive_paths_poisson_approx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.hawkes.sample_hawkes_observed_predictive_paths_poisson_approx" title="Link to this definition"></a></dt>
+<dd><p>Sample predictive <em>observed</em> count paths with Poisson approximation.</p>
+<p>This is aligned with the Poisson-approx likelihood used in
+<a class="reference internal" href="#motac.sim.hawkes_loglik_poisson_observed" title="motac.sim.hawkes_loglik_poisson_observed"><code class="xref py py-func docutils literal notranslate"><span class="pre">motac.sim.hawkes_loglik_poisson_observed()</span></code></a>:</p>
+<blockquote>
+<div><p>y_obs(t) ~ Poisson(p_detect * lambda(t) + false_rate)</p>
+</div></blockquote>
+<p>where lambda(t) is the latent Hawkes intensity.</p>
+<p>The latent counts are <em>not</em> sampled; instead we sample y_obs directly given
+the intensity recursion driven by <cite>y_history_for_intensity</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>y_obs: (n_paths, n_locations, horizon)</p></li>
+<li><p>intensity_obs: (n_paths, n_locations, horizon)</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict with arrays</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function" id="module-motac.sim.fit">
+<dt class="sig sig-object py" id="motac.sim.fit.fit_hawkes_alpha_mu">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.fit.</span></span><span class="sig-name descname"><span class="pre">fit_hawkes_alpha_mu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ridge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/fit.html#fit_hawkes_alpha_mu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.fit.fit_hawkes_alpha_mu" title="Link to this definition"></a></dt>
+<dd><p>Fit mu (per-location) and a global alpha using ridge regression.</p>
+<p>This is a deliberately simple parameter-recovery routine used for
+simulator sanity checks. It treats the Poisson observations as roughly
+Gaussian and regresses counts onto the history term.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>world</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#motac.sim.World" title="motac.sim.world.World"><code class="xref py py-class docutils literal notranslate"><span class="pre">World</span></code></a></span>) – Provides the mobility matrix.</p></li>
+<li><p><strong>kernel</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>) – Discrete lag kernel of shape (n_lags,).</p></li>
+<li><p><strong>y</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>) – Observed or latent counts of shape (n_locations, n_steps).</p></li>
+<li><p><strong>ridge</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>) – Ridge penalty added to the normal equations.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict with keys “mu” (<a class="reference internal" href="eval.html#motac.eval.EvalConfig.n_locations" title="motac.eval.EvalConfig.n_locations">n_locations</a>,) and “alpha” (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a>).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.fit.fit_hawkes_mle_alpha_mu">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.fit.</span></span><span class="sig-name descname"><span class="pre">fit_hawkes_mle_alpha_mu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/fit.html#fit_hawkes_mle_alpha_mu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.fit.fit_hawkes_mle_alpha_mu" title="Link to this definition"></a></dt>
+<dd><p>Fit (mu, alpha) by maximum likelihood under the Poisson Hawkes model.</p>
+<p>This is intended as the first “parametric Hawkes” vertical slice (M3):
+likelihood + fit + prediction hooks for simulator recovery.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>world</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#motac.sim.World" title="motac.sim.world.World"><code class="xref py py-class docutils literal notranslate"><span class="pre">World</span></code></a></span>) – See <a class="reference internal" href="#motac.sim.hawkes_loglik_poisson" title="motac.sim.hawkes_loglik_poisson"><code class="xref py py-func docutils literal notranslate"><span class="pre">motac.sim.hawkes_loglik_poisson()</span></code></a>.</p></li>
+<li><p><strong>kernel</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>) – See <a class="reference internal" href="#motac.sim.hawkes_loglik_poisson" title="motac.sim.hawkes_loglik_poisson"><code class="xref py py-func docutils literal notranslate"><span class="pre">motac.sim.hawkes_loglik_poisson()</span></code></a>.</p></li>
+<li><p><strong>y</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>) – See <a class="reference internal" href="#motac.sim.hawkes_loglik_poisson" title="motac.sim.hawkes_loglik_poisson"><code class="xref py py-func docutils literal notranslate"><span class="pre">motac.sim.hawkes_loglik_poisson()</span></code></a>.</p></li>
+<li><p><strong>init_mu</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>) – Optional initial mu guess, shape (n_locations,). If None, uses
+per-location sample mean.</p></li>
+<li><p><strong>init_alpha</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>) – Initial alpha guess.</p></li>
+<li><p><strong>maxiter</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Maximum iterations for the optimiser.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>mu: np.ndarray (n_locations,)</p></li>
+<li><p>alpha: float</p></li>
+<li><p>loglik: float</p></li>
+<li><p>result: scipy optimisation result</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict with keys</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.fit.fit_hawkes_mle_alpha_mu_beta">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.fit.</span></span><span class="sig-name descname"><span class="pre">fit_hawkes_mle_alpha_mu_beta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_lags</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">800</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/fit.html#fit_hawkes_mle_alpha_mu_beta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.fit.fit_hawkes_mle_alpha_mu_beta" title="Link to this definition"></a></dt>
+<dd><p>Fit (mu, alpha, beta) by MLE with a 1-parameter exponential kernel.</p>
+<section id="kernel-parameterisation">
+<h3>Kernel parameterisation<a class="headerlink" href="#kernel-parameterisation" title="Link to this heading"></a></h3>
+<p>We fix the lag length L = n_lags and use a normalized exponential kernel
+over lags 1..L:</p>
+<blockquote>
+<div><p>g_l propto exp(-beta * (l-1))</p>
+</div></blockquote>
+<p>with beta &gt; 0 enforced via a softplus transform.</p>
+<dl class="field-list simple">
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>mu: np.ndarray (n_locations,)</p></li>
+<li><p>alpha: float</p></li>
+<li><p>beta: float</p></li>
+<li><p>kernel: np.ndarray (n_lags,)</p></li>
+<li><p>loglik: float</p></li>
+<li><p>loglik_init: float</p></li>
+<li><p>result: scipy optimisation result</p></li>
+</ul>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict with keys</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.fit.fit_hawkes_mle_alpha_mu_observed_poisson_approx">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.fit.</span></span><span class="sig-name descname"><span class="pre">fit_hawkes_mle_alpha_mu_observed_poisson_approx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_true_for_history</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_obs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_detect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">false_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">600</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/fit.html#fit_hawkes_mle_alpha_mu_observed_poisson_approx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.fit.fit_hawkes_mle_alpha_mu_observed_poisson_approx" title="Link to this definition"></a></dt>
+<dd><p>Fit (mu, alpha) from observed counts using Poisson-approx likelihood.</p>
+<p>Uses <a class="reference internal" href="#motac.sim.hawkes_loglik_poisson_observed" title="motac.sim.hawkes_loglik_poisson_observed"><code class="xref py py-func docutils literal notranslate"><span class="pre">motac.sim.hawkes_loglik_poisson_observed()</span></code></a> which approximates the
+simulator observation model by</p>
+<blockquote>
+<div><p>y_obs(t) ~ Poisson(p_detect * lambda(t) + false_rate).</p>
+</div></blockquote>
+<p class="rubric">Notes</p>
+<p>The history term for lambda(t) is computed from <cite>y_true_for_history</cite>.
+In real-data settings you may substitute y_obs, but then this is a
+misspecified likelihood.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.fit.fit_observation_params_exact">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.fit.</span></span><span class="sig-name descname"><span class="pre">fit_observation_params_exact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_obs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_p_detect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_false_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">400</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/fit.html#fit_observation_params_exact"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.fit.fit_observation_params_exact" title="Link to this definition"></a></dt>
+<dd><p>Fit (p_detect, false_rate) given (y_true, y_obs) under exact likelihood.</p>
+<p>Uses <a class="reference internal" href="#motac.sim.hawkes_loglik_observed_exact" title="motac.sim.hawkes_loglik_observed_exact"><code class="xref py py-func docutils literal notranslate"><span class="pre">motac.sim.hawkes_loglik_observed_exact()</span></code></a> (thinning + clutter)
+and enforces constraints via transforms:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>p_detect in (0,1) via sigmoid</p></li>
+<li><p>false_rate &gt;= 0 via softplus</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>p_detect: float</p></li>
+<li><p>false_rate: float</p></li>
+<li><p>loglik: float</p></li>
+<li><p>loglik_init: float</p></li>
+<li><p>result: scipy optimisation result</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict with keys</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This ignores the Hawkes intensity model entirely; it is purely an
+observation-model fit conditional on y_true.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.sim.fit.fit_hawkes_mle_alpha_mu_complete_data_with_exact_obs">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.fit.</span></span><span class="sig-name descname"><span class="pre">fit_hawkes_mle_alpha_mu_complete_data_with_exact_obs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_true_for_history</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_obs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_detect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">false_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">600</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/fit.html#fit_hawkes_mle_alpha_mu_complete_data_with_exact_obs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.fit.fit_hawkes_mle_alpha_mu_complete_data_with_exact_obs" title="Link to this definition"></a></dt>
+<dd><p>Fit (mu, alpha) on complete data and report exact observation loglik.</p>
+<p>This wrapper is useful for simulator QA when the latent counts <cite>y_true</cite> are
+available. It fits (mu, alpha) by maximizing the latent Poisson Hawkes
+likelihood (same objective as <a class="reference internal" href="#motac.sim.fit.fit_hawkes_mle_alpha_mu" title="motac.sim.fit.fit_hawkes_mle_alpha_mu"><code class="xref py py-func docutils literal notranslate"><span class="pre">fit_hawkes_mle_alpha_mu()</span></code></a>), and also
+computes the exact observed likelihood term for <cite>y_obs</cite> given <cite>y_true</cite>:</p>
+<blockquote>
+<div><p>log p(y_true | mu, alpha, …) + log p(y_obs | y_true, p_detect, false_rate).</p>
+</div></blockquote>
+<p class="rubric">Notes</p>
+<p>The exact observation term does <em>not</em> depend on (mu, alpha) once y_true is
+fixed; it is included for bookkeeping and to make it explicit what part of
+the joint likelihood is being optimised.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function" id="module-motac.sim.predictive">
+<dt class="sig sig-object py" id="motac.sim.predictive.summarize_predictive_paths">
+<span class="sig-prename descclassname"><span class="pre">motac.sim.predictive.</span></span><span class="sig-name descname"><span class="pre">summarize_predictive_paths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.05,</span> <span class="pre">0.5,</span> <span class="pre">0.95)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/sim/predictive.html#summarize_predictive_paths"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.sim.predictive.summarize_predictive_paths" title="Link to this definition"></a></dt>
+<dd><p>Summarize Monte Carlo predictive paths.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>paths</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>) – Array of predictive samples with shape (n_paths, …).
+The first axis is interpreted as Monte Carlo replicate index.</p></li>
+<li><p><strong>q</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#Ellipsis" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code></a>]</span>) – Quantiles to compute along the path axis.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>mean: (…,) predictive mean</p></li>
+<li><p>quantiles: (len(q), …)</p></li>
+<li><p>q: (len(q),) the quantile levels</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict with keys</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="substrate.html" class="btn btn-neutral float-left" title="Substrate" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="model.html" class="btn btn-neutral float-right" title="Model API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, OJ Watson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

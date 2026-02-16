@@ -1,0 +1,941 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Substrate &mdash; motac 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Simulation and Hawkes utilities" href="sim.html" />
+    <link rel="prev" title="Schema" href="schema.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            motac
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../model/00_overview.html">Model overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../model/01_parameter_recovery.html">Parameter recovery (road Hawkes, M3)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../loaders/index.html">Loaders</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/01_synthetic_quickstart.html">Tutorial: Synthetic quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/02_poi_features.html">Tutorial: POI features (baseline)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/03_ingest_spatial_query.html">End-to-end: ingest → spatial join → query</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="schema.html">Schema</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Substrate</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#building">Building</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cache-artefacts">Cache artefacts</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bundle-contents-v1">Bundle contents (v1)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cache-format-versioning">Cache format versioning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#loading-a-cached-bundle-with-version-validation">Loading a cached bundle (with version validation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#minimal-example-load-bundle-validate-version-bundle-load-validate-version">Minimal example: load bundle + validate version {#bundle-load-validate-version}</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#poi-features-m2">POI features (M2)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tag-value-breakout-counts">Tag/value breakout counts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-config">Example config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#travel-time-to-nearest-poi-min-travel-time">Travel-time-to-nearest-POI (min travel time)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-motac.substrate">API reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#motac.substrate.Grid"><code class="docutils literal notranslate"><span class="pre">Grid</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.Grid.lat"><code class="docutils literal notranslate"><span class="pre">Grid.lat</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.Grid.lon"><code class="docutils literal notranslate"><span class="pre">Grid.lon</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.Grid.cell_size_m"><code class="docutils literal notranslate"><span class="pre">Grid.cell_size_m</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.Grid.__init__"><code class="docutils literal notranslate"><span class="pre">Grid.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.substrate.NeighbourSets"><code class="docutils literal notranslate"><span class="pre">NeighbourSets</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.NeighbourSets.travel_time_s"><code class="docutils literal notranslate"><span class="pre">NeighbourSets.travel_time_s</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.NeighbourSets.__init__"><code class="docutils literal notranslate"><span class="pre">NeighbourSets.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.substrate.POIFeatures"><code class="docutils literal notranslate"><span class="pre">POIFeatures</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.POIFeatures.x"><code class="docutils literal notranslate"><span class="pre">POIFeatures.x</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.POIFeatures.feature_names"><code class="docutils literal notranslate"><span class="pre">POIFeatures.feature_names</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.POIFeatures.__init__"><code class="docutils literal notranslate"><span class="pre">POIFeatures.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.substrate.Substrate"><code class="docutils literal notranslate"><span class="pre">Substrate</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.Substrate.grid"><code class="docutils literal notranslate"><span class="pre">Substrate.grid</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.Substrate.neighbours"><code class="docutils literal notranslate"><span class="pre">Substrate.neighbours</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.Substrate.poi"><code class="docutils literal notranslate"><span class="pre">Substrate.poi</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.Substrate.graphml_path"><code class="docutils literal notranslate"><span class="pre">Substrate.graphml_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.Substrate.__init__"><code class="docutils literal notranslate"><span class="pre">Substrate.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.substrate.SubstrateBuilder"><code class="docutils literal notranslate"><span class="pre">SubstrateBuilder</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.SubstrateBuilder.CACHE_FORMAT_VERSION"><code class="docutils literal notranslate"><span class="pre">SubstrateBuilder.CACHE_FORMAT_VERSION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.SubstrateBuilder.__init__"><code class="docutils literal notranslate"><span class="pre">SubstrateBuilder.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.SubstrateBuilder.build"><code class="docutils literal notranslate"><span class="pre">SubstrateBuilder.build()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.substrate.SubstrateConfig"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.SubstrateConfig.north"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig.north</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.SubstrateConfig.south"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig.south</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.SubstrateConfig.east"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig.east</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.SubstrateConfig.west"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig.west</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.SubstrateConfig.place"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig.place</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.SubstrateConfig.graphml_path"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig.graphml_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.SubstrateConfig.cell_size_m"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig.cell_size_m</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.SubstrateConfig.max_travel_time_s"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig.max_travel_time_s</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.SubstrateConfig.disable_pois"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig.disable_pois</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.SubstrateConfig.poi_tags"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig.poi_tags</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.SubstrateConfig.poi_geojson_path"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig.poi_geojson_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.SubstrateConfig.poi_travel_time_features"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig.poi_travel_time_features</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.SubstrateConfig.cache_dir"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig.cache_dir</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.SubstrateConfig.from_json"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig.from_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.SubstrateConfig.bbox"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig.bbox()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.SubstrateConfig.__init__"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.substrate.builder.SubstrateConfig"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.builder.SubstrateConfig.north"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig.north</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.builder.SubstrateConfig.south"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig.south</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.builder.SubstrateConfig.east"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig.east</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.builder.SubstrateConfig.west"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig.west</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.builder.SubstrateConfig.place"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig.place</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.builder.SubstrateConfig.graphml_path"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig.graphml_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.builder.SubstrateConfig.cell_size_m"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig.cell_size_m</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.builder.SubstrateConfig.max_travel_time_s"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig.max_travel_time_s</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.builder.SubstrateConfig.disable_pois"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig.disable_pois</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.builder.SubstrateConfig.poi_tags"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig.poi_tags</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.builder.SubstrateConfig.poi_geojson_path"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig.poi_geojson_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.builder.SubstrateConfig.poi_travel_time_features"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig.poi_travel_time_features</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.builder.SubstrateConfig.cache_dir"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig.cache_dir</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.builder.SubstrateConfig.from_json"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig.from_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.builder.SubstrateConfig.bbox"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig.bbox()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.builder.SubstrateConfig.__init__"><code class="docutils literal notranslate"><span class="pre">SubstrateConfig.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.substrate.builder.SubstrateBuilder"><code class="docutils literal notranslate"><span class="pre">SubstrateBuilder</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.builder.SubstrateBuilder.CACHE_FORMAT_VERSION"><code class="docutils literal notranslate"><span class="pre">SubstrateBuilder.CACHE_FORMAT_VERSION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.builder.SubstrateBuilder.__init__"><code class="docutils literal notranslate"><span class="pre">SubstrateBuilder.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.builder.SubstrateBuilder.build"><code class="docutils literal notranslate"><span class="pre">SubstrateBuilder.build()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.substrate.builder.build_grid_from_lonlat_bounds"><code class="docutils literal notranslate"><span class="pre">build_grid_from_lonlat_bounds()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.substrate.types.Grid"><code class="docutils literal notranslate"><span class="pre">Grid</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.types.Grid.lat"><code class="docutils literal notranslate"><span class="pre">Grid.lat</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.types.Grid.lon"><code class="docutils literal notranslate"><span class="pre">Grid.lon</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.types.Grid.cell_size_m"><code class="docutils literal notranslate"><span class="pre">Grid.cell_size_m</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.types.Grid.__init__"><code class="docutils literal notranslate"><span class="pre">Grid.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.substrate.types.POIFeatures"><code class="docutils literal notranslate"><span class="pre">POIFeatures</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.types.POIFeatures.x"><code class="docutils literal notranslate"><span class="pre">POIFeatures.x</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.types.POIFeatures.feature_names"><code class="docutils literal notranslate"><span class="pre">POIFeatures.feature_names</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.types.POIFeatures.__init__"><code class="docutils literal notranslate"><span class="pre">POIFeatures.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.substrate.types.NeighbourSets"><code class="docutils literal notranslate"><span class="pre">NeighbourSets</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.types.NeighbourSets.travel_time_s"><code class="docutils literal notranslate"><span class="pre">NeighbourSets.travel_time_s</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.types.NeighbourSets.__init__"><code class="docutils literal notranslate"><span class="pre">NeighbourSets.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#motac.substrate.types.Substrate"><code class="docutils literal notranslate"><span class="pre">Substrate</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.types.Substrate.grid"><code class="docutils literal notranslate"><span class="pre">Substrate.grid</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.types.Substrate.neighbours"><code class="docutils literal notranslate"><span class="pre">Substrate.neighbours</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.types.Substrate.poi"><code class="docutils literal notranslate"><span class="pre">Substrate.poi</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.types.Substrate.graphml_path"><code class="docutils literal notranslate"><span class="pre">Substrate.graphml_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motac.substrate.types.Substrate.__init__"><code class="docutils literal notranslate"><span class="pre">Substrate.__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sim.html">Simulation and Hawkes utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">Model API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="neural_kernels.html">Neural kernels API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eval.html">Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Command line interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paper_artefacts.html">Paper artefacts pipeline (M11)</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">motac</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Substrate</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/substrate.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="substrate">
+<h1>Substrate<a class="headerlink" href="#substrate" title="Link to this heading"></a></h1>
+<p>The substrate is the road-constrained spatial scaffold used by models and
+simulators:</p>
+<ul class="simple">
+<li><p>a road graph (OSMnx GraphML)</p></li>
+<li><p>a regular grid (cell centroids)</p></li>
+<li><p>sparse travel-time neighbourhoods between grid cells</p></li>
+<li><p>optional POI feature matrix aligned to the grid</p></li>
+</ul>
+<section id="building">
+<h2>Building<a class="headerlink" href="#building" title="Link to this heading"></a></h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">SubstrateBuilder(SubstrateConfig(...)).build()</span></code> (or the CLI wrapper) to build
+and optionally cache artefacts.</p>
+<p><code class="docutils literal notranslate"><span class="pre">SubstrateConfig</span></code> supports three ways to specify the region:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">bbox=(north,south,east,west)</span></code> via the individual fields <code class="docutils literal notranslate"><span class="pre">north/south/east/west</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">place=&quot;...&quot;</span></code> (OSM place query)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">graphml_path=&quot;...&quot;</span></code> (offline / tests)</p></li>
+</ul>
+</section>
+<section id="cache-artefacts">
+<h2>Cache artefacts<a class="headerlink" href="#cache-artefacts" title="Link to this heading"></a></h2>
+<p>If <code class="docutils literal notranslate"><span class="pre">cache_dir</span></code> is set, the builder writes a self-contained bundle:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">graph.graphml</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">grid.npz</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">neighbours.npz</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">meta.json</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">poi.npz</span></code> (optional)</p></li>
+</ul>
+<section id="bundle-contents-v1">
+<h3>Bundle contents (v1)<a class="headerlink" href="#bundle-contents-v1" title="Link to this heading"></a></h3>
+<dl class="simple myst">
+<dt><code class="docutils literal notranslate"><span class="pre">graph.graphml</span></code></dt><dd><p>Road network saved via <code class="docutils literal notranslate"><span class="pre">osmnx.save_graphml</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">grid.npz</span></code></dt><dd><p>A compressed NumPy archive with:</p>
+</dd>
+</dl>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">lat</span></code>: <code class="docutils literal notranslate"><span class="pre">float64</span></code>, shape <code class="docutils literal notranslate"><span class="pre">(n_cells,)</span></code> — grid cell centroid latitudes (EPSG:4326)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lon</span></code>: <code class="docutils literal notranslate"><span class="pre">float64</span></code>, shape <code class="docutils literal notranslate"><span class="pre">(n_cells,)</span></code> — grid cell centroid longitudes (EPSG:4326)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cell_size_m</span></code>: <code class="docutils literal notranslate"><span class="pre">float64</span></code>, shape <code class="docutils literal notranslate"><span class="pre">(1,)</span></code> — grid spacing in metres</p></li>
+</ul>
+<dl class="simple myst">
+<dt><code class="docutils literal notranslate"><span class="pre">neighbours.npz</span></code></dt><dd><p>A SciPy sparse matrix saved via <code class="docutils literal notranslate"><span class="pre">scipy.sparse.save_npz</span></code>.</p>
+</dd>
+</dl>
+<ul class="simple">
+<li><p>matrix type: CSR (<code class="docutils literal notranslate"><span class="pre">.tocsr()</span></code> on load)</p></li>
+<li><p>shape: <code class="docutils literal notranslate"><span class="pre">(n_cells,</span> <span class="pre">n_cells)</span></code></p></li>
+<li><p>entries: <code class="docutils literal notranslate"><span class="pre">travel_time_s[i,</span> <span class="pre">j]</span></code> = shortest-path travel time (seconds) from cell <code class="docutils literal notranslate"><span class="pre">i</span></code> to <code class="docutils literal notranslate"><span class="pre">j</span></code>,
+for all <code class="docutils literal notranslate"><span class="pre">j</span></code> reachable within <code class="docutils literal notranslate"><span class="pre">max_travel_time_s</span></code> (plus the diagonal)</p></li>
+</ul>
+<dl class="simple myst">
+<dt><code class="docutils literal notranslate"><span class="pre">poi.npz</span></code> (optional)</dt><dd><p>Present when POIs are enabled.</p>
+</dd>
+</dl>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span></code>: <code class="docutils literal notranslate"><span class="pre">float64</span></code>, shape <code class="docutils literal notranslate"><span class="pre">(n_cells,</span> <span class="pre">n_features)</span></code> — POI feature matrix aligned to the grid</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">feature_names</span></code>: <code class="docutils literal notranslate"><span class="pre">object</span></code> array of strings, length <code class="docutils literal notranslate"><span class="pre">n_features</span></code></p></li>
+</ul>
+<dl class="simple myst">
+<dt><code class="docutils literal notranslate"><span class="pre">meta.json</span></code></dt><dd><p>Human-readable provenance and validation metadata. Keys:</p>
+</dd>
+</dl>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cache_format_version</span></code> (int)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">built_at_utc</span></code> (UTC timestamp, <code class="docutils literal notranslate"><span class="pre">YYYY-MM-DDTHH:MM:SSZ</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">motac_version</span></code> (string)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">config</span></code> (dict) — the normalized subset of <code class="docutils literal notranslate"><span class="pre">SubstrateConfig</span></code> fields that affect the bundle</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">config_sha256</span></code> (hex string) — SHA-256 over JSON(<code class="docutils literal notranslate"><span class="pre">config</span></code>) with sorted keys and compact separators</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">graphml_path</span></code> (string) — path of the GraphML used by the bundle (when cached, this points at <code class="docutils literal notranslate"><span class="pre">cache_dir/graph.graphml</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">has_poi</span></code> (bool)</p></li>
+</ul>
+</section>
+<section id="cache-format-versioning">
+<h3>Cache format versioning<a class="headerlink" href="#cache-format-versioning" title="Link to this heading"></a></h3>
+<p>The cache includes <code class="docutils literal notranslate"><span class="pre">meta.json[&quot;cache_format_version&quot;]</span></code>. The loader validates this
+against the library’s expected version and raises if they mismatch.</p>
+</section>
+<section id="loading-a-cached-bundle-with-version-validation">
+<h3>Loading a cached bundle (with version validation)<a class="headerlink" href="#loading-a-cached-bundle-with-version-validation" title="Link to this heading"></a></h3>
+<section id="minimal-example-load-bundle-validate-version-bundle-load-validate-version">
+<h4>Minimal example: load bundle + validate version {#bundle-load-validate-version}<a class="headerlink" href="#minimal-example-load-bundle-validate-version-bundle-load-validate-version" title="Link to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">SubstrateBuilder.build()</span></code> validates the cache format version automatically, but
+if you want an explicit, human-readable guard before doing any work you can read
+<code class="docutils literal notranslate"><span class="pre">meta.json</span></code> yourself:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">motac.substrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">SubstrateBuilder</span><span class="p">,</span> <span class="n">SubstrateConfig</span>
+
+<span class="n">cache_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;./cache/camden&quot;</span><span class="p">)</span>
+<span class="n">meta</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">((</span><span class="n">cache_dir</span> <span class="o">/</span> <span class="s2">&quot;meta.json&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
+
+<span class="c1"># Fast fail if the on-disk bundle is from an unsupported format.</span>
+<span class="k">if</span> <span class="n">meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cache_format_version&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">SubstrateBuilder</span><span class="o">.</span><span class="n">CACHE_FORMAT_VERSION</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+        <span class="s2">&quot;Unsupported substrate cache format version: &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cache_format_version&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2"> (expected </span><span class="si">{</span><span class="n">SubstrateBuilder</span><span class="o">.</span><span class="n">CACHE_FORMAT_VERSION</span><span class="si">}</span><span class="s2">)&quot;</span>
+    <span class="p">)</span>
+
+<span class="c1"># Loads graph.graphml, grid.npz, neighbours.npz (and optionally poi.npz).</span>
+<span class="n">substrate</span> <span class="o">=</span> <span class="n">SubstrateBuilder</span><span class="p">(</span><span class="n">SubstrateConfig</span><span class="p">(</span><span class="n">cache_dir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">)))</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">substrate</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">lat</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">substrate</span><span class="o">.</span><span class="n">neighbours</span><span class="o">.</span><span class="n">travel_time_s</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If <code class="docutils literal notranslate"><span class="pre">cache_dir</span></code> already contains a bundle, <code class="docutils literal notranslate"><span class="pre">SubstrateBuilder.build()</span></code> loads it and
+validates <code class="docutils literal notranslate"><span class="pre">cache_format_version</span></code> automatically:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">motac.substrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">SubstrateBuilder</span><span class="p">,</span> <span class="n">SubstrateConfig</span>
+
+<span class="c1"># Point at a previously built cache directory containing:</span>
+<span class="c1"># graph.graphml, grid.npz, neighbours.npz, meta.json (and optionally poi.npz)</span>
+<span class="n">cache_dir</span> <span class="o">=</span> <span class="s2">&quot;./cache/camden&quot;</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">substrate</span> <span class="o">=</span> <span class="n">SubstrateBuilder</span><span class="p">(</span><span class="n">SubstrateConfig</span><span class="p">(</span><span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_dir</span><span class="p">))</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+<span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="c1"># Raised e.g. when meta.json[&quot;cache_format_version&quot;] is unsupported.</span>
+    <span class="k">raise</span>
+
+<span class="c1"># Use the loaded substrate.</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">substrate</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">lat</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">substrate</span><span class="o">.</span><span class="n">neighbours</span><span class="o">.</span><span class="n">travel_time_s</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="poi-features-m2">
+<h2>POI features (M2)<a class="headerlink" href="#poi-features-m2" title="Link to this heading"></a></h2>
+<p>If POIs are enabled, <code class="docutils literal notranslate"><span class="pre">Substrate.poi</span></code> is a <code class="docutils literal notranslate"><span class="pre">POIFeatures</span></code> object with:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span></code>: shape <code class="docutils literal notranslate"><span class="pre">(n_cells,</span> <span class="pre">n_features)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">feature_names</span></code>: list of feature names, aligned to columns of <code class="docutils literal notranslate"><span class="pre">x</span></code></p></li>
+</ul>
+<p>By default we always include:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">poi_count</span></code>: total number of POIs assigned to each grid cell</p></li>
+</ul>
+<section id="tag-value-breakout-counts">
+<h3>Tag/value breakout counts<a class="headerlink" href="#tag-value-breakout-counts" title="Link to this heading"></a></h3>
+<p>If <code class="docutils literal notranslate"><span class="pre">SubstrateConfig.poi_tags</span></code> is provided, we also add optional breakout count
+features based on POI properties:</p>
+<ul class="simple">
+<li><p>If <code class="docutils literal notranslate"><span class="pre">{&quot;amenity&quot;:</span> <span class="pre">True}</span></code> then we add a feature named <code class="docutils literal notranslate"><span class="pre">amenity</span></code> counting POIs with
+a non-null <code class="docutils literal notranslate"><span class="pre">amenity</span></code> property.</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">{&quot;amenity&quot;:</span> <span class="pre">[&quot;cafe&quot;,</span> <span class="pre">&quot;restaurant&quot;]}</span></code> then we add features named
+<code class="docutils literal notranslate"><span class="pre">amenity=cafe</span></code> and <code class="docutils literal notranslate"><span class="pre">amenity=restaurant</span></code>.</p></li>
+</ul>
+<p>This works both for OSM downloads (where those properties are columns in the
+GeoDataFrame) and for local GeoJSON inputs (as long as <code class="docutils literal notranslate"><span class="pre">properties</span></code> contain the
+relevant keys).</p>
+</section>
+<section id="example-config">
+<h3>Example config<a class="headerlink" href="#example-config" title="Link to this heading"></a></h3>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;place&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Camden, London, UK&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;cell_size_m&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">250.0</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;max_travel_time_s&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">900.0</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;poi_tags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;amenity&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;cafe&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;restaurant&quot;</span><span class="p">]},</span>
+<span class="w">  </span><span class="nt">&quot;cache_dir&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;./cache/camden&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="travel-time-to-nearest-poi-min-travel-time">
+<h3>Travel-time-to-nearest-POI (min travel time)<a class="headerlink" href="#travel-time-to-nearest-poi-min-travel-time" title="Link to this heading"></a></h3>
+<p>If <code class="docutils literal notranslate"><span class="pre">SubstrateConfig.poi_travel_time_features=true</span></code>, the builder appends
+travel-time-based features computed from the sparse neighbourhood matrix
+<code class="docutils literal notranslate"><span class="pre">neighbours.travel_time_s</span></code>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">poi_min_travel_time_s</span></code>: minimum travel time (seconds) from each cell to <em>any</em>
+cell that contains at least one POI.</p></li>
+</ul>
+<p>If <code class="docutils literal notranslate"><span class="pre">poi_tags</span></code> defines breakout categories, we also add category-specific
+features using the same naming convention as the count breakouts:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">poi_&lt;tag&gt;_min_travel_time_s</span></code> for <code class="docutils literal notranslate"><span class="pre">&lt;tag&gt;:</span> <span class="pre">True</span></code> (e.g. <code class="docutils literal notranslate"><span class="pre">poi_amenity_min_travel_time_s</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">poi_&lt;tag&gt;=&lt;value&gt;_min_travel_time_s</span></code> for <code class="docutils literal notranslate"><span class="pre">&lt;tag&gt;:</span> <span class="pre">[values]</span></code>
+(e.g. <code class="docutils literal notranslate"><span class="pre">poi_amenity=school_min_travel_time_s</span></code>)</p></li>
+</ul>
+<p>If no POI target is reachable for a cell within the cached neighbourhood cutoff,
+we set the feature to <code class="docutils literal notranslate"><span class="pre">max_travel_time_s</span></code>.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="module-motac.substrate">
+<span id="api-reference"></span><h2>API reference<a class="headerlink" href="#module-motac.substrate" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="motac.substrate.Grid">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motac.substrate.</span></span><span class="sig-name descname"><span class="pre">Grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_size_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/substrate/types.html#Grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.substrate.Grid" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Regular grid substrate.</p>
+<p>Coordinates are stored as WGS84 centroids for downstream modelling.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.Grid.lat">
+<span class="sig-name descname"><span class="pre">lat</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a></span><a class="headerlink" href="#motac.substrate.Grid.lat" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.Grid.lon">
+<span class="sig-name descname"><span class="pre">lon</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a></span><a class="headerlink" href="#motac.substrate.Grid.lon" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.Grid.cell_size_m">
+<span class="sig-name descname"><span class="pre">cell_size_m</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#motac.substrate.Grid.cell_size_m" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.substrate.Grid.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_size_m</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#motac.substrate.Grid.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motac.substrate.NeighbourSets">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motac.substrate.</span></span><span class="sig-name descname"><span class="pre">NeighbourSets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">travel_time_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/substrate/types.html#NeighbourSets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.substrate.NeighbourSets" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Sparse travel-time neighbourhoods between grid cells.</p>
+<p>matrix[i, j] = travel time in seconds from i to j (0 on diagonal).</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.NeighbourSets.travel_time_s">
+<span class="sig-name descname"><span class="pre">travel_time_s</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csr_matrix.html#scipy.sparse.csr_matrix" title="(in SciPy v1.17.0)"><span class="pre">csr_matrix</span></a></span><a class="headerlink" href="#motac.substrate.NeighbourSets.travel_time_s" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.substrate.NeighbourSets.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">travel_time_s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#motac.substrate.NeighbourSets.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motac.substrate.POIFeatures">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motac.substrate.</span></span><span class="sig-name descname"><span class="pre">POIFeatures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_names</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/substrate/types.html#POIFeatures"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.substrate.POIFeatures" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>POI features per grid cell.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.POIFeatures.x">
+<span class="sig-name descname"><span class="pre">x</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a></span><a class="headerlink" href="#motac.substrate.POIFeatures.x" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.POIFeatures.feature_names">
+<span class="sig-name descname"><span class="pre">feature_names</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#motac.substrate.POIFeatures.feature_names" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.substrate.POIFeatures.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#motac.substrate.POIFeatures.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motac.substrate.Substrate">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motac.substrate.</span></span><span class="sig-name descname"><span class="pre">Substrate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neighbours</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graphml_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/substrate/types.html#Substrate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.substrate.Substrate" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.Substrate.grid">
+<span class="sig-name descname"><span class="pre">grid</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#motac.substrate.types.Grid" title="motac.substrate.types.Grid"><span class="pre">Grid</span></a></span><a class="headerlink" href="#motac.substrate.Substrate.grid" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.Substrate.neighbours">
+<span class="sig-name descname"><span class="pre">neighbours</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#motac.substrate.types.NeighbourSets" title="motac.substrate.types.NeighbourSets"><span class="pre">NeighbourSets</span></a></span><a class="headerlink" href="#motac.substrate.Substrate.neighbours" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.Substrate.poi">
+<span class="sig-name descname"><span class="pre">poi</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#motac.substrate.types.POIFeatures" title="motac.substrate.types.POIFeatures"><span class="pre">POIFeatures</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><a class="headerlink" href="#motac.substrate.Substrate.poi" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.Substrate.graphml_path">
+<span class="sig-name descname"><span class="pre">graphml_path</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><a class="headerlink" href="#motac.substrate.Substrate.graphml_path" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.substrate.Substrate.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neighbours</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graphml_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#motac.substrate.Substrate.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motac.substrate.SubstrateBuilder">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motac.substrate.</span></span><span class="sig-name descname"><span class="pre">SubstrateBuilder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/substrate/builder.html#SubstrateBuilder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.substrate.SubstrateBuilder" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Build a road-constrained substrate and persist cache artefacts.</p>
+<section id="cache-format-v1">
+<h3>Cache format (v1)<a class="headerlink" href="#cache-format-v1" title="Link to this heading"></a></h3>
+<p>When <code class="docutils literal notranslate"><span class="pre">SubstrateConfig.cache_dir</span></code> is set, <code class="docutils literal notranslate"><span class="pre">build()</span></code> writes a self-contained
+artefact bundle:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">graph.graphml</span></code>: road network (OSMnx GraphML)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">grid.npz</span></code>: grid centroid lat/lon + cell_size_m</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">neighbours.npz</span></code>: CSR travel-time neighbourhood matrix</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">meta.json</span></code>: provenance + config hash + format version</p></li>
+<li><p>optionally <code class="docutils literal notranslate"><span class="pre">poi.npz</span></code>: POI feature matrix</p></li>
+</ul>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.SubstrateBuilder.CACHE_FORMAT_VERSION">
+<span class="sig-name descname"><span class="pre">CACHE_FORMAT_VERSION</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></span><a class="headerlink" href="#motac.substrate.SubstrateBuilder.CACHE_FORMAT_VERSION" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.substrate.SubstrateBuilder.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/substrate/builder.html#SubstrateBuilder.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.substrate.SubstrateBuilder.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.substrate.SubstrateBuilder.build">
+<span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/substrate/builder.html#SubstrateBuilder.build"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.substrate.SubstrateBuilder.build" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motac.substrate.SubstrateConfig">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motac.substrate.</span></span><span class="sig-name descname"><span class="pre">SubstrateConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">north</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">south</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">east</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">west</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">place</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graphml_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_size_m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">250.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_travel_time_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">900.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disable_pois</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poi_tags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poi_geojson_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poi_travel_time_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/substrate/builder.html#SubstrateConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.substrate.SubstrateConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Configuration for substrate building.</p>
+<dl class="simple">
+<dt>Provide one of:</dt><dd><ul class="simple">
+<li><p>bbox (north, south, east, west)</p></li>
+<li><p>place (OSM place query string)</p></li>
+<li><p>graphml_path (local graph for offline/testing)</p></li>
+</ul>
+</dd>
+<dt>POIs are optional. For M1 we support:</dt><dd><ul class="simple">
+<li><p>disable_pois=True</p></li>
+<li><p>poi_geojson_path (local) OR poi_tags + (bbox/place/graph)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.SubstrateConfig.north">
+<span class="sig-name descname"><span class="pre">north</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><a class="headerlink" href="#motac.substrate.SubstrateConfig.north" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.SubstrateConfig.south">
+<span class="sig-name descname"><span class="pre">south</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><a class="headerlink" href="#motac.substrate.SubstrateConfig.south" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.SubstrateConfig.east">
+<span class="sig-name descname"><span class="pre">east</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><a class="headerlink" href="#motac.substrate.SubstrateConfig.east" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.SubstrateConfig.west">
+<span class="sig-name descname"><span class="pre">west</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><a class="headerlink" href="#motac.substrate.SubstrateConfig.west" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.SubstrateConfig.place">
+<span class="sig-name descname"><span class="pre">place</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><a class="headerlink" href="#motac.substrate.SubstrateConfig.place" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.SubstrateConfig.graphml_path">
+<span class="sig-name descname"><span class="pre">graphml_path</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><a class="headerlink" href="#motac.substrate.SubstrateConfig.graphml_path" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.SubstrateConfig.cell_size_m">
+<span class="sig-name descname"><span class="pre">cell_size_m</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#motac.substrate.SubstrateConfig.cell_size_m" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.SubstrateConfig.max_travel_time_s">
+<span class="sig-name descname"><span class="pre">max_travel_time_s</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#motac.substrate.SubstrateConfig.max_travel_time_s" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.SubstrateConfig.disable_pois">
+<span class="sig-name descname"><span class="pre">disable_pois</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><a class="headerlink" href="#motac.substrate.SubstrateConfig.disable_pois" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.SubstrateConfig.poi_tags">
+<span class="sig-name descname"><span class="pre">poi_tags</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><a class="headerlink" href="#motac.substrate.SubstrateConfig.poi_tags" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.SubstrateConfig.poi_geojson_path">
+<span class="sig-name descname"><span class="pre">poi_geojson_path</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><a class="headerlink" href="#motac.substrate.SubstrateConfig.poi_geojson_path" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.SubstrateConfig.poi_travel_time_features">
+<span class="sig-name descname"><span class="pre">poi_travel_time_features</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><a class="headerlink" href="#motac.substrate.SubstrateConfig.poi_travel_time_features" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.SubstrateConfig.cache_dir">
+<span class="sig-name descname"><span class="pre">cache_dir</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><a class="headerlink" href="#motac.substrate.SubstrateConfig.cache_dir" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.substrate.SubstrateConfig.from_json">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/substrate/builder.html#SubstrateConfig.from_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.substrate.SubstrateConfig.from_json" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#motac.substrate.builder.SubstrateConfig" title="motac.substrate.builder.SubstrateConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">SubstrateConfig</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.substrate.SubstrateConfig.bbox">
+<span class="sig-name descname"><span class="pre">bbox</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/substrate/builder.html#SubstrateConfig.bbox"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.substrate.SubstrateConfig.bbox" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>] | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.substrate.SubstrateConfig.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">north</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">south</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">east</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">west</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">place</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graphml_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_size_m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">250.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_travel_time_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">900.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disable_pois</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poi_tags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poi_geojson_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poi_travel_time_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#motac.substrate.SubstrateConfig.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class" id="module-motac.substrate.builder">
+<dt class="sig sig-object py" id="motac.substrate.builder.SubstrateConfig">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motac.substrate.builder.</span></span><span class="sig-name descname"><span class="pre">SubstrateConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">north</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">south</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">east</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">west</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">place</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graphml_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_size_m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">250.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_travel_time_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">900.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disable_pois</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poi_tags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poi_geojson_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poi_travel_time_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/substrate/builder.html#SubstrateConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.substrate.builder.SubstrateConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Configuration for substrate building.</p>
+<dl class="simple">
+<dt>Provide one of:</dt><dd><ul class="simple">
+<li><p>bbox (north, south, east, west)</p></li>
+<li><p>place (OSM place query string)</p></li>
+<li><p>graphml_path (local graph for offline/testing)</p></li>
+</ul>
+</dd>
+<dt>POIs are optional. For M1 we support:</dt><dd><ul class="simple">
+<li><p>disable_pois=True</p></li>
+<li><p>poi_geojson_path (local) OR poi_tags + (bbox/place/graph)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.builder.SubstrateConfig.north">
+<span class="sig-name descname"><span class="pre">north</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><a class="headerlink" href="#motac.substrate.builder.SubstrateConfig.north" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.builder.SubstrateConfig.south">
+<span class="sig-name descname"><span class="pre">south</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><a class="headerlink" href="#motac.substrate.builder.SubstrateConfig.south" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.builder.SubstrateConfig.east">
+<span class="sig-name descname"><span class="pre">east</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><a class="headerlink" href="#motac.substrate.builder.SubstrateConfig.east" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.builder.SubstrateConfig.west">
+<span class="sig-name descname"><span class="pre">west</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><a class="headerlink" href="#motac.substrate.builder.SubstrateConfig.west" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.builder.SubstrateConfig.place">
+<span class="sig-name descname"><span class="pre">place</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><a class="headerlink" href="#motac.substrate.builder.SubstrateConfig.place" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.builder.SubstrateConfig.graphml_path">
+<span class="sig-name descname"><span class="pre">graphml_path</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><a class="headerlink" href="#motac.substrate.builder.SubstrateConfig.graphml_path" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.builder.SubstrateConfig.cell_size_m">
+<span class="sig-name descname"><span class="pre">cell_size_m</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#motac.substrate.builder.SubstrateConfig.cell_size_m" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.builder.SubstrateConfig.max_travel_time_s">
+<span class="sig-name descname"><span class="pre">max_travel_time_s</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#motac.substrate.builder.SubstrateConfig.max_travel_time_s" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.builder.SubstrateConfig.disable_pois">
+<span class="sig-name descname"><span class="pre">disable_pois</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><a class="headerlink" href="#motac.substrate.builder.SubstrateConfig.disable_pois" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.builder.SubstrateConfig.poi_tags">
+<span class="sig-name descname"><span class="pre">poi_tags</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><a class="headerlink" href="#motac.substrate.builder.SubstrateConfig.poi_tags" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.builder.SubstrateConfig.poi_geojson_path">
+<span class="sig-name descname"><span class="pre">poi_geojson_path</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><a class="headerlink" href="#motac.substrate.builder.SubstrateConfig.poi_geojson_path" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.builder.SubstrateConfig.poi_travel_time_features">
+<span class="sig-name descname"><span class="pre">poi_travel_time_features</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><a class="headerlink" href="#motac.substrate.builder.SubstrateConfig.poi_travel_time_features" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.builder.SubstrateConfig.cache_dir">
+<span class="sig-name descname"><span class="pre">cache_dir</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><a class="headerlink" href="#motac.substrate.builder.SubstrateConfig.cache_dir" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.substrate.builder.SubstrateConfig.from_json">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/substrate/builder.html#SubstrateConfig.from_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.substrate.builder.SubstrateConfig.from_json" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#motac.substrate.builder.SubstrateConfig" title="motac.substrate.builder.SubstrateConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">SubstrateConfig</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.substrate.builder.SubstrateConfig.bbox">
+<span class="sig-name descname"><span class="pre">bbox</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/substrate/builder.html#SubstrateConfig.bbox"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.substrate.builder.SubstrateConfig.bbox" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>] | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.substrate.builder.SubstrateConfig.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">north</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">south</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">east</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">west</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">place</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graphml_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_size_m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">250.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_travel_time_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">900.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disable_pois</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poi_tags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poi_geojson_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poi_travel_time_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#motac.substrate.builder.SubstrateConfig.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motac.substrate.builder.SubstrateBuilder">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motac.substrate.builder.</span></span><span class="sig-name descname"><span class="pre">SubstrateBuilder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/substrate/builder.html#SubstrateBuilder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.substrate.builder.SubstrateBuilder" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Build a road-constrained substrate and persist cache artefacts.</p>
+<section id="cache-format-v1">
+<h3>Cache format (v1)<a class="headerlink" href="#cache-format-v1" title="Link to this heading"></a></h3>
+<p>When <code class="docutils literal notranslate"><span class="pre">SubstrateConfig.cache_dir</span></code> is set, <code class="docutils literal notranslate"><span class="pre">build()</span></code> writes a self-contained
+artefact bundle:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">graph.graphml</span></code>: road network (OSMnx GraphML)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">grid.npz</span></code>: grid centroid lat/lon + cell_size_m</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">neighbours.npz</span></code>: CSR travel-time neighbourhood matrix</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">meta.json</span></code>: provenance + config hash + format version</p></li>
+<li><p>optionally <code class="docutils literal notranslate"><span class="pre">poi.npz</span></code>: POI feature matrix</p></li>
+</ul>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.builder.SubstrateBuilder.CACHE_FORMAT_VERSION">
+<span class="sig-name descname"><span class="pre">CACHE_FORMAT_VERSION</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></span><a class="headerlink" href="#motac.substrate.builder.SubstrateBuilder.CACHE_FORMAT_VERSION" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.substrate.builder.SubstrateBuilder.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/substrate/builder.html#SubstrateBuilder.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.substrate.builder.SubstrateBuilder.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.substrate.builder.SubstrateBuilder.build">
+<span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/substrate/builder.html#SubstrateBuilder.build"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.substrate.builder.SubstrateBuilder.build" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motac.substrate.builder.build_grid_from_lonlat_bounds">
+<span class="sig-prename descclassname"><span class="pre">motac.substrate.builder.</span></span><span class="sig-name descname"><span class="pre">build_grid_from_lonlat_bounds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_size_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/substrate/builder.html#build_grid_from_lonlat_bounds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.substrate.builder.build_grid_from_lonlat_bounds" title="Link to this definition"></a></dt>
+<dd><p>Build a Grid from lon/lat bounds using the spatial grid builder (M1.2).</p>
+<p>Returns motac.substrate.types.Grid.</p>
+</dd></dl>
+
+<dl class="py class" id="module-motac.substrate.types">
+<dt class="sig sig-object py" id="motac.substrate.types.Grid">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motac.substrate.types.</span></span><span class="sig-name descname"><span class="pre">Grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_size_m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/substrate/types.html#Grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.substrate.types.Grid" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Regular grid substrate.</p>
+<p>Coordinates are stored as WGS84 centroids for downstream modelling.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.types.Grid.lat">
+<span class="sig-name descname"><span class="pre">lat</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a></span><a class="headerlink" href="#motac.substrate.types.Grid.lat" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.types.Grid.lon">
+<span class="sig-name descname"><span class="pre">lon</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a></span><a class="headerlink" href="#motac.substrate.types.Grid.lon" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.types.Grid.cell_size_m">
+<span class="sig-name descname"><span class="pre">cell_size_m</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><a class="headerlink" href="#motac.substrate.types.Grid.cell_size_m" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.substrate.types.Grid.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_size_m</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#motac.substrate.types.Grid.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motac.substrate.types.POIFeatures">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motac.substrate.types.</span></span><span class="sig-name descname"><span class="pre">POIFeatures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_names</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/substrate/types.html#POIFeatures"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.substrate.types.POIFeatures" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>POI features per grid cell.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.types.POIFeatures.x">
+<span class="sig-name descname"><span class="pre">x</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><span class="pre">ndarray</span></a></span><a class="headerlink" href="#motac.substrate.types.POIFeatures.x" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.types.POIFeatures.feature_names">
+<span class="sig-name descname"><span class="pre">feature_names</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#motac.substrate.types.POIFeatures.feature_names" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.substrate.types.POIFeatures.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#motac.substrate.types.POIFeatures.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motac.substrate.types.NeighbourSets">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motac.substrate.types.</span></span><span class="sig-name descname"><span class="pre">NeighbourSets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">travel_time_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/substrate/types.html#NeighbourSets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.substrate.types.NeighbourSets" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Sparse travel-time neighbourhoods between grid cells.</p>
+<p>matrix[i, j] = travel time in seconds from i to j (0 on diagonal).</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.types.NeighbourSets.travel_time_s">
+<span class="sig-name descname"><span class="pre">travel_time_s</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csr_matrix.html#scipy.sparse.csr_matrix" title="(in SciPy v1.17.0)"><span class="pre">csr_matrix</span></a></span><a class="headerlink" href="#motac.substrate.types.NeighbourSets.travel_time_s" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.substrate.types.NeighbourSets.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">travel_time_s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#motac.substrate.types.NeighbourSets.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motac.substrate.types.Substrate">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motac.substrate.types.</span></span><span class="sig-name descname"><span class="pre">Substrate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neighbours</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graphml_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/motac/substrate/types.html#Substrate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motac.substrate.types.Substrate" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.types.Substrate.grid">
+<span class="sig-name descname"><span class="pre">grid</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#motac.substrate.types.Grid" title="motac.substrate.types.Grid"><span class="pre">Grid</span></a></span><a class="headerlink" href="#motac.substrate.types.Substrate.grid" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.types.Substrate.neighbours">
+<span class="sig-name descname"><span class="pre">neighbours</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#motac.substrate.types.NeighbourSets" title="motac.substrate.types.NeighbourSets"><span class="pre">NeighbourSets</span></a></span><a class="headerlink" href="#motac.substrate.types.Substrate.neighbours" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.types.Substrate.poi">
+<span class="sig-name descname"><span class="pre">poi</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#motac.substrate.types.POIFeatures" title="motac.substrate.types.POIFeatures"><span class="pre">POIFeatures</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><a class="headerlink" href="#motac.substrate.types.Substrate.poi" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="motac.substrate.types.Substrate.graphml_path">
+<span class="sig-name descname"><span class="pre">graphml_path</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><a class="headerlink" href="#motac.substrate.types.Substrate.graphml_path" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motac.substrate.types.Substrate.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neighbours</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graphml_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#motac.substrate.types.Substrate.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="schema.html" class="btn btn-neutral float-left" title="Schema" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="sim.html" class="btn btn-neutral float-right" title="Simulation and Hawkes utilities" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, OJ Watson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

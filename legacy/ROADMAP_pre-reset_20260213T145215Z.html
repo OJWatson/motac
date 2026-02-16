@@ -1,0 +1,361 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Roadmap &mdash; motac 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            motac
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../model/00_overview.html">Model overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../model/01_parameter_recovery.html">Parameter recovery (road Hawkes, M3)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../loaders/index.html">Loaders</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/01_synthetic_quickstart.html">Tutorial: Synthetic quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/02_poi_features.html">Tutorial: POI features (baseline)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/03_ingest_spatial_query.html">End-to-end: ingest → spatial join → query</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/schema.html">Schema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/substrate.html">Substrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/sim.html">Simulation and Hawkes utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/model.html">Model API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/neural_kernels.html">Neural kernels API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/eval.html">Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/cli.html">Command line interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paper_artefacts.html">Paper artefacts pipeline (M11)</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">motac</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Roadmap</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/legacy/ROADMAP_pre-reset_20260213T145215Z.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="roadmap">
+<h1>Roadmap<a class="headerlink" href="#roadmap" title="Link to this heading"></a></h1>
+<p>This document tracks the planned milestone sequence and Definition-of-Done (DoD)
+for <code class="docutils literal notranslate"><span class="pre">motac</span></code>.</p>
+<section id="m0-project-reset-spec-alignment">
+<h2>M0 — Project reset + spec alignment<a class="headerlink" href="#m0-project-reset-spec-alignment" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>DoD:</p>
+<ul>
+<li><p>Repository documentation is user-facing and buildable.</p></li>
+<li><p>Canonical event schema implemented with validation + unit tests.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="m1-substrate-cache-artefacts-v1">
+<h2>M1 — Substrate cache artefacts v1<a class="headerlink" href="#m1-substrate-cache-artefacts-v1" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>DoD:</p>
+<ul>
+<li><p>Substrate cache bundle writes/loads deterministically.</p></li>
+<li><p>Offline unit test validates expected cache files + provenance/config hash.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="m2-pois-baseline-features-v1">
+<h2>M2 — POIs + baseline features v1<a class="headerlink" href="#m2-pois-baseline-features-v1" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>DoD:</p>
+<ul>
+<li><p>POI count features (incl. optional tag/value breakouts).</p></li>
+<li><p>Travel-time-to-nearest style POI features available (min travel time), with tests.</p></li>
+<li><p>User docs describe feature names and configuration.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="m3-parametric-road-constrained-hawkes-v1-poisson-negbin">
+<h2>M3 — Parametric road-constrained Hawkes v1 (Poisson + NegBin)<a class="headerlink" href="#m3-parametric-road-constrained-hawkes-v1-poisson-negbin" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>DoD:</p>
+<ul>
+<li><p>Sparse road-constrained intensity based on travel-time neighbourhoods and W(d_travel).</p></li>
+<li><p>Poisson and Negative Binomial likelihood support under a stable API.</p></li>
+<li><p>Offline parameter-recovery test on a tiny substrate to sanity-check end-to-end fitting.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="m4-pdf-spec-re-alignment-package-layout-structure-first">
+<h2>M4 — PDF spec re-alignment + package layout (structure-first)<a class="headerlink" href="#m4-pdf-spec-re-alignment-package-layout-structure-first" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Goal: bring the repository into close alignment with the PDF’s <em>explicit</em> architecture/goals (including later milestones), so subsequent work is not drifting.</p></li>
+<li><p>DoD:</p>
+<ul>
+<li><p>A short, concrete spec-alignment doc exists (e.g. <code class="docutils literal notranslate"><span class="pre">docs/spec_alignment.md</span></code>) containing:</p>
+<ul>
+<li><p>a checklist of the PDF-required components,</p></li>
+<li><p>what already exists in the repo,</p></li>
+<li><p>what is missing / out of place,</p></li>
+<li><p>and how the remaining milestones map to code + docs.</p></li>
+</ul>
+</li>
+<li><p>Package layout is aligned to the PDF’s conceptual modules (names may differ, but the separation must be clear and discoverable):</p>
+<ul>
+<li><p>dataset loaders + schema validation</p></li>
+<li><p>substrate/spatial (grid/graph, travel-time neighbours, POIs)</p></li>
+<li><p>models (parametric Hawkes; marked Hawkes later; neural kernel modules later)</p></li>
+<li><p>inference (JAX likelihoods, jit kernels, optimisers/constraints)</p></li>
+<li><p>sim (simulator + observation models)</p></li>
+<li><p>eval (backtesting, metrics, calibration, plotting)</p></li>
+<li><p>cli (fetch, build-substrate, fit, forecast, backtest, simulate)</p></li>
+<li><p>configs (experiment configs)</p></li>
+</ul>
+</li>
+<li><p>Roadmap updated (this file) to reflect the PDF sequencing accurately, including an explicit note for any deliberate deviations.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="m5-predict-eval-plumbing-v1">
+<h2>M5 — Predict/eval plumbing v1<a class="headerlink" href="#m5-predict-eval-plumbing-v1" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>DoD:</p>
+<ul>
+<li><p>Minimal prediction/evaluation utilities wired to the parametric model.</p></li>
+<li><p>Tests for shapes/consistency on toy data.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="m6-chicago-loader-v1">
+<h2>M6 — Chicago loader v1<a class="headerlink" href="#m6-chicago-loader-v1" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>DoD:</p>
+<ul>
+<li><p>Deterministic loader and basic sanity tests.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="m7-acled-loader-v1">
+<h2>M7 — ACLED loader v1<a class="headerlink" href="#m7-acled-loader-v1" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>DoD:</p>
+<ul>
+<li><p>Deterministic loader and basic sanity tests.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="m8-observed-data-likelihood-predictive-sampling-v1">
+<h2>M8 — Observed-data likelihood/predictive sampling v1<a class="headerlink" href="#m8-observed-data-likelihood-predictive-sampling-v1" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>DoD:</p>
+<ul>
+<li><p>Core observed-data workflows supported with tests.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="m9-exact-observed-log-likelihood-v1">
+<h2>M9 — Exact observed log-likelihood v1<a class="headerlink" href="#m9-exact-observed-log-likelihood-v1" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>DoD:</p>
+<ul>
+<li><p>Exact observed log-likelihood implemented and tested.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="m10-exact-vs-approx-observed-log-likelihood-comparison">
+<h2>M10 — Exact vs approx observed log-likelihood comparison<a class="headerlink" href="#m10-exact-vs-approx-observed-log-likelihood-comparison" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>DoD:</p>
+<ul>
+<li><p>Comparison harness + tests on toy data.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="m11-paper-artefacts-pipeline-v1">
+<h2>M11 — Paper artefacts pipeline v1<a class="headerlink" href="#m11-paper-artefacts-pipeline-v1" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>DoD:</p>
+<ul>
+<li><p>Reproducible artefact generation with CI-safe tests.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="m12-substrate-cache-artefacts-v1-implementation">
+<h2>M12 — Substrate cache artefacts v1 (implementation)<a class="headerlink" href="#m12-substrate-cache-artefacts-v1-implementation" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Goal: implement the M1 DoD in code (the roadmap already defines the desired outcome; this milestone is the concrete build-out).</p></li>
+<li><p>DoD:</p>
+<ul>
+<li><p>Substrate cache bundle writes/loads deterministically.</p></li>
+<li><p>Offline unit test validates expected cache files + provenance/config hash.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="m13-marked-hawkes-scaffolding-v1">
+<h2>M13 — Marked Hawkes scaffolding v1<a class="headerlink" href="#m13-marked-hawkes-scaffolding-v1" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Goal: introduce a minimal, stable <em>API surface</em> for marked Hawkes variants (event types/severities), without committing to a final modelling choice.</p></li>
+<li><p>DoD:</p>
+<ul>
+<li><p>A small <code class="docutils literal notranslate"><span class="pre">motac.model.marked_hawkes</span></code> module exists with:</p>
+<ul>
+<li><p>a mark representation (categorical/int) suitable for unit tests,</p></li>
+<li><p>and a thin dataset wrapper or validation helpers.</p></li>
+</ul>
+</li>
+<li><p>CI-safe unit test asserts import-path stability for the new module/API.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="m14-neural-kernel-scaffolding-v1">
+<h2>M14 — Neural kernel scaffolding v1<a class="headerlink" href="#m14-neural-kernel-scaffolding-v1" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Goal: establish a stable import path + minimal interface for learned/neural kernels (used by later nonparametric variants).</p></li>
+<li><p>DoD:</p>
+<ul>
+<li><p>A small <code class="docutils literal notranslate"><span class="pre">motac.model.neural_kernels</span></code> (or similarly named) module exists with:</p>
+<ul>
+<li><p>a tiny, documented kernel interface (call signature + expected shapes),</p></li>
+<li><p>a toy implementation sufficient for unit tests.</p></li>
+</ul>
+</li>
+<li><p>CI-safe import-path stability unit test for the new module/API.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="m15-neural-kernel-contract-hardening-v1">
+<h2>M15 — Neural kernel contract hardening v1<a class="headerlink" href="#m15-neural-kernel-contract-hardening-v1" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Goal: harden the neural-kernel scaffold into a small utility surface that other
+modules can safely depend on (without introducing a full neural model).</p></li>
+<li><p>DoD:</p>
+<ul>
+<li><p>A tiny validation helper exists (e.g. <code class="docutils literal notranslate"><span class="pre">validate_kernel_fn</span></code>) that asserts the
+v1 shape/value contract and fails fast on contract violations.</p></li>
+<li><p>CI-safe unit tests cover at least:</p>
+<ul>
+<li><p>happy-path validation on a reference kernel,</p></li>
+<li><p>rejection of negative outputs,</p></li>
+<li><p>rejection of incorrect output shapes.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="m16-neural-kernel-minimal-integration-v1">
+<h2>M16 — Neural kernel minimal integration v1<a class="headerlink" href="#m16-neural-kernel-minimal-integration-v1" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Goal: wire the M14/M15 neural-kernel interface into at least one minimal
+end-to-end model path, without committing to a full neural architecture.</p></li>
+<li><p>DoD:</p>
+<ul>
+<li><p>A small adapter exists that uses a <code class="docutils literal notranslate"><span class="pre">kernel_fn</span></code> (validated via
+<code class="docutils literal notranslate"><span class="pre">validate_kernel_fn</span></code>) to produce nonnegative travel-time weights compatible
+with the existing road-constrained model plumbing.</p></li>
+<li><p>CI-safe unit test(s) cover the adapter on a tiny synthetic substrate and
+assert basic shape/value invariants.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, OJ Watson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

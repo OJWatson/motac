@@ -1,0 +1,178 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>M0/M1 milestone DoD (canonical) &mdash; motac 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            motac
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../model/00_overview.html">Model overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../model/01_parameter_recovery.html">Parameter recovery (road Hawkes, M3)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../loaders/index.html">Loaders</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/01_synthetic_quickstart.html">Tutorial: Synthetic quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/02_poi_features.html">Tutorial: POI features (baseline)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/03_ingest_spatial_query.html">End-to-end: ingest → spatial join → query</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/schema.html">Schema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/substrate.html">Substrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/sim.html">Simulation and Hawkes utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/model.html">Model API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/neural_kernels.html">Neural kernels API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/eval.html">Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/cli.html">Command line interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paper_artefacts.html">Paper artefacts pipeline (M11)</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">motac</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">M0/M1 milestone DoD (canonical)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/agent/MILESTONES_M0_M1.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="m0-m1-milestone-dod-canonical">
+<h1>M0/M1 milestone DoD (canonical)<a class="headerlink" href="#m0-m1-milestone-dod-canonical" title="Link to this heading"></a></h1>
+<p>This file is the <strong>single source of truth</strong> for the definition-of-done (DoD)
+for the early reset milestones.</p>
+<p>It exists to stop M0/M1 work drifting into later-milestone feature work.</p>
+<p>If this file and any other doc disagree, treat this file as authoritative.</p>
+<section id="m0-reset-schema-dod">
+<h2>M0 — Reset + schema (DoD)<a class="headerlink" href="#m0-reset-schema-dod" title="Link to this heading"></a></h2>
+<p>M0 is done when all of the following are true:</p>
+<ul class="simple">
+<li><p><strong>Canonical event schema exists</strong> (one source of truth in code).</p></li>
+<li><p><strong>Schema validation is tested</strong> (unit tests that fail on invalid events).</p></li>
+<li><p><strong>Repo layout is stable</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> configured</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">src/</span></code> layout used</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">pytest</span> <span class="pre">-q</span></code> passes in CI</p></li>
+</ul>
+</li>
+<li><p><strong>Docs point to the canonical schema</strong> (so later chapters do not invent new formats).</p></li>
+</ul>
+<p>Practical verification:</p>
+<ul class="simple">
+<li><p>Canonical schema location is documented and discoverable.</p></li>
+<li><p>Tests cover at least: required fields, types, and a representative invalid payload.</p></li>
+</ul>
+</section>
+<section id="m1-substrate-cache-artefacts-v1-dod">
+<h2>M1 — Substrate cache artefacts v1 (DoD)<a class="headerlink" href="#m1-substrate-cache-artefacts-v1-dod" title="Link to this heading"></a></h2>
+<p>M1 is done when all of the following are true:</p>
+<ul class="simple">
+<li><p><strong>Cache bundle format is defined and versioned</strong> (reader can reject unknown versions).</p></li>
+<li><p><strong>Writes are deterministic</strong> (same inputs → identical bundle bytes / file tree).</p></li>
+<li><p><strong>Provenance hash is stable</strong> (guarded by a regression test).</p></li>
+<li><p><strong>Docs describe the artefact contract</strong>:</p>
+<ul>
+<li><p>what the bundle contains (high level)</p></li>
+<li><p>how to load it (one minimal code snippet or API pointer)</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="explicit-out-of-scope-for-m0-m1">
+<h2>Explicit out-of-scope for M0/M1<a class="headerlink" href="#explicit-out-of-scope-for-m0-m1" title="Link to this heading"></a></h2>
+<p>Track these under later milestones instead:</p>
+<ul class="simple">
+<li><p>End-to-end forecasting / backtesting workflows.</p></li>
+<li><p>Full observed-data ingestion pipelines (ACLED/Chicago loaders, ETL, cleaning).</p></li>
+<li><p>Significant CLI UX work beyond minimal entrypoints.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, OJ Watson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

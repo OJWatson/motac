@@ -1,0 +1,267 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spec alignment (PDF) &mdash; motac 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=01f34227"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            motac
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model/00_overview.html">Model overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model/01_parameter_recovery.html">Parameter recovery (road Hawkes, M3)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loaders/index.html">Loaders</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/01_synthetic_quickstart.html">Tutorial: Synthetic quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/02_poi_features.html">Tutorial: POI features (baseline)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/03_ingest_spatial_query.html">End-to-end: ingest → spatial join → query</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/schema.html">Schema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/substrate.html">Substrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/sim.html">Simulation and Hawkes utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/model.html">Model API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/neural_kernels.html">Neural kernels API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/eval.html">Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/cli.html">Command line interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="paper_artefacts.html">Paper artefacts pipeline (M11)</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">motac</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Spec alignment (PDF)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/spec_alignment.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="spec-alignment-pdf">
+<h1>Spec alignment (PDF)<a class="headerlink" href="#spec-alignment-pdf" title="Link to this heading"></a></h1>
+<p>This document is a structure-first alignment checklist against the PDF spec.
+It is intentionally concise and actionable.</p>
+<section id="scope-notes-m0-m1">
+<h2>Scope notes (M0/M1)<a class="headerlink" href="#scope-notes-m0-m1" title="Link to this heading"></a></h2>
+<p>Canonical DoD for M0/M1 lives in:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">docs/agent/MILESTONES_M0_M1.md</span></code></p></li>
+</ul>
+<p>This document only keeps a <em>brief</em> reminder so the spec alignment checklist stays
+compact.</p>
+<p>Quick reminder:</p>
+<ul class="simple">
+<li><p>M0: schema exists + validation tests + stable repo layout + docs pointer.</p></li>
+<li><p>M1: versioned deterministic cache bundle + provenance hash test + docs contract.</p></li>
+<li><p>Out-of-scope: loaders/ETL, full workflows (forecast/backtest), significant CLI UX.</p></li>
+</ul>
+</section>
+<section id="checklist-of-required-components">
+<h2>Checklist of required components<a class="headerlink" href="#checklist-of-required-components" title="Link to this heading"></a></h2>
+<section id="data-schema">
+<h3>Data + schema<a class="headerlink" href="#data-schema" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>[x] Canonical event schema + validation</p></li>
+<li><p>[ ] Dataset loaders (Chicago, ACLED)</p></li>
+<li><p>[ ] Time binning and observation matrix construction</p></li>
+</ul>
+</section>
+<section id="substrate-spatial">
+<h3>Substrate / spatial<a class="headerlink" href="#substrate-spatial" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>[x] Road graph build/load (offline GraphML supported)</p></li>
+<li><p>[x] Grid definition + cell centroids</p></li>
+<li><p>[x] Travel-time neighbourhoods (sparse)</p></li>
+<li><p>[x] POIs + baseline features (count + travel-time-to-nearest)</p></li>
+<li><p>[x] Cache bundle + provenance</p></li>
+</ul>
+</section>
+<section id="models">
+<h3>Models<a class="headerlink" href="#models" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>[x] Parametric road-constrained Hawkes (Poisson)</p></li>
+<li><p>[x] Parametric road-constrained Hawkes (NegBin)</p></li>
+<li><p>[ ] Marked Hawkes variants (later)</p></li>
+<li><p>[ ] Neural / learned kernels (later)</p></li>
+</ul>
+</section>
+<section id="inference">
+<h3>Inference<a class="headerlink" href="#inference" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>[ ] Likelihoods and optimisers (JAX/jit kernels as required by PDF)</p></li>
+<li><p>[ ] Constraints/parameterisations for stability</p></li>
+</ul>
+</section>
+<section id="simulation">
+<h3>Simulation<a class="headerlink" href="#simulation" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>[ ] Simulator + observation models</p></li>
+</ul>
+</section>
+<section id="evaluation">
+<h3>Evaluation<a class="headerlink" href="#evaluation" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>[ ] Forecast/backtest workflows</p></li>
+<li><p>[ ] Metrics + calibration</p></li>
+<li><p>[ ] Plotting/reporting hooks</p></li>
+</ul>
+</section>
+<section id="cli-configs">
+<h3>CLI + configs<a class="headerlink" href="#cli-configs" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>[ ] CLI entrypoints (fetch/build-substrate/fit/forecast/backtest/simulate)</p></li>
+<li><p>[ ] Experiment configuration files</p></li>
+</ul>
+</section>
+</section>
+<section id="what-exists-vs-missing-repo-reality">
+<h2>What exists vs missing (repo reality)<a class="headerlink" href="#what-exists-vs-missing-repo-reality" title="Link to this heading"></a></h2>
+<section id="exists-implemented-tested">
+<h3>Exists (implemented + tested)<a class="headerlink" href="#exists-implemented-tested" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Canonical schema + validation tests: <code class="docutils literal notranslate"><span class="pre">src/motac/schema.py</span></code>, <code class="docutils literal notranslate"><span class="pre">tests/test_schema_m0.py</span></code></p></li>
+<li><p>Substrate cache bundle + provenance hash test: <code class="docutils literal notranslate"><span class="pre">tests/test_substrate_cache_bundle_m1.py</span></code></p></li>
+<li><p>POI features:</p>
+<ul>
+<li><p>count + tag/value breakouts: <code class="docutils literal notranslate"><span class="pre">src/motac/substrate/builder.py</span></code></p></li>
+<li><p>min travel-time features behind flag: <code class="docutils literal notranslate"><span class="pre">src/motac/substrate/features.py</span></code></p></li>
+<li><p>documented: <code class="docutils literal notranslate"><span class="pre">docs/api/substrate.md</span></code></p></li>
+</ul>
+</li>
+<li><p>Road-constrained parametric model pieces (M3):</p>
+<ul>
+<li><p>sparse exp travel-time kernel + intensity: <code class="docutils literal notranslate"><span class="pre">src/motac/model/road_hawkes.py</span></code></p></li>
+<li><p>Poisson + NegBin likelihood: <code class="docutils literal notranslate"><span class="pre">src/motac/model/likelihood.py</span></code></p></li>
+<li><p>MLE fitter: <code class="docutils literal notranslate"><span class="pre">src/motac/model/fit.py</span></code></p></li>
+<li><p>minimal predict wrappers: <code class="docutils literal notranslate"><span class="pre">src/motac/model/predict.py</span></code></p></li>
+<li><p>recovery tests: <code class="docutils literal notranslate"><span class="pre">tests/test_parameter_recovery_m3.py</span></code>, <code class="docutils literal notranslate"><span class="pre">tests/test_negbin_parameter_recovery_m3.py</span></code></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="missing-out-of-place-to-be-built">
+<h3>Missing / out of place (to be built)<a class="headerlink" href="#missing-out-of-place-to-be-built" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Clear package/module separation per PDF across:</p>
+<ul>
+<li><p>loaders/schema vs substrate vs models vs inference vs sim vs eval vs cli vs configs</p></li>
+</ul>
+</li>
+<li><p>Inference components specifically requiring JAX/jit (if mandated by PDF)</p></li>
+<li><p>Evaluation/backtesting workflows beyond toy metric utilities</p></li>
+<li><p>CLI wiring for end-to-end workflows</p></li>
+<li><p>Dataset loaders and full observed-data workflows as per later milestones</p></li>
+</ul>
+</section>
+</section>
+<section id="milestones-modules-code-map">
+<h2>Milestones → modules / code map<a class="headerlink" href="#milestones-modules-code-map" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>M0 (reset + schema): <code class="docutils literal notranslate"><span class="pre">src/motac/schema.py</span></code>, docs + tests</p></li>
+<li><p>M1 (cache artefacts): <code class="docutils literal notranslate"><span class="pre">src/motac/substrate/*</span></code>, cache tests</p></li>
+<li><p>M2 (POIs + baseline features): <code class="docutils literal notranslate"><span class="pre">src/motac/substrate/{builder,features}.py</span></code>, <code class="docutils literal notranslate"><span class="pre">docs/api/substrate.md</span></code></p></li>
+<li><p>M3 (parametric road Hawkes v1): <code class="docutils literal notranslate"><span class="pre">src/motac/model/{dataset,road_hawkes,likelihood,fit,predict}.py</span></code>, M3 tests</p></li>
+<li><p>M4 (this milestone):</p>
+<ul>
+<li><p>spec alignment doc: <code class="docutils literal notranslate"><span class="pre">docs/spec_alignment.md</span></code></p></li>
+<li><p>package layout adjustments (structure-first): create/confirm module boundaries</p></li>
+</ul>
+</li>
+<li><p>M5 (predict/eval plumbing v1): <code class="docutils literal notranslate"><span class="pre">src/motac/model/{forecast,metrics}.py</span></code> + eval utilities/tests</p></li>
+</ul>
+</section>
+<section id="deviations-out-of-scope-notes">
+<h2>Deviations / out-of-scope notes<a class="headerlink" href="#deviations-out-of-scope-notes" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>A small slice of M5 (forecast + mean NLL) landed early for CI-safe plumbing; it is tracked as M5 work even if merged earlier.</p></li>
+<li><p>This doc does not restate the full PDF; it is a checklist + mapping for implementation planning.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, OJ Watson.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

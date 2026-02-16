@@ -1,0 +1,65 @@
+# Work log
+
+Short, append-only notes intended to preserve continuity across short-lived builder runs.
+
+Guidelines:
+- One dated bullet per meaningful action.
+- Record failures (CI link, error snippet) and the next concrete step.
+- Keep this file small.
+
+- 2026-02-12: Added tiny backtest helper `backtest_fit_forecast_nll` (fit→forecast→score) and a toy unit test; ran full pytest in venv (64 passed).
+- 2026-02-12: Documented `motac.eval.backtest` in Sphinx API docs and added explicit eval-module re-exports; `uv run ruff check` + `uv run pytest` (64 passed); pushed `0855815`.
+- 2026-02-12: CI green on `0855815`; advanced STATUS from M5→M6; ran `uv run ruff check` + `uv run pytest` (64 passed).
+- 2026-02-12: Added committed Chicago loader CSV fixture + fixture-driven sanity test; ran `uv run ruff check .` + `uv run pytest` (65 passed); pushed `c17c199`.
+- 2026-02-12: Added committed mobility `.npy` fixture + tests for `meta["mobility_source"]` and mismatched mobility shape rejection; ran `uv run ruff check .` + `uv run pytest` (66 passed); pushed `66bb0cd`.
+- 2026-02-12: Asserted identity default `meta["mobility_source"] == "identity"` in Chicago loader test; ran `uv run ruff check .` + `uv run pytest` (66 passed); pushed `fdde12f`.
+- 2026-02-12: Documented Chicago raw on-disk contract (v1 placeholder) and added test that loader preserves row ordering; ran `uv run ruff check .` + `uv run pytest` (67 passed); pushed `c1fdfe9`.
+- 2026-02-12: Extended Chicago loader `load_y_obs_matrix` to accept a raw directory (expects `y_obs.csv`, autodetects optional `mobility.npy`); added tests; ran `uv run ruff check .` + `uv run pytest` (69 passed); pushed `3fd47e0`.
+- 2026-02-12: Added minimal Chicago raw loader JSON config (`ChicagoRawConfig`) + CLI entry point `motac data chicago-load`; added CLI test; ran `uv run ruff check .` + `uv run pytest` (70 passed); pushed `1558da0`.
+- 2026-02-12: Documented `motac data chicago-load` usage + example JSON config in `docs/loaders/chicago.md`; ran `uv run ruff check .` + `uv run pytest` (70 passed); pushed `2364677`.
+- 2026-02-12: CI green; reviewed M6 DoD (Chicago loader deterministic + sanity tests) and advanced STATUS to M7 (ACLED loader next); pushed `1af27be`.
+- 2026-02-12: Added committed ACLED CSV fixture + fixture-driven sanity test (identity mobility); ran `uv run ruff check .` + `uv run pytest` (71 passed); pushed `6e49a5e`.
+- 2026-02-12: Added minimal ACLED loader docs page + wired `docs/loaders/` into Sphinx toctree; ran `uv run ruff check .` + `uv run pytest` (71 passed); pushed `e071651`.
+- 2026-02-12: Added ACLED loader JSON config (`AcledEventsCsvConfig`) + CLI entry point `motac data acled-load`; added CLI test; ran `uv run ruff check .` + `uv run pytest` (72 passed); pushed `1ab9112`.
+- 2026-02-12: Documented `motac data acled-load` usage + example JSON config in `docs/loaders/acled.md`; ran `uv run ruff check .` + `uv run pytest` (72 passed); pushed `837291e`.
+- 2026-02-12: Added CI-safe observed-data end-to-end unit test (fit → predictive sample → score) on toy data; ran `uv run ruff check .` + `uv run pytest` (73 passed); pushed `e8bfbe3`.
+- 2026-02-12: Updated `docs/STATUS.md` (M8 next step + header) and appended to worklog; pushed `5456d0b`.
+- 2026-02-12: Adjusted STATUS header `headSha` to point at last code-gated commit (`e8bfbe3`); pushed `961bcb4`.
+- 2026-02-12: Reviewed M8 DoD coverage (observed-data end-to-end test exists) and advanced STATUS to M9.
+- 2026-02-12: Reviewed M9 DoD coverage (exact observed log-likelihood + tests exist) and advanced STATUS to M10.
+- 2026-02-12: Added public comparison harness `compare_observed_loglik_exact_vs_poisson_approx` + unit test; ran `uv run ruff check .` + `uv run pytest` (74 passed); pushed `6cf9f8d`.
+- 2026-02-12: Documented interpretation/expected gaps for exact-vs-Poisson-approx observed likelihoods in `docs/api/sim.md`; ran `uv run ruff check .` + `uv run pytest` (74 passed); pushed `aa905e7`.
+- 2026-02-12: Added Sphinx page documenting the CI-safe paper artefacts stub (`motac paper generate-artifacts`) and wired it into docs; refactored artefact generation to return the written path; ran `uv run ruff check .` + `uv run pytest` (75 passed); pushed `2ac1744`.
+- 2026-02-12: Added minimal manifest alongside synthetic eval JSON artifact (git SHA + seed + config summary + timestamp) with CI-safe unit test; ran `uv run ruff check .` + `uv run pytest` (75 passed); pushed `0fc1134`.
+- 2026-02-12: Documented paper artefact manifest filename + fields in `docs/paper_artefacts.md`; ran `uv run ruff check .` + `uv run pytest` (75 passed); pushed `e57e4e1`.
+- 2026-02-12: Added helper script `scripts/check_github_ci.py` to query combined status + check-runs for a commit; ran `uv run ruff check .` + `uv run pytest` (75 passed); pushed `4db5124`.
+- 2026-02-12: Confirmed CI check-runs success for `4db5124`; marked M11 complete in `docs/STATUS.md` and added M12 milestone to `docs/ROADMAP.md`.
+- 2026-02-12: Reviewed existing substrate cache bundle implementation/tests; updated `docs/STATUS.md` to mark M12 complete and set next step to M2 (POIs + baseline features v1).
+- 2026-02-12: Added offline unit test asserting POI `poi_count` + tag breakout feature columns from local GeoJSON; ran `uv run ruff check .` + `uv run pytest` (76 passed); pushed `df8d469`.
+- 2026-02-12: Added user tutorial for POI feature names/config (`docs/tutorials/02_poi_features.md`) and wired into docs index; ran `uv run ruff check .` + `uv run pytest` (76 passed); pushed `af76896`.
+- 2026-02-12: Added tiny end-to-end M3 parameter recovery unit test for road-constrained Hawkes Poisson fitter; ran `uv run ruff check .` + `uv run pytest` (76 passed); pushed `56996a0`.
+- 2026-02-12: Reviewed M3 DoD coverage (Poisson+NegBin likelihoods + recovery tests) and marked M3 complete in `docs/STATUS.md`.
+- 2026-02-12: Advanced roadmap to M13 (marked Hawkes scaffolding) and added `motac.model.marked_hawkes` scaffold + import-path unit test; set STATUS to M13 running.
+- 2026-02-12: Defined v1 categorical mark contract via `validate_categorical_marks_matrix` + added CI-safe unit test for shape/dtype/range validation; ran `uv run ruff check .` + `uv run pytest`; CI green on `7ea8fcb` (run https://github.com/OJWatson/motac/actions/runs/21959996053).
+- 2026-02-12: Added `encode_categorical_marks_onehot` helper + tiny unit tests for shape/dtype/values; ran `uv run ruff check .` + `uv run pytest` (80 passed); CI green on `2dd1ec3` (run https://github.com/OJWatson/motac/actions/runs/21960678695).
+- 2026-02-12: Added Sphinx API page `docs/api/model.md` documenting the v1 categorical mark contract + one-hot helper; linked from docs index; ran `uv run ruff check .` + `uv run pytest` (80 passed); CI green on `7568439` (run https://github.com/OJWatson/motac/actions/runs/21961371948).
+- 2026-02-12: CI green for STATUS/WORKLOG update commit `43c17fb`; updated STATUS header to point at the last code-gated SHA (run https://github.com/OJWatson/motac/actions/runs/21961447269).
+- 2026-02-12: Reviewed M13 DoD coverage (marked Hawkes scaffolding module/helpers/tests/docs); marked M13 complete; added M14 (neural kernel scaffolding) milestone stub to roadmap and updated STATUS next step.
+- 2026-02-12: Started M14 by adding `motac.model.neural_kernels` scaffold (`ExpDecayKernel`) + CI-safe unit tests; ran `uv run ruff check .` + `uv run pytest` (82 passed); pushed `768b23c`.
+- 2026-02-12: Added Sphinx API page for `motac.model.neural_kernels` and linked it from the docs index; ran `uv run ruff check .` + `uv run pytest` (82 passed) + `uv run sphinx-build -b html docs docs/_build/html`; pushed `46a90ed`.
+- 2026-02-12: CI green for `46a90ed`; marked M14 (neural kernel scaffolding) complete in `docs/STATUS.md` and set next step to define M15.
+- 2026-02-12: CI green for STATUS/WORKLOG update commit `28d4459` (runs https://github.com/OJWatson/motac/actions/runs/21964077136, https://github.com/OJWatson/motac/actions/runs/21964077130); updated STATUS header to keep `headSha` on last code gate.
+- 2026-02-13: Advanced roadmap/status to M15 (running); added `validate_kernel_fn` helper for neural-kernel contract hardening + CI-safe unit tests; ran `uv run ruff check .` + `uv run pytest` (85 passed).
+- 2026-02-13: Documented `validate_kernel_fn` usage/contract in `docs/api/neural_kernels.md`; ran `uv run ruff check .` + `uv run pytest` (85 passed); pushed `3a63aca`.
+- 2026-02-13: Added M15 edge-case tests ensuring `validate_kernel_fn` rejects non-`ndarray` returns and non-finite weights; ran `uv run ruff check .` + `uv run pytest` (87 passed); pushed `8986838`.
+- 2026-02-13: Hardened `scripts/check_github_ci.py` API headers + error reporting (more robust check-runs query); ran `uv run ruff check .` + `uv run pytest` (87 passed); pushed `4d5eeb4`.
+- 2026-02-13: Confirmed CI success for `4d5eeb4` (run https://github.com/OJWatson/motac/actions/runs/21974199542); updated STATUS `headSha` to the correct full SHA and marked M15 complete.
+- 2026-02-13: Added M16 milestone definition to `docs/ROADMAP.md` (neural kernel minimal integration) and advanced `docs/STATUS.md` to M16 running; ran `uv run ruff check .` + `uv run pytest` (87 passed).
+- 2026-02-13: Added M16 adapter `travel_time_kernel_from_fn` to build sparse travel-time weights from a validated `kernel_fn`, plus CI-safe unit test; ran `uv run ruff check .` + `uv run pytest` (88 passed); pushed `3275af2`.
+- 2026-02-13: Integrated optional `kernel_fn` into `predict_intensity_one_step_road` (uses `travel_time_kernel_from_fn`) and added CI-safe unit test asserting correct excitation when off-diagonal weights are zeroed; ran `uv run ruff check .` + `uv run pytest` (89 passed).
+- 2026-02-13: Extended in-sample `road_intensity_matrix`/`road_loglik` to accept optional validated `kernel_fn` (uses `travel_time_kernel_from_fn`) with CI-safe unit test; ran `uv run ruff check .` + `uv run pytest` (90 passed).
+- 2026-02-13: Threaded optional validated `kernel_fn` through `fit_road_hawkes_mle` and added CI-safe unit test rejecting negative weights; ran `uv run ruff check .` + `uv run pytest` (91 passed); pushed `4468154`.
+- 2026-02-13: Updated STATUS header to latest commit and re-ran local checks; `uv run ruff check .` + `uv run pytest` (91 passed); pushed `eaa3505`.
+- 2026-02-13: Reverted STATUS `headSha` to last code-gated commit (`4468154`) (docs-only follow-ups); pushed `5ea236f`.
+- 2026-02-13T11:52:09+00:00 M1.1 complete (job 2070fdf7-5774-4256-b668-36b4560d5600): spatial grid builder + CRS transforms
+- 2026-02-13T13:18:52+00:00 M1.2 complete (job e496d86c-6b3b-442c-a651-280b1f5ac7dc): integrated grid builder into substrate builder
