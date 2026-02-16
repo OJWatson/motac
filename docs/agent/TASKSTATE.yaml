@@ -188,8 +188,15 @@ tasks:
     status: done
     updated_at_utc: '2026-02-16T01:04:55Z'
   M3.3:
-    status: todo
-    updated_at_utc: ''
+    last:
+      commit: 912fadba932f45ac02d779d0f1640623e67c31a4
+      log_path: /home/kana/.openclaw/workspace/portfolio/reports/runs/20260216T013007Z/logs/motac.log
+      outcome: success
+      pushed: false
+      reason: 'M3.3: parameter recovery harness (multi-seed) + tolerances + docs'
+      tick_ts: 20260216T013007Z
+    status: done
+    updated_at_utc: '2026-02-16T01:35:48Z'
   M3.END:
     status: todo
     updated_at_utc: ''
