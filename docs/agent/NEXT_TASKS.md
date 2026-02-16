@@ -1,15 +1,16 @@
 # NEXT_TASKS
 
 Now:
-- M4.0 — Sim: discrete-time Hawkes generator wired to substrate neighbours + deterministic fixture
+- M4.1 — Sim: observation noise model (thinning/jitter/missingness) + golden regression tests
 
 Next:
-- M4.1 — Sim: observation noise model (thinning/jitter/missingness) + golden regression tests
+- M4.2 — Sim: scenario knobs incl. road-closure travel-time perturbations + docs
 - M4.2 — Sim: scenario knobs incl. road-closure travel-time perturbations + docs
 - M4.END — Milestone end: M4 complete (gate on CI)
 - CI.FIX.M4 — CI fix: make GitHub Actions green for M4 boundary
 
 Done:
+- M4.0 — Sim: discrete-time Hawkes generator wired to substrate neighbours + deterministic fixture
 - CI.FIX.M3 — CI fix: make GitHub Actions green for M3 boundary
 - M3.END — Milestone end: M3 complete (gate on CI)
 - M3.3 — Validation: parameter recovery harness (multi-seed) + tolerances + docs

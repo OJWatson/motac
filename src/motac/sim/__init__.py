@@ -34,6 +34,7 @@ from .likelihood import (
     hawkes_loglik_poisson_observed,
 )
 from .predictive import summarize_predictive_paths
+from .road_hawkes import SubstrateHawkesParams, simulate_substrate_hawkes_counts
 from .workflows import observed_fit_sample_summarize_poisson_approx
 from .world import World, generate_random_world
 
@@ -54,6 +55,8 @@ __all__ = [
     "hawkes_loglik_poisson_observed",
     "hawkes_loglik_observed_exact",
     "summarize_predictive_paths",
+    "simulate_substrate_hawkes_counts",
+    "SubstrateHawkesParams",
     "observed_fit_sample_summarize_poisson_approx",
     "fit_hawkes_alpha_mu",
     "fit_hawkes_mle_alpha_mu",
