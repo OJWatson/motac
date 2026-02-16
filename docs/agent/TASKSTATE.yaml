@@ -218,8 +218,15 @@ tasks:
     status: done
     updated_at_utc: '2026-02-16T03:34:23Z'
   M4.0:
-    status: todo
-    updated_at_utc: ''
+    last:
+      commit: a841b370bc2b35b45b605a896543994c1a30d596
+      log_path: /home/kana/.openclaw/workspace/portfolio/reports/runs/20260216T040004Z/logs/motac.log
+      outcome: success
+      pushed: false
+      reason: "[M4.0] Sim: substrate-neighbour Hawkes generator + golden fixture"
+      tick_ts: 20260216T040004Z
+    status: done
+    updated_at_utc: '2026-02-16T04:06:40Z'
   M4.1:
     status: todo
     updated_at_utc: ''
