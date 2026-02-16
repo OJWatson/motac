@@ -208,8 +208,15 @@ tasks:
     status: done
     updated_at_utc: '2026-02-16T02:03:32Z'
   CI.FIX.M3:
-    status: todo
-    updated_at_utc: ''
+    last:
+      commit: 243d86c2e399c8a461cd9ad2487ae194b9dd7888
+      log_path: /home/kana/.openclaw/workspace/portfolio/reports/runs/20260216T033006Z/logs/motac.log
+      outcome: success
+      pushed: true
+      reason: '[CI.FIX.M3] Align optional dev deps with uv dependency group + bookkeeping'
+      tick_ts: 20260216T033006Z
+    status: done
+    updated_at_utc: '2026-02-16T03:34:23Z'
   M4.0:
     status: todo
     updated_at_utc: ''

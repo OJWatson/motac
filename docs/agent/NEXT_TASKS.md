@@ -1,16 +1,22 @@
 # NEXT_TASKS
 
 Now:
-- (none)
+- M4.0 — Sim: discrete-time Hawkes generator wired to substrate neighbours + deterministic fixture
 
 Next:
-- (none)
+- M4.1 — Sim: observation noise model (thinning/jitter/missingness) + golden regression tests
+- M4.2 — Sim: scenario knobs incl. road-closure travel-time perturbations + docs
+- M4.END — Milestone end: M4 complete (gate on CI)
+- CI.FIX.M4 — CI fix: make GitHub Actions green for M4 boundary
 
 Done:
+- CI.FIX.M3 — CI fix: make GitHub Actions green for M3 boundary
+- M3.END — Milestone end: M3 complete (gate on CI)
+- M3.3 — Validation: parameter recovery harness (multi-seed) + tolerances + docs
 - M3.2 — Model: parametric road-kernel Hawkes fit/predict API + end-to-end sim smoke
-
 - M3.1 — Inference: Poisson/NegBin likelihoods + gradient checks on tiny fixtures
 - M3.0 — Inference: JAX sparse neighbour convolution ops (jit-ready) + tests
+- CI.FIX.M2 — CI fix: make GitHub Actions green for M2 boundary
 - M2.END — Milestone end: M2 complete (gate on CI)
 - M2.4 — Substrate: include POI baseline features in cache bundle v1 + deterministic tests
 - M2.3 — Spatial: implement OSM POI extraction + per-cell baseline feature matrix
