@@ -198,8 +198,15 @@ tasks:
     status: done
     updated_at_utc: '2026-02-16T01:35:48Z'
   M3.END:
-    status: todo
-    updated_at_utc: ''
+    last:
+      commit: b0a6993de214ee9fbe9ef1e9aa1e16bfef8f9825
+      log_path: /home/kana/.openclaw/workspace/portfolio/reports/runs/20260216T020005Z/logs/motac.log
+      outcome: success
+      pushed: true
+      reason: 'M3.END: CI gate passed (ruff/pytest); milestone closed'
+      tick_ts: 20260216T020005Z
+    status: done
+    updated_at_utc: '2026-02-16T02:03:32Z'
   CI.FIX.M3:
     status: todo
     updated_at_utc: ''
