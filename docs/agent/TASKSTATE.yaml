@@ -192,7 +192,7 @@ tasks:
       commit: 13e727f4247f515dc3e165c0d63f6fcfc1a5d93f
       log_path: /home/kana/.openclaw/workspace/portfolio/reports/runs/20260216T013007Z/logs/motac.log
       outcome: success
-      pushed: false
+      pushed: true
       reason: 'M3.3: parameter recovery harness (multi-seed) + tolerances + docs'
       tick_ts: 20260216T013007Z
     status: done
