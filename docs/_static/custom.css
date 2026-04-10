@@ -1,0 +1,27 @@
+/* Documentation polish: improve readability and section navigation behavior. */
+
+.bd-page-width {
+  max-width: 1200px;
+}
+
+.bd-main .bd-content .bd-article-container {
+  max-width: 78ch;
+}
+
+.bd-sidebar-primary,
+.bd-sidebar-secondary {
+  position: sticky;
+  top: 1rem;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+}
+
+.bd-content .nbinput .prompt,
+.bd-content .nboutput .prompt {
+  min-width: 4.5rem;
+}
+
+.math,
+.math.display {
+  overflow-x: auto;
+}
