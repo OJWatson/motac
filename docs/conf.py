@@ -26,11 +26,19 @@ html_theme_options = {
     "show_nav_level": 2,
     "navigation_depth": 4,
     "show_toc_level": 3,
+    "secondary_sidebar_items": [],
 }
 html_static_path = ["_static"]
 html_css_files = ["custom.css"]
 bibtex_bibfiles = ["references.bib"]
 bibtex_reference_style = "author_year"
+mathjax3_config = {
+    "tex": {
+        "inlineMath": [["$", "$"], [r"\\(", r"\\)"]],
+        "displayMath": [["$$", "$$"], [r"\\[", r"\\]"]],
+        "processEscapes": True,
+    }
+}
 
 # Keep docs as local-build artifacts; do not execute notebooks during docs build.
 nbsphinx_execute = "never"
