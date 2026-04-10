@@ -5,6 +5,27 @@ on:
   pull_request:
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install lint dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .[dev]
+
+      - name: Run release lint checks
+        run: |
+          python -m ruff check --select F src/motac tests docs/conf.py
+          python -m py_compile src/motac/*.py tests/*.py
+
   tests:
     runs-on: ubuntu-latest
     steps:
@@ -23,4 +44,24 @@ jobs:
 
       - name: Run tests
         run: |
-          PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 pytest -q
+          PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q
+
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install build tooling
+        run: |
+          python -m pip install --upgrade pip
+          pip install build
+
+      - name: Build sdist and wheel
+        run: |
+          python -m build

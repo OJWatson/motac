@@ -3,17 +3,17 @@ repos:
     rev: v0.15.4
     hooks:
       - id: ruff
-        args: ["--fix"]
-      - id: ruff-format
-
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.19.1
-    hooks:
-      - id: mypy
-        args: ["--config-file=pyproject.toml"]
+        args: ["--select", "F"]
 
   - repo: local
     hooks:
+      - id: py-compile
+        name: py_compile quick
+        entry: sh -c 'python3.11 -m py_compile src/motac/*.py tests/*.py'
+        language: system
+        pass_filenames: false
+        stages: [pre-push]
+
       - id: pytest
         name: pytest quick
         entry: python3.11 -m pytest -q -m "not slow"

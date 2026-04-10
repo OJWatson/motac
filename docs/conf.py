@@ -1,5 +1,10 @@
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+
 project = "motac"
-author = "motac3"
+author = "OJ Watson"
 extensions = [
     "sphinx.ext.mathjax",
     "myst_parser",
@@ -12,6 +17,8 @@ exclude_patterns = [
     "_build",
     "Thumbs.db",
     ".DS_Store",
+    "tutorials/06_acled_hawkes_deep_dive_and_improvements.ipynb",
+    "tutorials/08_acled_nuts_truncated.ipynb",
 ]
 
 html_theme = "pydata_sphinx_theme"

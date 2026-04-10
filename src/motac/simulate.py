@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Sequence
 
 import jax
 import jax.numpy as jnp
@@ -117,7 +117,7 @@ def simulate_counts(
     marks: Sequence[str],
     connectivity: ConvStencil | EdgeList,
     params: HawkesSimParams,
-    noise: HawkesSimNoise = HawkesSimNoise(),
+    noise: HawkesSimNoise | None = None,
     seed: int = 0,
 ) -> CountsTensor:
     """Simulate a marked mobility-constrained Hawkes count tensor.
@@ -128,6 +128,7 @@ def simulate_counts(
 
     m = len(marks)
     b = params.rho.shape[1]
+    noise = noise or HawkesSimNoise()
 
     mu = jnp.asarray(params.mu, dtype=jnp.float32)
     if mu.ndim == 0:

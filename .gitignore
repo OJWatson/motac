@@ -5,13 +5,20 @@ __pycache__/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.coverage
+htmlcov/
 .venv/
 .env
 build/
 dist/
 *.egg-info/
+*.whl
+*.tar.gz
 .docs_build/
 docs/_build/
+.ipynb_checkpoints/
 docs/tutorials/data/*.csv
-
-motac3.tar.gz
+docs/tutorials/data/*.parquet
+docs/tutorials/data/*.pkl
+docs/tutorials/data/*.npy
+Lightweight JAX_NumPyro package specification for discrete-time mobility-constrained Hawkes models.docx

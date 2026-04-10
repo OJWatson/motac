@@ -2,7 +2,9 @@
 
 ## 0.1.0
 
-Initial full implementation of `motac` in Python 3.11.
+First public WIP release of `motac` in Python 3.11.
+
+This release establishes the initial package surface, curated docs/tutorial structure, and release metadata for the repository while keeping the modelling workflows explicitly experimental.
 
 ### Added
 
@@ -40,5 +42,6 @@ Initial full implementation of `motac` in Python 3.11.
 - BCOO backend deferred behind feature-flag future path.
 - ZINB2 deferred; v1 supports Poisson and NB2.
 - `optax` is a hard dependency.
-- Packaging uses `pyproject.toml` only.
+- Packaging uses `pyproject.toml` only and now follows a `src/` layout.
 - Docs are local-build artifacts, not notebook CI gates.
+- Only the curated tutorial set is published in the docs navigation; more experimental notebooks remain in the repo.

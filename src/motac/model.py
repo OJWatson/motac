@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Callable
+from typing import TYPE_CHECKING, Callable
 
 import jax
 import jax.numpy as jnp
@@ -13,6 +13,10 @@ from numpyro.contrib.control_flow import scan as numpyro_scan
 
 from .connectivity import apply_spatial_backend
 from .data import CountsTensor
+
+if TYPE_CHECKING:
+    from .forecast import ForecastResult
+    from .infer import FitConfig, FitResult
 
 
 @dataclass(frozen=True)
@@ -182,9 +186,9 @@ class MobilityHawkesModel:
         data: CountsTensor,
         *,
         method: str = "map_ensemble",
-        config: "FitConfig" | None = None,
+        config: FitConfig | None = None,
         seed: int = 0,
-    ) -> "FitResult":
+    ) -> FitResult:
         """Fit model parameters with selected backend (`map_ensemble`, `svi`, `nuts_small`)."""
 
         from .infer import FitConfig, fit_model
@@ -195,13 +199,13 @@ class MobilityHawkesModel:
     def forecast(
         self,
         data: CountsTensor,
-        fit: "FitResult",
+        fit: FitResult,
         *,
         horizon: int = 7,
         num_samples: int = 200,
         seed: int = 0,
         quantile_levels: tuple[float, ...] = (0.05, 0.5, 0.95),
-    ) -> "ForecastResult":
+    ) -> ForecastResult:
         """Run posterior predictive rollout from a fitted model state."""
 
         from .forecast import forecast_from_fit
