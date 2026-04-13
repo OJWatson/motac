@@ -24,15 +24,15 @@ assumptions while remaining computationally practical for repeated rolling-origi
 The primary data interface mirrors how forecasting is typically evaluated in practice. We begin with an
 event table
 
-\[
+$$
   e_i = (t_i, \mathrm{lat}_i, \mathrm{lon}_i, m_i), \qquad i = 1,\ldots,N,
-\]
+$$
 
 and discretise into **daily marked counts** on a set of spatial nodes (usually a grid):
 
-\[
+$$
   y_{t,j,m} \in \{0,1,2,\ldots\}, \qquad t=1,\ldots,T,\ j=1,\ldots,J,\ m=1,\ldots,M.
-\]
+$$
 
 This discretisation is not a modelling assumption so much as an engineering choice: it makes
 rolling backtests, calibration checks, and operational forecasting straightforward, while retaining

@@ -8,16 +8,16 @@ through an explicit mobility structure {cite}`zipf1946,simini2012`.
 
 Formally, each time step applies a spatial operator
 
-\[
+$$
 \mathcal{S}: \mathbb{R}^{J\times C} \to \mathbb{R}^{J\times C},
-\]
+$$
 
-where \(J\) is the number of nodes and \(C\) is the number of latent channels (mark-basis combinations).
+where $J$ is the number of nodes and $C$ is the number of latent channels (mark-basis combinations).
 The operator redistributes latent excitation before mark mixing and observation sampling. That ordering
 matters: mobility determines where historical pressure can travel, and only then do cross-mark effects
 amplify or damp the redistributed signal.
 
-Unlike fully implicit spatial deep components, `motac` keeps \(\mathcal{S}\) explicit and auditable. This
+Unlike fully implicit spatial deep components, `motac` keeps $\mathcal{S}$ explicit and auditable. This
 is deliberate. Analysts can inspect the exact connectivity object used in simulation, fitting, and
 forecasting, which keeps policy-relevant assumptions transparent.
 

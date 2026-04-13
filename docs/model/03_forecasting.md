@@ -7,18 +7,18 @@ carried into horizon-level risk summaries {cite}`gelman2013`.
 
 ## Forecast target and Monte Carlo approximation
 
-Let \(Y_{1:T}\) denote observed history, \(H\) the forecast horizon, and \(\theta^{(s)}\) parameter draws from
+Let $Y_{1:T}$ denote observed history, $H$ the forecast horizon, and $\theta^{(s)}$ parameter draws from
 an approximate posterior. Forecasting draws trajectories according to
 
-\[
+$$
 Y_{T+1:T+H}^{(s)} \sim p(\cdot \mid Y_{1:T}, \theta^{(s)}),
-\]
+$$
 
 which is a Monte Carlo approximation to the full posterior predictive integral
 
-\[
+$$
 p(Y_{T+1:T+H}\mid Y_{1:T}) = \int p(Y_{T+1:T+H}\mid Y_{1:T},\theta)\,p(\theta\mid Y_{1:T})\,d\theta.
-\]
+$$
 
 The practical consequence is that forecast uncertainty is represented directly in samples, rather than
 imposed later through ad hoc error bars.
@@ -26,7 +26,7 @@ imposed later through ad hoc error bars.
 ## Conditioning on the correct terminal latent state
 
 A subtle but crucial step is state initialization. Forecast rollout first replays the training history
-through the same recurrence used during fitting to recover the terminal latent memory state \(h_T\). In
+through the same recurrence used during fitting to recover the terminal latent memory state $h_T$. In
 other words, forecasting starts from the inferred excitation state implied by observed history, not from a
 zero or arbitrary warm start.
 
@@ -38,7 +38,7 @@ and forecast semantics silently diverge.
 ## One-step transition and autoregressive uncertainty propagation
 
 For each horizon step, the model updates temporal basis states, applies the spatial mobility operator,
-mixes basis contributions with \(w\), applies mark coupling via \(G\), adds baseline \(\mu\), and samples from
+mixes basis contributions with $w$, applies mark coupling via $G$, adds baseline $\mu$, and samples from
 the observation law (Poisson or NB2). Repeating this transition yields fully autoregressive trajectories.
 
 Because each step depends on realized simulated counts from previous steps, uncertainty naturally expands
@@ -46,7 +46,7 @@ with horizon when dynamics are noisy or strongly self-exciting. This behavior is
 forecasting: confidence should degrade when the process itself is uncertain.
 
 Importantly, normalization settings are preserved between fitting and forecasting. If
-`normalise_time_kernel=True`, basis contributions are scaled by \((1-\rho_{m,b})\); if
+`normalise_time_kernel=True`, basis contributions are scaled by $(1-\rho_{m,b})$; if
 `normalise_spatial_kernel` is enabled, stencil normalization is applied (or overridden) during spatial
 dispatch. Keeping these semantics identical across phases avoids hidden gain shifts at deployment time.
 

@@ -7,11 +7,11 @@ while remaining stable in day-to-day forecasting pipelines.
 
 At a high level, all methods target the same posterior quantity
 
-\[
+$$
 \log p(\theta \mid Y) = \log p(Y\mid\theta) + \log p(\theta) + C,
-\]
+$$
 
-with \(\log p(Y\mid\theta)\) computed by the scan-based model recurrence and \(\log p(\theta)\) defined on
+with $\log p(Y\mid\theta)$ computed by the scan-based model recurrence and $\log p(\theta)$ defined on
 unconstrained parameter coordinates. This follows the usual Bayesian decomposition {cite}`gelman2013`,
 but the implementation focus is explicitly operational: fast repeated fitting with transparent diagnostics.
 
@@ -24,7 +24,7 @@ interaction and memory raw terms are weakly regularized around zero. The dispers
 centered at moderate over-dispersion (`phi_raw ~ N(3, 0.5)`).
 
 After transformation, these become weakly informative priors over admissible model parameters
-\((\mu, \alpha, P, \rho, w, \phi)\), preserving interpretability while discouraging unstable extremes early
+$(\mu, \alpha, P, \rho, w, \phi)$, preserving interpretability while discouraging unstable extremes early
 in optimization.
 
 ## MAP ensembles as the default operational posterior approximation
@@ -34,9 +34,9 @@ conditions. Each restart is trained with gradient clipping and early stopping, a
 restart is retained. Collecting these retained optima gives a practical ensemble approximation to
 epistemic uncertainty:
 
-\[
+$$
 \{\hat\theta^{(s)}\}_{s=1}^S.
-\]
+$$
 
 This strategy intentionally mirrors the motivation behind deep ensembles {cite}`lakshminarayanan2017`:
 exact posterior sampling is often too expensive for repeated short-horizon backtests, but multiple
@@ -51,9 +51,9 @@ MAP ensembles and Bayesian methods through the same downstream API.
 When a smoother posterior family is needed, `svi` uses NumPyro autoguides (`AutoDiagonalNormal` or
 `AutoNormal`) and optimizes an ELBO objective
 
-\[
+$$
 \mathcal L(q) = \mathbb E_{q(\theta)}[\log p(Y,\theta)-\log q(\theta)].
-\]
+$$
 
 The implementation prefers `AutoContinuousELBO` when available and falls back to `Trace_ELBO` for
 compatibility. Posterior draws from the guide are transformed back to constrained model space and exposed

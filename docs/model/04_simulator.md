@@ -31,22 +31,22 @@ Because the output contract matches model-fitting input, synthetic datasets can 
 
 For each mark-basis channel, the simulator evolves latent memory by geometric decay:
 
-\[
+$$
 h_{t,j,m,b} = \rho_{m,b} h_{t-1,j,m,b} + Y_{t-1,j,m}.
-\]
+$$
 
 Spatial propagation is then applied in latent history space, mixed over temporal bases, and mapped
 through mark interaction matrix
 
-\[
+$$
 G = \operatorname{diag}(\alpha)P.
-\]
+$$
 
 Conditional mean counts are
 
-\[
+$$
 \lambda_{t,j,m} = \mu_{j,m} + \sum_{m'} G_{m',m}\,z_{t,j,m'},
-\]
+$$
 
 followed by observation sampling (Poisson or NB2). This is a discrete-time analogue of marked
 self-exciting dynamics in the Hawkes family {cite}`hawkes1971,ogata1988,bacry2015`.
