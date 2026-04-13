@@ -56,9 +56,10 @@ dev = [
 ]
 docs = [
   "sphinx>=8.0",
-  "pydata-sphinx-theme>=0.15",
+  "sphinx-rtd-theme>=2.0",
   "myst-parser>=3.0",
   "nbsphinx>=0.9",
+  "nbconvert>=7.17",
   "sphinxcontrib-bibtex>=2.6",
   "ipython>=8.18",
 ]

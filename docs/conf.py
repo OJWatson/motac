@@ -21,16 +21,12 @@ exclude_patterns = [
     "tutorials/08_acled_nuts_truncated.ipynb",
 ]
 
-html_theme = "pydata_sphinx_theme"
+html_theme = "sphinx_rtd_theme"
 html_theme_options = {
-    "show_nav_level": 2,
     "navigation_depth": 4,
-    "show_toc_level": 3,
-    "secondary_sidebar_items": [],
+    "collapse_navigation": False,
 }
 html_static_path = ["_static"]
-html_css_files = ["custom.css"]
-html_js_files = ["mathjax-fix.js"]
 bibtex_bibfiles = ["references.bib"]
 bibtex_reference_style = "author_year"
 mathjax_path = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
@@ -49,7 +45,7 @@ myst_enable_extensions = [
     "dollarmath",
     "amsmath",
 ]
-myst_update_mathjax = False
+myst_update_mathjax = True
 
 source_suffix = {
     ".rst": "restructuredtext",
