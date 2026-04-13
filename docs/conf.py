@@ -30,6 +30,7 @@ html_theme_options = {
 }
 html_static_path = ["_static"]
 html_css_files = ["custom.css"]
+html_js_files = ["mathjax-fix.js"]
 bibtex_bibfiles = ["references.bib"]
 bibtex_reference_style = "author_year"
 mathjax_path = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
@@ -48,6 +49,7 @@ myst_enable_extensions = [
     "dollarmath",
     "amsmath",
 ]
+myst_update_mathjax = False
 
 source_suffix = {
     ".rst": "restructuredtext",
