@@ -32,8 +32,8 @@ bibtex_reference_style = "author_year"
 mathjax_path = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
 mathjax3_config = {
     "tex": {
-        "inlineMath": [["$", "$"], [r"\\(", r"\\)"]],
-        "displayMath": [["$$", "$$"], [r"\\[", r"\\]"]],
+        "inlineMath": [["$", "$"], [r"\(", r"\)"]],
+        "displayMath": [["$$", "$$"], [r"\[", r"\]"]],
         "processEscapes": True,
     }
 }

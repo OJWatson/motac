@@ -1,17 +1,8 @@
 (() => {
-  const getTargets = () => Array.from(document.querySelectorAll("article.bd-article section.tex2jax_ignore.mathjax_ignore"));
-
-  const prepareTargets = () => {
-    const targets = getTargets();
-    for (const target of targets) {
-      target.classList.remove("tex2jax_ignore", "mathjax_ignore");
-      target.classList.add("mathjax_process");
-    }
-    return targets;
-  };
+  const getTargets = () => Array.from(document.querySelectorAll(".math")).filter((target) => target.dataset.mathjaxTypeset !== "done");
 
   const tryTypeset = () => {
-    const targets = prepareTargets();
+    const targets = getTargets();
     if (!targets.length) {
       return true;
     }
@@ -21,18 +12,42 @@
       return false;
     }
 
+    for (const target of targets) {
+      target.dataset.mathjaxTypeset = "pending";
+    }
+
     if (typeof mathJax.typesetClear === "function") {
       mathJax.typesetClear(targets);
     }
 
     if (typeof mathJax.typesetPromise === "function") {
-      mathJax.typesetPromise(targets).catch(() => {});
+      mathJax.typesetPromise(targets)
+        .then(() => {
+          for (const target of targets) {
+            target.dataset.mathjaxTypeset = "done";
+          }
+        })
+        .catch(() => {
+          for (const target of targets) {
+            delete target.dataset.mathjaxTypeset;
+          }
+        });
       return true;
     }
 
     if (typeof mathJax.typeset === "function") {
-      mathJax.typeset(targets);
-      return true;
+      try {
+        mathJax.typeset(targets);
+        for (const target of targets) {
+          target.dataset.mathjaxTypeset = "done";
+        }
+        return true;
+      } catch {
+        for (const target of targets) {
+          delete target.dataset.mathjaxTypeset;
+        }
+        return false;
+      }
     }
 
     return false;
